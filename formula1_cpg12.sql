@@ -1,0 +1,20 @@
+use cs3380;
+
+drop table if exists circuit;
+drop table if exists city;
+drop table if exists constructor;
+drop table if exists drivesFor;
+drop table if exists driver;
+drop table if exists race;
+drop table if exists compete;
+drop table if exists result;
+drop table if exists sprintResult;
+drop table if exists driverStanding;
+drop table if exists constructorResults;
+drop table if exists constructorStanding;
+drop table if exists pitstop;
+drop table if exists status;
+drop table if exists qualifyingRecord;
+drop table if exists laptime;
+drop table if exists records;
+drop table if exists completeLapTime;
