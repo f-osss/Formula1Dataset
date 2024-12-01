@@ -30,6 +30,13 @@ create table circuit(
     altitude   integer       not null
 );
 
+--saida
+CREATE TABLE City (
+    cityID INT PRIMARY KEY IDENTITY(1,1),  
+    name VARCHAR(100) NOT NULL,            
+    country VARCHAR(100) NOT NULL          
+);
+
 create table constructor(
     constructorID integer primary key IDENTITY(1,1),
     constructorRef varchar(255) not null,
