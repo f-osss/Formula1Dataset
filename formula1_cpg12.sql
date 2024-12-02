@@ -145,3 +145,68 @@ create table driverStanding(
     position integer not null,
     wins integer not null
 );
+
+-- chuka create table statements
+create table driver(
+    driverID INT PRIMARY KEY,
+    driverRef NVARCHAR(255) NOT NULL,
+    forename NVARCHAR(255) NOT NULL,
+    surname NVARCHAR(255) NOT NULL,
+    number INT NULL,
+    nationality NVARCHAR(255) NULL,
+    code CHAR(3) NULL,
+    dob DATE NULL
+);
+
+create table result(
+    resultID INT PRIMARY KEY,
+    raceID INT NOT NULL,
+    driverID INT NOT NULL,
+    constructorID INT NOT NULL,
+    number INT NULL,
+    grid INT NOT NULL,
+    positionOrder INT NULL,
+    points DECIMAL(10, 2) NOT NULL,
+    laps INT NOT NULL,
+    time NVARCHAR(255) NULL,
+    milliseconds INT NULL,
+    fastestLap INT NULL,
+    rank INT NULL,
+    fastestLapTime NVARCHAR(255) NULL,
+    fastestLapSpeed DECIMAL(10, 2) NULL,
+    statusID INT NOT NULL,
+    FOREIGN KEY (driverID) REFERENCES Driver(driverID)
+);
+
+create table pitstop(
+    raceID INT NOT NULL,
+    driverID INT NOT NULL,
+    stop INT NOT NULL,
+    lap INT NOT NULL,
+    time NVARCHAR(255) NOT NULL,
+    duration NVARCHAR(255) NOT NULL,
+    PRIMARY KEY (raceID, driverID, stop),
+    FOREIGN KEY (driverID) REFERENCES Driver(driverID)
+);
+
+create table status(
+    statusID INT PRIMARY KEY,
+    status NVARCHAR(255) NOT NULL
+);
+
+create table laptime(
+    raceID INT NOT NULL,
+    driverID INT NOT NULL,
+    lap INT NOT NULL,
+    position INT NOT NULL,
+    time NVARCHAR(255) NOT NULL,
+    milliseconds INT NOT NULL,
+    PRIMARY KEY (raceID, driverID, lap),
+    FOREIGN KEY (driverID) REFERENCES Driver(driverID)
+);
+
+create table records(
+    raceID INT NOT NULL,
+    lapID INT NOT NULL,
+    PRIMARY KEY (raceID, lapID)
+);
