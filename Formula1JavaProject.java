@@ -42,4 +42,7 @@ public class Formula1JavaProject {
                         + "loginTimeout=30;";
 
     }
+
+    //QUERIES
+
 }
