@@ -342,10 +342,10 @@ public class Populate {
                 String[] columns = line.split(",");
                 PreparedStatement stmt = connection.prepareStatement("INSERT INTO driver (driverID, forename, surname, dob, nationality) VALUES (?, ?, ?, ?, ?)");
                 stmt.setInt(1, Integer.parseInt(columns[0]));
-                stmt.setString(2, columns[1]);
-                stmt.setString(3, columns[2]);
-                stmt.setDate(4, Date.valueOf(columns[3]));
-                stmt.setString(5, columns[4]);
+                stmt.setString(2, columns[4]);
+                stmt.setString(3, columns[5]);
+                stmt.setDate(4, Date.valueOf(columns[6]));
+                stmt.setString(5, columns[7]);
                 stmt.executeUpdate();
                 stmt.close();
             }
@@ -354,7 +354,7 @@ public class Populate {
             e.printStackTrace();
         }
     }
-    
+    /**
     // Insert data into 'result' table from CSV file
     private void insertResultData() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
@@ -467,6 +467,7 @@ public class Populate {
             e.printStackTrace();
         }
     }
+    **/
     // Chuka table inserts end here
 
     
