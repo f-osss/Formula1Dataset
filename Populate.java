@@ -47,7 +47,7 @@ public class Populate {
                 + "trustServerCertificate=false;"
                 + "loginTimeout=30;";
 
-        constructor();
+        //constructor();
         constructorResult();
 //        race();
 //        sprintResult();
@@ -114,7 +114,7 @@ public class Populate {
     public void constructorResult()
     {
         String sql = "INSERT INTO constructorResults (raceID,constructorID,points,status) VALUES (?, ?,?,?)";
-        file = "csv_files/constructors_results.csv";
+        file = "csv_files/constructor_results.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
