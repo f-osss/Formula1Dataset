@@ -53,6 +53,9 @@ public class Populate {
 //        driver();
         status();
 
+        //constructorStanding();
+        qualifyingRecord();
+
 
     }
 
@@ -135,6 +138,125 @@ public class Populate {
             System.out.println("Error reading csv file.");
         }
     }
+
+    public void constructorStanding() {
+        String sql = "INSERT INTO constructorStanding (raceID,wins,points,position,constructorID) VALUES (?, ?,?,?,?)";
+        file = "csv_files/constructor_standings.csv";
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+             BufferedReader br = new BufferedReader(new FileReader(file));
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            String line;
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+
+                int raceID = Integer.parseInt(fields[1].trim());
+                int wins = Integer.parseInt(fields[2].trim());
+                int points = Integer.parseInt(fields[3].trim());
+                int position = Integer.parseInt(fields[4].trim());
+                int constructorID= Integer.parseInt(fields[5].trim());
+
+                preparedStatement.setInt(1, raceID);
+                preparedStatement.setInt(2, wins);
+                preparedStatement.setInt(3, points);
+                preparedStatement.setInt(4, position);
+                preparedStatement.setInt(5, constructorID);
+
+                preparedStatement.executeUpdate();
+            }
+
+
+            System.out.println("constructor_Results table successfully populated");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("csv file not found.");
+        } catch (IOException e) {
+            System.out.println("Error reading csv file.");
+        }
+    }
+
+
+    public void qualifyingRecord() {
+        String sql = "INSERT INTO qualifyingRecord (raceID, driverID, constructorID, number, position, q1, q2, q3) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        file = "csv_files/qualifying.csv";
+
+        System.out.println("tryign");
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+             BufferedReader br = new BufferedReader(new FileReader(file));
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            String line;
+            br.readLine(); // Skip the header row
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+
+                int raceID = Integer.parseInt(fields[1].trim());
+                int driverID = Integer.parseInt(fields[2].trim());
+                int constructorID = Integer.parseInt(fields[3].trim());
+                int number = Integer.parseInt(fields[4].trim());
+                int position = Integer.parseInt(fields[5].trim());
+
+                // Parse q1, q2, q3 or set them as NULL if `\N`
+                Double q1 = fields[6].trim().equals("\\N") ? null : parseTimeToDecimal(fields[6].trim());
+                Double q2 = fields[7].trim().equals("\\N") ? null : parseTimeToDecimal(fields[7].trim());
+                Double q3 = fields[8].trim().equals("\\N") ? null : parseTimeToDecimal(fields[8].trim());
+
+                preparedStatement.setInt(1, raceID);
+                preparedStatement.setInt(2, driverID);
+                preparedStatement.setInt(3, constructorID);
+                preparedStatement.setInt(4, number);
+                preparedStatement.setInt(5, position);
+
+                // Use `setNull` for null values, or `setDouble` for non-null
+                if (q1 == null) {
+                    preparedStatement.setNull(6, java.sql.Types.DECIMAL);
+                } else {
+                    preparedStatement.setDouble(6, q1);
+                }
+                if (q2 == null) {
+                    preparedStatement.setNull(7, java.sql.Types.DECIMAL);
+                } else {
+                    preparedStatement.setDouble(7, q2);
+                }
+                if (q3 == null) {
+                    preparedStatement.setNull(8, java.sql.Types.DECIMAL);
+                } else {
+                    preparedStatement.setDouble(8, q3);
+                }
+
+                preparedStatement.executeUpdate();
+                System.out.println("tryign");
+            }
+
+            System.out.println("qualifyingRecord table successfully populated");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("csv file not found.");
+        } catch (IOException e) {
+            System.out.println("Error reading csv file.");
+        }
+    }
+
+    // Helper method to convert time (hh:mm:ss.s) to DECIMAL
+    private Double parseTimeToDecimal(String time) {
+        try {
+            String[] parts = time.split(":");
+            double minutes = Double.parseDouble(parts[0]) * 60; // Convert hours to seconds
+            double seconds = Double.parseDouble(parts[1]);
+            return minutes + seconds;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid time format: " + time, e);
+        }
+    }
+
+
 
 
     public void circuit() {
