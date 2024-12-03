@@ -165,7 +165,7 @@ create table driverStanding(
 
 
 create table result(
-                       resultID INT PRIMARY KEY,
+                       resultID INT PRIMARY KEY IDENTITY(1,1),
                        raceID INT NOT NULL,
                        driverID INT NOT NULL,
                        constructorID INT NOT NULL,
