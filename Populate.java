@@ -49,7 +49,7 @@ public class Populate {
 
         constructor();
 //        race();
-        sprintResult();
+//        sprintResult();
     }
 
     public void constructor() {
@@ -193,14 +193,14 @@ public class Populate {
                 int number = Integer.parseInt(fields[4].trim());
                 int grid = Integer.parseInt(fields[5].trim());
                 Integer position = fields[6].trim().equals("\\N") ? null : Integer.parseInt(fields[6].trim());
-                int positionOrder = Integer.parseInt(fields[7].trim());
-                int points = Integer.parseInt(fields[8].trim());
-                int laps = Integer.parseInt(fields[9].trim());
-                String time = fields[10].trim().equals("\\N") ? null : fields[10].trim();
-                Integer milliseconds = fields[11].trim().equals("\\N") ? null : Integer.parseInt(fields[11].trim());
-                Integer fastestLap = fields[12].trim().equals("\\N") ? null : Integer.parseInt(fields[12].trim());
-                String fastestLapTime = fields[13].trim().equals("\\N") ? null : fields[13].trim();
-                int statusID = Integer.parseInt(fields[14].trim());
+                int positionOrder = Integer.parseInt(fields[8].trim());
+                int points = Integer.parseInt(fields[9].trim());
+                int laps = Integer.parseInt(fields[10].trim());
+                String time = fields[11].trim().equals("\\N") ? null : fields[10].trim();
+                Integer milliseconds = fields[12].trim().equals("\\N") ? null : Integer.parseInt(fields[12].trim());
+                Integer fastestLap = fields[13].trim().equals("\\N") ? null : Integer.parseInt(fields[13].trim());
+                String fastestLapTime = fields[14].trim().equals("\\N") ? null : fields[14].trim();
+                int statusID = Integer.parseInt(fields[15].trim());
 
 
                 preparedStatement.setInt(1, raceID);
