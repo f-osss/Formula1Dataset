@@ -318,7 +318,6 @@ public class Populate {
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
                 PreparedStatement stmt = connection.prepareStatement("INSERT INTO driver (forename, surname, dob, nationality) VALUES (?, ?, ?, ?)");
-                stmt.setInt(1, Integer.parseInt(columns[1]));
                 stmt.setString(2, columns[4]);
                 stmt.setString(3, columns[5]);
                 stmt.setDate(4, Date.valueOf(columns[6]));
