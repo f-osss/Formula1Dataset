@@ -41,6 +41,7 @@ public class Database {
     }
 
     //Queries
+    
     //Queries 23-33 by Chuka
     //23. Fastest Lap Times Across All Races
     public void findFastestLapTimes(Connection connection) {
