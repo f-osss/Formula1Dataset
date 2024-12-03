@@ -49,7 +49,8 @@ public class Populate {
 
         //constructor();
 //        constructorResult();
-        race();
+//        race();
+        insertDriverData();
 
 
     }
@@ -311,21 +312,36 @@ public class Populate {
     // Insert data into 'driver' table from CSV file
     private void insertDriverData() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-            BufferedReader reader = new BufferedReader(new FileReader("driver.csv"));
+            BufferedReader reader = new BufferedReader(new FileReader("csv_files/drivers.csv"));
             reader.readLine(); // Skip header
     
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO driver (forename, surname, dob, nationality) VALUES (?, ?, ?, ?)");
-                stmt.setString(2, columns[4]);
-                stmt.setString(3, columns[5]);
-                stmt.setDate(4, Date.valueOf(columns[6]));
-                stmt.setString(5, columns[7]);
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO driver (driverRef, forename, surname,number,nationality, code, dob) VALUES (?, ?, ?, ?,?,?,?)");
+                stmt.setString(1, columns[1].trim());
+                stmt.setString(2, columns[2].trim());
+                stmt.setString(3, columns[3].trim());
+
+                Integer number = columns[2].trim().equals("\\N") ? null : Integer.parseInt(columns[2].trim());
+
+                if (number != null) {
+                    stmt.setInt(4, number);
+                } else {
+                    stmt.setNull(4, Types.INTEGER);
+                }
+
+                stmt.setString(5, columns[7].trim());
+                stmt.setString(6, columns[3].trim());
+                stmt.setDate(7, Date.valueOf(columns[6]));
+
                 stmt.executeUpdate();
                 stmt.close();
+
+
             }
             reader.close();
+            System.out.println("driver table successfully populated");
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }

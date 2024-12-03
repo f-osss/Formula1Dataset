@@ -45,7 +45,7 @@ create table constructor(
 );
 
 create table driver(
-                       driverID INT PRIMARY KEY,
+                       driverID INT PRIMARY KEY IDENTITY(1,1),
                        driverRef NVARCHAR(255) NOT NULL,
                        forename NVARCHAR(255) NOT NULL,
                        surname NVARCHAR(255) NOT NULL,
