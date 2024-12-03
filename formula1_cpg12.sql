@@ -132,7 +132,7 @@ create table compete(
 );
 
 create table status(
-                       statusID INT PRIMARY KEY,
+                       statusID INT PRIMARY KEY IDENTITY(1,1),
                        status NVARCHAR(255) NOT NULL
 );
 
