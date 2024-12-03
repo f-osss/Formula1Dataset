@@ -307,9 +307,7 @@ public class Populate {
             System.out.println("Error reading CSV file.");
         }
     }
-    
-    // Chuka table inserts starts here
-    // Insert data into 'driver' table from CSV file
+
     private void driver() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/drivers.csv"));
@@ -347,18 +345,16 @@ public class Populate {
         }
     }
 
-    // Insert data into 'status' table from CSV file
-    private void insertStatusData() {
+    private void status() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-            BufferedReader reader = new BufferedReader(new FileReader("status.csv"));
+            BufferedReader reader = new BufferedReader(new FileReader("csv_files/status.csv"));
             reader.readLine(); // Skip header
     
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO status (statusID, status) VALUES (?, ?)");
-                stmt.setInt(1, Integer.parseInt(columns[0]));
-                stmt.setString(2, columns[1]);
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO status (status) VALUES (?)");
+                stmt.setString(1, columns[1]);
                 stmt.executeUpdate();
                 stmt.close();
             }
