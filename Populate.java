@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.sql.Statement;
 
 public class Populate {
     private String file;
@@ -89,7 +90,7 @@ public class Populate {
         }
     }
 
-    public void circuit(){
+    public void circuit() {
         String sql = "INSERT INTO circuit (cityID, circuitRef, name, long, lat, altitude) VALUES (?, ?, ?, ?, ?, ?)";
         file = "csv_files/circuit.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -130,7 +131,7 @@ public class Populate {
         }
     }
 
-    public void race(){
+    public void race() {
         String sql = "INSERT INTO race (year, round, circuitID, name, date, time) VALUES (?, ?, ?, ?, ?, ?)";
         file = "csv_files/races.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);

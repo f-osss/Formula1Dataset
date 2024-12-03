@@ -18,7 +18,7 @@ drop table if exists status; --chuka
 drop table if exists qualifyingRecord;
 drop table if exists laptime; --chuka
 drop table if exists records; --chuka
-drop table if exists completeLapTime;
+drop table if exists completesLapTime;
 
 CREATE TABLE city (
                       cityID INT PRIMARY KEY IDENTITY(1,1),
