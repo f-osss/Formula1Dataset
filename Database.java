@@ -1,23 +1,12 @@
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Properties;
 
-public class Formula1JavaProject {
+public class Database {
     private String connectionUrl;
 
-    public static void main(String[] args) {
-        Formula1JavaProject project = new Formula1JavaProject();
-        project.loadConfig();
-    }
-
-    public void loadConfig() {
+    public Database() {
         Properties prop = new Properties();
         String fileName = "auth.cfg";
 
@@ -51,5 +40,7 @@ public class Formula1JavaProject {
 
     }
 
-
+    //Queries
 }
+
+
