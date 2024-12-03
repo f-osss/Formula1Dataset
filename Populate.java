@@ -51,6 +51,28 @@ public class Populate {
         constructorResult();
 //        race();
 //        sprintResult();
+//        //----------------------------------------------TEST-----------------------------------------------
+//        ResultSet resultSet = null;
+//        try (Connection connection = DriverManager.getConnection(connectionUrl);
+//             Statement statement = connection.createStatement();) {
+//
+//            // Create and execute a SELECT SQL statement.
+//            String selectSql = "SELECT * FROM constructor;";
+//            resultSet = statement.executeQuery(selectSql);
+//
+//            // Print results from select statement
+//            while (resultSet.next()) {
+//                System.out.println(resultSet.getString(1) +
+//                        resultSet.getString(2) +
+//                         resultSet.getString(3));
+//            }
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        //----------------------------------------------TEST-----------------------------------------------
+
+
     }
 
     public void constructor() {
@@ -91,7 +113,7 @@ public class Populate {
 
     public void constructorResult()
     {
-        String sql = "INSERT INTO constructorResults (constructorResultsID,raceID,constructorID,points,status) VALUES (?, ?, ?,?,?)";
+        String sql = "INSERT INTO constructorResults (raceID,constructorID,points,status) VALUES (?, ?,?,?)";
         file = "csv_files/constructors_results.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
@@ -103,20 +125,25 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                int constructorResultID =  Integer.parseInt(fields[1].trim());
-                int raceID =  Integer.parseInt(fields[2].trim());
-                int constructorID =  Integer.parseInt(fields[3].trim());
-                int points = Integer.parseInt(fields[4].trim());
-                String status = fields[5].trim();
+                int raceID =  Integer.parseInt(fields[1].trim());
+                int constructorID =  Integer.parseInt(fields[2].trim());
+                int points = Integer.parseInt(fields[3].trim());
+                String status = fields[4].trim();
 
-                preparedStatement.setInt(1, constructorResultID);
-                preparedStatement.setInt(2, raceID);
-                preparedStatement.setInt(3, constructorID);
-                preparedStatement.setInt(4, points);
-                preparedStatement.setString(5, status);
+                preparedStatement.setInt(1, raceID);
+                preparedStatement.setInt(2, constructorID);
+                preparedStatement.setInt(3, points);
+
+
+                if (!status.equals("\\N") && !status.isEmpty()) {
+                    preparedStatement.setString(4, status);
+                } else {
+                    preparedStatement.setNull(4, Types.VARCHAR);
+                }
 
                 preparedStatement.executeUpdate();
             }
+
 
             System.out.println("constructor_Results table successfully populated");
 
