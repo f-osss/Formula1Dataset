@@ -50,7 +50,7 @@ public class Populate {
         //constructor();
 //        constructorResult();
 //        race();
-        insertDriverData();
+        driver();
 
 
     }
@@ -310,7 +310,7 @@ public class Populate {
     
     // Chuka table inserts starts here
     // Insert data into 'driver' table from CSV file
-    private void insertDriverData() {
+    private void driver() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/drivers.csv"));
             reader.readLine(); // Skip header
