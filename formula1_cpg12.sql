@@ -72,7 +72,7 @@ create table race(
                      circuitID integer references circuit(circuitID),
                      name text not null,
                      date date not null,
-                     time time null
+                     time time 
 );
 
 -- saida
