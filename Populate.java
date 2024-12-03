@@ -48,6 +48,7 @@ public class Populate {
                 + "loginTimeout=30;";
 
         constructor();
+        constructorResult();
 //        race();
 //        sprintResult();
     }
@@ -90,7 +91,7 @@ public class Populate {
 
     public void constructorResult()
     {
-        String sql = "INSERT INTO constructor (constructorRef, name, nationality) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO constructorResults (constructorResultsID,raceID,constructorID,points,status) VALUES (?, ?, ?,?,?)";
         file = "csv_files/constructors_results.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
