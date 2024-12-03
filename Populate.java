@@ -49,8 +49,8 @@ public class Populate {
 
         //constructor();
 //        constructorResult();
-        circuit();
-   race();
+        //circuit();
+   //race();
 //        driver();
         //status();
 
