@@ -48,29 +48,8 @@ public class Populate {
                 + "loginTimeout=30;";
 
         //constructor();
-        constructorResult();
-//        race();
-//        sprintResult();
-//        //----------------------------------------------TEST-----------------------------------------------
-//        ResultSet resultSet = null;
-//        try (Connection connection = DriverManager.getConnection(connectionUrl);
-//             Statement statement = connection.createStatement();) {
-//
-//            // Create and execute a SELECT SQL statement.
-//            String selectSql = "SELECT * FROM constructor;";
-//            resultSet = statement.executeQuery(selectSql);
-//
-//            // Print results from select statement
-//            while (resultSet.next()) {
-//                System.out.println(resultSet.getString(1) +
-//                        resultSet.getString(2) +
-//                         resultSet.getString(3));
-//            }
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        //----------------------------------------------TEST-----------------------------------------------
+//        constructorResult();
+        race();
 
 
     }
@@ -111,8 +90,7 @@ public class Populate {
     }
 
 
-    public void constructorResult()
-    {
+    public void constructorResult() {
         String sql = "INSERT INTO constructorResults (raceID,constructorID,points,status) VALUES (?, ?,?,?)";
         file = "csv_files/constructor_results.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -125,8 +103,8 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                int raceID =  Integer.parseInt(fields[1].trim());
-                int constructorID =  Integer.parseInt(fields[2].trim());
+                int raceID = Integer.parseInt(fields[1].trim());
+                int constructorID = Integer.parseInt(fields[2].trim());
                 int points = Integer.parseInt(fields[3].trim());
                 String status = fields[4].trim();
 
@@ -155,8 +133,6 @@ public class Populate {
             System.out.println("Error reading csv file.");
         }
     }
-
-
 
 
     public void circuit() {
@@ -247,7 +223,8 @@ public class Populate {
     }
 
     public void sprintResult() {
-        String sql = "INSERT INTO sprintResult (raceID, driverID, constructorID, number, grid, position, positionOrder, points, laps, time, milliseconds, fastestLap, fastestLapTime, statusID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        file = "csv_files/sprint_results.csv";
+        String sql = "INSERT INTO sprintResult (raceID, driverID, constructorID, number, grid, position, positionOrder, points, laps, time, milliseconds, fastestLap, fastestLapTime, statusID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        file = "csv_files/sprint_results.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -469,6 +446,5 @@ public class Populate {
 //    }
 //    // Chuka table inserts end here
 
-    
 
 }

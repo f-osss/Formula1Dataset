@@ -81,7 +81,7 @@ CREATE TABLE constructorResults (
                                     raceID INT NOT NULL,
                                     constructorID INT NOT NULL,
                                     points DECIMAL(10, 2) NOT NULL,
-                                    status VARCHAR(255) NOT NULL,
+                                    status VARCHAR(255),
                                     FOREIGN KEY (raceID) REFERENCES race(raceID),     -- Reference to the Race table
                                     FOREIGN KEY (constructorID) REFERENCES constructor(constructorID) -- Reference to the Constructor table
 );
