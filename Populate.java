@@ -346,6 +346,28 @@ public class Populate {
             e.printStackTrace();
         }
     }
+
+    // Insert data into 'status' table from CSV file
+    private void insertStatusData() {
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            BufferedReader reader = new BufferedReader(new FileReader("status.csv"));
+            reader.readLine(); // Skip header
+    
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO status (statusID, status) VALUES (?, ?)");
+                stmt.setInt(1, Integer.parseInt(columns[0]));
+                stmt.setString(2, columns[1]);
+                stmt.executeUpdate();
+                stmt.close();
+            }
+            reader.close();
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     /**
     // Insert data into 'result' table from CSV file
     private void insertResultData() {
@@ -385,27 +407,6 @@ public class Populate {
                 stmt.setInt(2, Integer.parseInt(columns[1]));
                 stmt.setTimestamp(3, Timestamp.valueOf(columns[2]));
                 stmt.setDouble(4, Double.parseDouble(columns[3]));
-                stmt.executeUpdate();
-                stmt.close();
-            }
-            reader.close();
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    // Insert data into 'status' table from CSV file
-    private void insertStatusData() {
-        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-            BufferedReader reader = new BufferedReader(new FileReader("status.csv"));
-            reader.readLine(); // Skip header
-    
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO status (statusID, description) VALUES (?, ?)");
-                stmt.setInt(1, Integer.parseInt(columns[0]));
-                stmt.setString(2, columns[1]);
                 stmt.executeUpdate();
                 stmt.close();
             }
