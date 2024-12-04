@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class Populate {
     private String file;
