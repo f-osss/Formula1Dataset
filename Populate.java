@@ -49,12 +49,14 @@ public class Populate {
 
         //constructor();
 //        constructorResult();
-//        race();
+        //circuit();
+   //race();
 //        driver();
-        status();
+        //status();
 
         //constructorStanding();
-        qualifyingRecord();
+        //qualifyingRecord();
+
 
 
     }
@@ -261,7 +263,7 @@ public class Populate {
 
     public void circuit() {
         String sql = "INSERT INTO circuit (cityID, circuitRef, name, long, lat, altitude) VALUES (?, ?, ?, ?, ?, ?)";
-        file = "csv_files/circuit.csv";
+        file = "csv_files/circuits.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -300,19 +302,25 @@ public class Populate {
         }
     }
 
+
+
     public void race() {
         String sql = "INSERT INTO race (year, round, circuitID, name, date, time) VALUES (?, ?, ?, ?, ?, ?)";
         file = "csv_files/races.csv";
+
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
+            System.out.println("Reading file: " + file);
+
             String line;
-            br.readLine();
+            br.readLine(); // Skip the header row
 
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
+                // Parse data from CSV
                 int year = Integer.parseInt(fields[1].trim());
                 int round = Integer.parseInt(fields[2].trim());
                 int circuitID = Integer.parseInt(fields[3].trim());
@@ -324,10 +332,19 @@ public class Populate {
                 preparedStatement.setInt(2, round);
                 preparedStatement.setInt(3, circuitID);
                 preparedStatement.setString(4, name);
-                preparedStatement.setString(5, date);
 
-                if (!time.equals("\\N") && !time.isEmpty()) {
-                    preparedStatement.setString(6, time);
+                // Use helper methods for date and time parsing
+                java.sql.Date sqlDate = parseDate(date);
+                java.sql.Time sqlTime = parseTime(time);
+
+                if (sqlDate != null) {
+                    preparedStatement.setDate(5, sqlDate);
+                } else {
+                    preparedStatement.setNull(5, java.sql.Types.DATE);
+                }
+
+                if (sqlTime != null) {
+                    preparedStatement.setTime(6, sqlTime);
                 } else {
                     preparedStatement.setNull(6, java.sql.Types.TIME);
                 }
@@ -345,6 +362,33 @@ public class Populate {
             System.out.println("Error reading csv file.");
         }
     }
+
+    // Helper method to parse date
+    private java.sql.Date parseDate(String date) {
+        try {
+            // Remove quotes and trim the input
+            date = date.replace("\"", "").trim();
+            // Return null for missing or invalid dates
+            return date.equals("\\N") || date.isEmpty() ? null : java.sql.Date.valueOf(date);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid date format: " + date, e);
+        }
+    }
+
+    // Helper method to parse time
+    private java.sql.Time parseTime(String time) {
+        try {
+            // Remove quotes and trim the input
+            time = time.replace("\"", "").trim();
+            // Return null for missing or invalid times
+            return time.equals("\\N") || time.isEmpty() ? null : java.sql.Time.valueOf(time);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid time format: " + time, e);
+        }
+    }
+
+
+
 
     public void sprintResult() {
         String sql = "INSERT INTO sprintResult (raceID, driverID, constructorID, number, grid, position, positionOrder, points, laps, time, milliseconds, fastestLap, fastestLapTime, statusID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
