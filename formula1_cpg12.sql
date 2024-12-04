@@ -150,7 +150,7 @@ create table sprintResult(
                              time varchar(100),
                              milliseconds integer,
                              fastestLap integer,
-                             fastestLapTime time,
+                             fastestLapTime varchar(10),
                              statusID integer references status(statusID)
 );
 
