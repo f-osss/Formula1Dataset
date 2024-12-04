@@ -684,6 +684,7 @@ public class Populate {
                 stmt.close();
             }
             reader.close();
+            System.out.println("pitstop table successfully populated");
         } catch (IOException | SQLException | ParseException e) {
             e.printStackTrace();
         }
