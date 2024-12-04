@@ -50,17 +50,17 @@ public class Populate {
                 + "trustServerCertificate=false;"
                 + "loginTimeout=30;";
 
-        //constructor();
+//        constructor();
 //        constructorResult();
-        //circuit();
-   //race();
+//        circuit();
+//        race();
 //        driver();
-        //status();
-
-        //constructorStanding();
-        //qualifyingRecord();
-        driver();
-        LapTime();
+//        status();
+//
+//        constructorStanding();
+//        qualifyingRecord();
+//        driver();
+//        LapTime();
 
 
 
