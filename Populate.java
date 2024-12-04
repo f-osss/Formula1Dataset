@@ -159,7 +159,7 @@ public class Populate {
                 int wins = Integer.parseInt(fields[2].trim());
                 int points = Integer.parseInt(fields[3].trim());
                 int position = Integer.parseInt(fields[4].trim());
-                int constructorID= Integer.parseInt(fields[5].trim());
+                int constructorID = Integer.parseInt(fields[5].trim());
 
                 preparedStatement.setInt(1, raceID);
                 preparedStatement.setInt(2, wins);
@@ -308,15 +308,12 @@ public class Populate {
              BufferedReader br = new BufferedReader(new FileReader(file));
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            System.out.println("Reading file: " + file);
-
             String line;
-            br.readLine(); // Skip the header row
+            br.readLine();
 
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                // Parse data from CSV
                 int year = Integer.parseInt(fields[1].trim());
                 int round = Integer.parseInt(fields[2].trim());
                 int circuitID = Integer.parseInt(fields[3].trim());
