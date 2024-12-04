@@ -68,6 +68,39 @@ public class Populate {
 
     }
 
+    public void city() {
+        String sql = "INSERT INTO city (name, country) VALUES (?, ?)";
+        file = "csv_files/city.csv";
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+             BufferedReader br = new BufferedReader(new FileReader(file));
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            String line;
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+
+                String name = fields[1].trim();
+                String country = fields[2].trim();
+
+
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, country);
+
+                preparedStatement.executeUpdate();
+            }
+
+            System.out.println("city table successfully populated");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("csv file not found.");
+        } catch (IOException e) {
+            System.out.println("Error reading csv file.");
+        }
+    }
     public void constructor() {
         String sql = "INSERT INTO constructor (constructorRef, name, nationality) VALUES (?, ?, ?)";
         file = "csv_files/constructors.csv";
