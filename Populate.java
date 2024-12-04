@@ -520,14 +520,14 @@ public class Populate {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/drivers.csv"));
             reader.readLine(); // Skip header
-    
+
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
                 PreparedStatement stmt = connection.prepareStatement("INSERT INTO driver (driverRef, forename, surname,number,nationality, code, dob) VALUES (?, ?, ?, ?,?,?,?)");
                 stmt.setString(1, columns[1].trim());
-                stmt.setString(2, columns[2].trim());
-                stmt.setString(3, columns[3].trim());
+                stmt.setString(2, columns[4].trim());
+                stmt.setString(3, columns[5].trim());
 
                 Integer number = columns[2].trim().equals("\\N") ? null : Integer.parseInt(columns[2].trim());
 
@@ -540,11 +540,8 @@ public class Populate {
                 stmt.setString(5, columns[7].trim());
                 stmt.setString(6, columns[3].trim());
                 stmt.setDate(7, Date.valueOf(columns[6]));
-
                 stmt.executeUpdate();
                 stmt.close();
-
-
             }
             reader.close();
             System.out.println("driver table successfully populated");
@@ -680,8 +677,8 @@ public class Populate {
                 stmt.setInt(4, Integer.parseInt(columns[3].trim())); // lap
                 String formattedTime = parseTime2(columns[4].trim()); // Parse HH:mm:ss to a string
                 stmt.setString(5, formattedTime);
-                String formattedDur = parseTime3(columns[5].trim().replace("\"", ""));
-                stmt.setString(6, formattedDur);
+                String formattedDur = parseTime3(columns[5].trim());
+                stmt.setString(6, formattedDur.replace("00:", ""));
                 stmt.setInt(7, Integer.parseInt(columns[6].trim())); // milliseconds
                 stmt.executeUpdate();
                 stmt.close();
