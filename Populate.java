@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class Populate {
     private String file;
@@ -95,6 +97,7 @@ public class Populate {
         }
     }
 
+
     public void constructorResult() {
         String sql = "INSERT INTO constructorResults (raceID,constructorID,points,status) VALUES (?, ?,?,?)";
         file = "csv_files/constructor_results.csv";
@@ -156,7 +159,7 @@ public class Populate {
                 int wins = Integer.parseInt(fields[2].trim());
                 int points = Integer.parseInt(fields[3].trim());
                 int position = Integer.parseInt(fields[4].trim());
-                int constructorID = Integer.parseInt(fields[5].trim());
+                int constructorID= Integer.parseInt(fields[5].trim());
 
                 preparedStatement.setInt(1, raceID);
                 preparedStatement.setInt(2, wins);
@@ -178,6 +181,7 @@ public class Populate {
             System.out.println("Error reading csv file.");
         }
     }
+
 
     public void qualifyingRecord() {
         String sql = "INSERT INTO qualifyingRecord (raceID, driverID, constructorID, number, position, q1, q2, q3) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -442,7 +446,6 @@ public class Populate {
                     preparedStatement.setNull(12, Types.INTEGER);
                 }
 
-
                 if (fastestLapTime != null) {
                     preparedStatement.setString(13, fastestLapTime);
                 } else {
@@ -469,7 +472,7 @@ public class Populate {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/drivers.csv"));
             reader.readLine(); // Skip header
-
+    
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
@@ -506,7 +509,7 @@ public class Populate {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/status.csv"));
             reader.readLine(); // Skip header
-
+    
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
@@ -520,100 +523,100 @@ public class Populate {
             e.printStackTrace();
         }
     }
-
+    
     /**
-     // Insert data into 'result' table from CSV file
-     private void insertResultData() {
-     try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-     BufferedReader reader = new BufferedReader(new FileReader("result.csv"));
-     reader.readLine(); // Skip header
-
-     String line;
-     while ((line = reader.readLine()) != null) {
-     String[] columns = line.split(",");
-     PreparedStatement stmt = connection.prepareStatement("INSERT INTO result (raceID, driverID, positionOrder, points, timeGap) VALUES (?, ?, ?, ?, ?)");
-     stmt.setInt(1, Integer.parseInt(columns[0]));
-     stmt.setInt(2, Integer.parseInt(columns[1]));
-     stmt.setInt(3, Integer.parseInt(columns[2]));
-     stmt.setInt(4, Integer.parseInt(columns[3]));
-     stmt.setDouble(5, Double.parseDouble(columns[4]));
-     stmt.executeUpdate();
-     stmt.close();
-     }
-     reader.close();
-     } catch (IOException | SQLException e) {
-     e.printStackTrace();
-     }
-     }
-
-     // Insert data into 'pitstop' table from CSV file
-     private void insertPitstopData() {
-     try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-     BufferedReader reader = new BufferedReader(new FileReader("pitstop.csv"));
-     reader.readLine(); // Skip header
-
-     String line;
-     while ((line = reader.readLine()) != null) {
-     String[] columns = line.split(",");
-     PreparedStatement stmt = connection.prepareStatement("INSERT INTO pitstop (raceID, driverID, stopTime, pitStopDuration) VALUES (?, ?, ?, ?)");
-     stmt.setInt(1, Integer.parseInt(columns[0]));
-     stmt.setInt(2, Integer.parseInt(columns[1]));
-     stmt.setTimestamp(3, Timestamp.valueOf(columns[2]));
-     stmt.setDouble(4, Double.parseDouble(columns[3]));
-     stmt.executeUpdate();
-     stmt.close();
-     }
-     reader.close();
-     } catch (IOException | SQLException e) {
-     e.printStackTrace();
-     }
-     }
-
-     // Insert data into 'laptime' table from CSV file
-     private void insertLapTimeData() {
-     try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-     BufferedReader reader = new BufferedReader(new FileReader("laptime.csv"));
-     reader.readLine(); // Skip header
-
-     String line;
-     while ((line = reader.readLine()) != null) {
-     String[] columns = line.split(",");
-     PreparedStatement stmt = connection.prepareStatement("INSERT INTO laptime (raceID, driverID, lapTime) VALUES (?, ?, ?)");
-     stmt.setInt(1, Integer.parseInt(columns[0]));
-     stmt.setInt(2, Integer.parseInt(columns[1]));
-     stmt.setDouble(3, Double.parseDouble(columns[2]));
-     stmt.executeUpdate();
-     stmt.close();
-     }
-     reader.close();
-     } catch (IOException | SQLException e) {
-     e.printStackTrace();
-     }
-     }
-
-     // Insert data into 'records' table from CSV file
-     private void insertRecordsData() {
-     try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-     BufferedReader reader = new BufferedReader(new FileReader("records.csv"));
-     reader.readLine(); // Skip header
-
-     String line;
-     while ((line = reader.readLine()) != null) {
-     String[] columns = line.split(",");
-     PreparedStatement stmt = connection.prepareStatement("INSERT INTO records (raceID, driverID, recordType, value) VALUES (?, ?, ?, ?)");
-     stmt.setInt(1, Integer.parseInt(columns[0]));
-     stmt.setInt(2, Integer.parseInt(columns[1]));
-     stmt.setString(3, columns[2]);
-     stmt.setString(4, columns[3]);
-     stmt.executeUpdate();
-     stmt.close();
-     }
-     reader.close();
-     } catch (IOException | SQLException e) {
-     e.printStackTrace();
-     }
-     }
-     **/
+    // Insert data into 'result' table from CSV file
+    private void insertResultData() {
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            BufferedReader reader = new BufferedReader(new FileReader("result.csv"));
+            reader.readLine(); // Skip header
+    
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO result (raceID, driverID, positionOrder, points, timeGap) VALUES (?, ?, ?, ?, ?)");
+                stmt.setInt(1, Integer.parseInt(columns[0]));
+                stmt.setInt(2, Integer.parseInt(columns[1]));
+                stmt.setInt(3, Integer.parseInt(columns[2]));
+                stmt.setInt(4, Integer.parseInt(columns[3]));
+                stmt.setDouble(5, Double.parseDouble(columns[4]));
+                stmt.executeUpdate();
+                stmt.close();
+            }
+            reader.close();
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Insert data into 'pitstop' table from CSV file
+    private void insertPitstopData() {
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            BufferedReader reader = new BufferedReader(new FileReader("pitstop.csv"));
+            reader.readLine(); // Skip header
+    
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO pitstop (raceID, driverID, stopTime, pitStopDuration) VALUES (?, ?, ?, ?)");
+                stmt.setInt(1, Integer.parseInt(columns[0]));
+                stmt.setInt(2, Integer.parseInt(columns[1]));
+                stmt.setTimestamp(3, Timestamp.valueOf(columns[2]));
+                stmt.setDouble(4, Double.parseDouble(columns[3]));
+                stmt.executeUpdate();
+                stmt.close();
+            }
+            reader.close();
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Insert data into 'laptime' table from CSV file
+    private void insertLapTimeData() {
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            BufferedReader reader = new BufferedReader(new FileReader("laptime.csv"));
+            reader.readLine(); // Skip header
+    
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO laptime (raceID, driverID, lapTime) VALUES (?, ?, ?)");
+                stmt.setInt(1, Integer.parseInt(columns[0]));
+                stmt.setInt(2, Integer.parseInt(columns[1]));
+                stmt.setDouble(3, Double.parseDouble(columns[2]));
+                stmt.executeUpdate();
+                stmt.close();
+            }
+            reader.close();
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Insert data into 'records' table from CSV file
+    private void insertRecordsData() {
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            BufferedReader reader = new BufferedReader(new FileReader("records.csv"));
+            reader.readLine(); // Skip header
+    
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO records (raceID, driverID, recordType, value) VALUES (?, ?, ?, ?)");
+                stmt.setInt(1, Integer.parseInt(columns[0]));
+                stmt.setInt(2, Integer.parseInt(columns[1]));
+                stmt.setString(3, columns[2]);
+                stmt.setString(4, columns[3]);
+                stmt.executeUpdate();
+                stmt.close();
+            }
+            reader.close();
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    **/
     // Chuka table inserts end here
 
 
