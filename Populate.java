@@ -63,6 +63,8 @@ public class Populate {
 //        qualifyingRecord();
 //        driver();
 //        LapTime();
+        driver();
+        Pitstop();
 
 
 
@@ -614,6 +616,8 @@ public class Populate {
 
     public static String parseTime2(String timeString) throws ParseException {
         try {
+            // Remove surrounding double quotes if they exist
+            timeString = timeString.replace("\"", "").trim();
             // Define the formatter for HH:mm:ss
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             LocalTime time = LocalTime.parse(timeString, formatter);
@@ -641,7 +645,7 @@ public class Populate {
                 stmt.setInt(4, Integer.parseInt(columns[3].trim())); // lap
                 String formattedTime = parseTime2(columns[4].trim()); // Parse HH:mm:ss to a string
                 stmt.setString(5, formattedTime);
-                stmt.setDouble(6, Double.parseDouble(columns[5].trim())); // duration
+                stmt.setDouble(6, Double.parseDouble(columns[5].trim().replace("\"", "")));
                 stmt.setInt(7, Integer.parseInt(columns[6].trim())); // milliseconds
                 stmt.executeUpdate();
                 stmt.close();
@@ -652,8 +656,6 @@ public class Populate {
         }
     }
 
-
-    /**
     // Insert data into 'result' table from CSV file
     private void insertResultData() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
@@ -677,7 +679,9 @@ public class Populate {
             e.printStackTrace();
         }
     }
-        
+
+
+    /**
     // Insert data into 'records' table from CSV file
     private void insertRecordsData() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
