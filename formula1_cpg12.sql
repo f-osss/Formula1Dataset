@@ -190,7 +190,7 @@ create table pitstop(
                         stop INT NOT NULL,
                         lap INT NOT NULL,
                         time NVARCHAR(255) NOT NULL,
-                        duration NVARCHAR(255) NOT NULL,
+                        duration DECIMAL(10, 3) NOT NULL,
                         PRIMARY KEY (raceID, driverID, stop),
                         FOREIGN KEY (driverID) REFERENCES driver(driverID)
 );

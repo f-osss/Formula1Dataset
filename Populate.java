@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.Properties;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class Populate {
@@ -568,7 +570,7 @@ public class Populate {
 
             // Parse and set time
             String formattedTime = parseTime1(columns[4].trim()).replace("00:", "");
-            stmt.setString(5, formattedTime); // Assuming database 'time' column is of type VARCHAR
+            stmt.setString(5, formattedTime);
 
             stmt.setInt(6, Integer.parseInt(columns[5].trim())); // milliseconds
             stmt.executeUpdate();
@@ -580,7 +582,17 @@ public class Populate {
     }
 }
 
-/**
+    public static String parseTime2(String timeString) throws ParseException {
+        try {
+            // Define the formatter for HH:mm:ss
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LocalTime time = LocalTime.parse(timeString, formatter);
+            return time.toString(); // Converts to ISO-8601 (HH:mm:ss) string
+        } catch (Exception e) {
+            throw new ParseException("Unable to parse time: " + timeString, 0);
+        }
+    }
+
     // Insert data into 'pitstop' table from CSV file
     private void Pitstop() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
@@ -590,20 +602,28 @@ public class Populate {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO pitstop (raceID, driverID, stopTime, pitStopDuration) VALUES (?, ?, ?, ?)");
-                stmt.setInt(1, Integer.parseInt(columns[0]));
-                stmt.setInt(2, Integer.parseInt(columns[1]));
-                stmt.setTimestamp(3, Timestamp.valueOf(columns[2]));
-                stmt.setDouble(4, Double.parseDouble(columns[3]));
+                PreparedStatement stmt = connection.prepareStatement(
+                        "INSERT INTO pitstop (raceID, driverID, stop, lap, time, duration, milliseconds) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                );
+                stmt.setInt(1, Integer.parseInt(columns[0].trim())); // raceID
+                stmt.setInt(2, Integer.parseInt(columns[1].trim())); // driverID
+                stmt.setInt(3, Integer.parseInt(columns[2].trim())); // stop
+                stmt.setInt(4, Integer.parseInt(columns[3].trim())); // lap
+                String formattedTime = parseTime2(columns[4].trim()); // Parse HH:mm:ss to a string
+                stmt.setString(5, formattedTime);
+                stmt.setDouble(6, Double.parseDouble(columns[5].trim())); // duration
+                stmt.setInt(7, Integer.parseInt(columns[6].trim())); // milliseconds
                 stmt.executeUpdate();
                 stmt.close();
             }
             reader.close();
-        } catch (IOException | SQLException e) {
+        } catch (IOException | SQLException | ParseException e) {
             e.printStackTrace();
         }
     }
 
+
+    /**
     // Insert data into 'result' table from CSV file
     private void insertResultData() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
