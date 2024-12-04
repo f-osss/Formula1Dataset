@@ -690,6 +690,7 @@ public class Populate {
         }
     }
 
+/** For fAIZA
     // Insert data into 'result' table from CSV file
     private void insertResultData() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
@@ -715,7 +716,7 @@ public class Populate {
     }
 
 
-    /**
+
     // Insert data into 'records' table from CSV file
     private void insertRecordsData() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
@@ -739,7 +740,6 @@ public class Populate {
         }
     }
     **/
-    // Chuka table inserts end here
 
 
 }
