@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.Duration;
+import java.time.format.DateTimeParseException;
 
 
 public class Populate {
@@ -63,7 +65,7 @@ public class Populate {
 //        qualifyingRecord();
 //        driver();
 //        LapTime();
-        driver();
+       driver();
         Pitstop();
 
 
@@ -621,11 +623,44 @@ public class Populate {
             // Define the formatter for HH:mm:ss
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             LocalTime time = LocalTime.parse(timeString, formatter);
-            return time.toString(); // Converts to ISO-8601 (HH:mm:ss) string
+            return time.toString();
         } catch (Exception e) {
             throw new ParseException("Unable to parse time: " + timeString, 0);
         }
     }
+
+    public static String parseTime3(String durationString) throws ParseException {
+        try {
+            // Remove surrounding double quotes if they exist
+            durationString = durationString.replace("\"", "").trim();
+
+            // Check if the format matches mm:ss.SSS
+            if (durationString.contains(":")) {
+                // Assume mm:ss.SSS format (e.g., "16:44.718")
+                String[] parts = durationString.split(":");
+                int minutes = Integer.parseInt(parts[0]);
+                String[] secondsAndMillis = parts[1].split("\\.");
+                int seconds = Integer.parseInt(secondsAndMillis[0]);
+                int millis = Integer.parseInt(secondsAndMillis[1]);
+
+                // Convert minutes and seconds to a LocalTime
+                LocalTime time = LocalTime.of(0, minutes, seconds, millis * 1_000_000);
+                return time.toString();
+            } else {
+                // Assume ss.SSS format (e.g., "22.534")
+                String[] parts = durationString.split("\\.");
+                int seconds = Integer.parseInt(parts[0]);
+                int millis = Integer.parseInt(parts[1]);
+
+                // Convert seconds and milliseconds to LocalTime
+                LocalTime time = LocalTime.of(0, 0, seconds, millis * 1_000_000);
+                return time.toString();
+            }
+        } catch (Exception e) {
+            throw new ParseException("Invalid duration format: " + durationString, 0);
+        }
+    }
+
 
     // Insert data into 'pitstop' table from CSV file
     private void Pitstop() {
@@ -645,7 +680,8 @@ public class Populate {
                 stmt.setInt(4, Integer.parseInt(columns[3].trim())); // lap
                 String formattedTime = parseTime2(columns[4].trim()); // Parse HH:mm:ss to a string
                 stmt.setString(5, formattedTime);
-                stmt.setDouble(6, Double.parseDouble(columns[5].trim().replace("\"", "")));
+                String formattedDur = parseTime3(columns[5].trim().replace("\"", ""));
+                stmt.setString(6, formattedDur);
                 stmt.setInt(7, Integer.parseInt(columns[6].trim())); // milliseconds
                 stmt.executeUpdate();
                 stmt.close();
