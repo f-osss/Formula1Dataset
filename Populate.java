@@ -56,7 +56,8 @@ public class Populate {
 
 //        constructor();
 //        constructorResult();
-//        circuit();
+        circuit();
+        city();
 //        race();
 //        driver();
 //        status();
@@ -65,9 +66,8 @@ public class Populate {
 //        qualifyingRecord();
 //        driver();
 //        LapTime();
-       driver();
-        Pitstop();
-
+//       driver();
+//        Pitstop();
 
 
     }
@@ -105,6 +105,7 @@ public class Populate {
             System.out.println("Error reading csv file.");
         }
     }
+
     public void constructor() {
         String sql = "INSERT INTO constructor (constructorRef, name, nationality) VALUES (?, ?, ?)";
         file = "csv_files/constructors.csv";
@@ -303,8 +304,6 @@ public class Populate {
     }
 
 
-
-
     public void circuit() {
         String sql = "INSERT INTO circuit (cityID, circuitRef, name, long, lat, altitude) VALUES (?, ?, ?, ?, ?, ?)";
         file = "csv_files/circuits.csv";
@@ -318,7 +317,7 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                int cityID = Integer.parseInt(fields[9].trim());
+                int cityID = Integer.parseInt(fields[3].trim());
                 String circuitRef = fields[1].trim();
                 String name = fields[2].trim();
                 double longitude = Double.parseDouble(fields[5].trim());
@@ -345,7 +344,6 @@ public class Populate {
             System.out.println("Error reading csv file.");
         }
     }
-
 
 
     public void race() {
@@ -427,8 +425,6 @@ public class Populate {
             throw new IllegalArgumentException("Invalid time format: " + time, e);
         }
     }
-
-
 
 
     public void sprintResult() {
@@ -554,7 +550,7 @@ public class Populate {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/status.csv"));
             reader.readLine(); // Skip header
-    
+
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
@@ -583,35 +579,35 @@ public class Populate {
 
     // Insert data into 'laptime' table from CSV file
     private void LapTime() {
-    try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-        BufferedReader reader = new BufferedReader(new FileReader("csv_files/lap_times.csv"));
-        reader.readLine(); // Skip header
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            BufferedReader reader = new BufferedReader(new FileReader("csv_files/lap_times.csv"));
+            reader.readLine(); // Skip header
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] columns = line.split(",");
-            PreparedStatement stmt = connection.prepareStatement(
-                "INSERT INTO laptime (raceID, driverID, lap, position, time, milliseconds) VALUES (?, ?, ?, ?, ?, ?)"
-            );
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                PreparedStatement stmt = connection.prepareStatement(
+                        "INSERT INTO laptime (raceID, driverID, lap, position, time, milliseconds) VALUES (?, ?, ?, ?, ?, ?)"
+                );
 
-            stmt.setInt(1, Integer.parseInt(columns[0].trim())); // raceID
-            stmt.setInt(2, Integer.parseInt(columns[1].trim())); // driverID
-            stmt.setInt(3, Integer.parseInt(columns[2].trim())); // lap
-            stmt.setInt(4, Integer.parseInt(columns[3].trim())); // position
+                stmt.setInt(1, Integer.parseInt(columns[0].trim())); // raceID
+                stmt.setInt(2, Integer.parseInt(columns[1].trim())); // driverID
+                stmt.setInt(3, Integer.parseInt(columns[2].trim())); // lap
+                stmt.setInt(4, Integer.parseInt(columns[3].trim())); // position
 
-            // Parse and set time
-            String formattedTime = parseTime1(columns[4].trim()).replace("00:", "");
-            stmt.setString(5, formattedTime);
+                // Parse and set time
+                String formattedTime = parseTime1(columns[4].trim()).replace("00:", "");
+                stmt.setString(5, formattedTime);
 
-            stmt.setInt(6, Integer.parseInt(columns[5].trim())); // milliseconds
-            stmt.executeUpdate();
-            stmt.close();
+                stmt.setInt(6, Integer.parseInt(columns[5].trim())); // milliseconds
+                stmt.executeUpdate();
+                stmt.close();
+            }
+            reader.close();
+        } catch (IOException | SQLException | ParseException e) {
+            e.printStackTrace();
         }
-        reader.close();
-    } catch (IOException | SQLException | ParseException e) {
-        e.printStackTrace();
     }
-}
 
     public static String parseTime2(String timeString) throws ParseException {
         try {
@@ -691,55 +687,55 @@ public class Populate {
     }
 
 /** For fAIZA
-    // Insert data into 'result' table from CSV file
-    private void insertResultData() {
-        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-            BufferedReader reader = new BufferedReader(new FileReader("result.csv"));
-            reader.readLine(); // Skip header
-    
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO result (raceID, driverID, positionOrder, points, timeGap) VALUES (?, ?, ?, ?, ?)");
-                stmt.setInt(1, Integer.parseInt(columns[0]));
-                stmt.setInt(2, Integer.parseInt(columns[1]));
-                stmt.setInt(3, Integer.parseInt(columns[2]));
-                stmt.setInt(4, Integer.parseInt(columns[3]));
-                stmt.setDouble(5, Double.parseDouble(columns[4]));
-                stmt.executeUpdate();
-                stmt.close();
-            }
-            reader.close();
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
+ // Insert data into 'result' table from CSV file
+ private void insertResultData() {
+ try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+ BufferedReader reader = new BufferedReader(new FileReader("result.csv"));
+ reader.readLine(); // Skip header
+
+ String line;
+ while ((line = reader.readLine()) != null) {
+ String[] columns = line.split(",");
+ PreparedStatement stmt = connection.prepareStatement("INSERT INTO result (raceID, driverID, positionOrder, points, timeGap) VALUES (?, ?, ?, ?, ?)");
+ stmt.setInt(1, Integer.parseInt(columns[0]));
+ stmt.setInt(2, Integer.parseInt(columns[1]));
+ stmt.setInt(3, Integer.parseInt(columns[2]));
+ stmt.setInt(4, Integer.parseInt(columns[3]));
+ stmt.setDouble(5, Double.parseDouble(columns[4]));
+ stmt.executeUpdate();
+ stmt.close();
+ }
+ reader.close();
+ } catch (IOException | SQLException e) {
+ e.printStackTrace();
+ }
+ }
 
 
 
-    // Insert data into 'records' table from CSV file
-    private void insertRecordsData() {
-        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-            BufferedReader reader = new BufferedReader(new FileReader("records.csv"));
-            reader.readLine(); // Skip header
-    
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO records (raceID, driverID, recordType, value) VALUES (?, ?, ?, ?)");
-                stmt.setInt(1, Integer.parseInt(columns[0]));
-                stmt.setInt(2, Integer.parseInt(columns[1]));
-                stmt.setString(3, columns[2]);
-                stmt.setString(4, columns[3]);
-                stmt.executeUpdate();
-                stmt.close();
-            }
-            reader.close();
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    **/
+ // Insert data into 'records' table from CSV file
+ private void insertRecordsData() {
+ try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+ BufferedReader reader = new BufferedReader(new FileReader("records.csv"));
+ reader.readLine(); // Skip header
+
+ String line;
+ while ((line = reader.readLine()) != null) {
+ String[] columns = line.split(",");
+ PreparedStatement stmt = connection.prepareStatement("INSERT INTO records (raceID, driverID, recordType, value) VALUES (?, ?, ?, ?)");
+ stmt.setInt(1, Integer.parseInt(columns[0]));
+ stmt.setInt(2, Integer.parseInt(columns[1]));
+ stmt.setString(3, columns[2]);
+ stmt.setString(4, columns[3]);
+ stmt.executeUpdate();
+ stmt.close();
+ }
+ reader.close();
+ } catch (IOException | SQLException e) {
+ e.printStackTrace();
+ }
+ }
+ **/
 
 
 }
