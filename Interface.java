@@ -60,7 +60,7 @@ public class Interface {
         System.out.println("   a. Races by Location");
         System.out.println("-------------------------------------------------------------------------");
         System.out.println("Enter `h` or 'help' at any time to return to this menu.");
-        System.out.println("Type `h` to close the program.");
+        System.out.println("Type `q` to close the program.");
     }
 
     private static void handleSubcategory(String subcategory, Scanner scanner) {

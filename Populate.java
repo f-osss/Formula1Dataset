@@ -61,14 +61,11 @@ public class Populate {
 //        constructor();
 //        driver();
 //        result();
-        sprintResult();
-
-
-//        constructorResult();
-
 //        status();
-//
-//        constructorStanding();
+//        sprintResult();
+//        driverStanding();
+//        constructorResult();
+        constructorStanding();
 //        qualifyingRecord();
 //        driver();
 //        LapTime();
@@ -397,8 +394,29 @@ public class Populate {
         }
     }
 
+    private void status() {
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            BufferedReader reader = new BufferedReader(new FileReader("csv_files/status.csv"));
+            reader.readLine(); // Skip header
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO status (statusID, status) VALUES (?,?)");
+                stmt.setInt(1, Integer.parseInt(columns[0].trim()));
+                stmt.setString(2, columns[1].trim());
+                stmt.executeUpdate();
+                stmt.close();
+            }
+            System.out.println("status table successfully populated");
+            reader.close();
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sprintResult() {
-        String sql = "INSERT INTO sprintResult (raceID, driverID, constructorID, number, grid, position, positionOrder, points, laps, time, milliseconds, fastestLap, fastestLapTime, statusID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sprintResult (resultID, raceID, driverID, constructorID, number, grid, position, positionOrder, points, laps, time, milliseconds, fastestLap, fastestLapTime, statusID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         file = "csv_files/sprint_results.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
@@ -410,7 +428,7 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-
+                int resultID = Integer.parseInt(fields[0].trim());
                 int raceID = Integer.parseInt(fields[1].trim());
                 int driverID = Integer.parseInt(fields[2].trim());
                 int constructorID = Integer.parseInt(fields[3].trim());
@@ -418,7 +436,7 @@ public class Populate {
                 int grid = Integer.parseInt(fields[5].trim());
                 Integer position = fields[6].trim().equals("\\N") ? null : Integer.parseInt(fields[6].trim());
                 int positionOrder = Integer.parseInt(fields[8].trim());
-                float points = Float.parseFloat(fields[9].trim());
+                BigDecimal points = new BigDecimal(fields[9].trim());
                 int laps = Integer.parseInt(fields[10].trim());
                 String time = fields[11].trim().equals("\\N") ? null : fields[10].trim();
                 Integer milliseconds = fields[12].trim().equals("\\N") ? null : Integer.parseInt(fields[12].trim());
@@ -427,46 +445,47 @@ public class Populate {
                 int statusID = Integer.parseInt(fields[15].trim());
 
 
-                preparedStatement.setInt(1, raceID);
-                preparedStatement.setInt(2, driverID);
-                preparedStatement.setInt(3, constructorID);
-                preparedStatement.setInt(4, number);
-                preparedStatement.setInt(5, grid);
+                preparedStatement.setInt(1, resultID);
+                preparedStatement.setInt(2, raceID);
+                preparedStatement.setInt(3, driverID);
+                preparedStatement.setInt(4, constructorID);
+                preparedStatement.setInt(5, number);
+                preparedStatement.setInt(6, grid);
 
                 if (position != null) {
-                    preparedStatement.setInt(6, position);
+                    preparedStatement.setInt(7, position);
                 } else {
-                    preparedStatement.setNull(6, Types.INTEGER);
+                    preparedStatement.setNull(7, Types.INTEGER);
                 }
 
-                preparedStatement.setInt(7, positionOrder);
-                preparedStatement.setFloat(8, points);
-                preparedStatement.setInt(9, laps);
+                preparedStatement.setInt(8, positionOrder);
+                preparedStatement.setBigDecimal(9, points);
+                preparedStatement.setInt(10, laps);
                 if (time != null) {
-                    preparedStatement.setString(10, time);
+                    preparedStatement.setString(11, time);
                 } else {
-                    preparedStatement.setNull(10, Types.VARCHAR);
+                    preparedStatement.setNull(11, Types.VARCHAR);
                 }
 
                 if (milliseconds != null) {
-                    preparedStatement.setInt(11, milliseconds);
-                } else {
-                    preparedStatement.setNull(11, Types.INTEGER);
-                }
-
-                if (fastestLap != null) {
-                    preparedStatement.setInt(12, fastestLap);
+                    preparedStatement.setInt(12, milliseconds);
                 } else {
                     preparedStatement.setNull(12, Types.INTEGER);
                 }
 
-                if (fastestLapTime != null) {
-                    preparedStatement.setString(13, fastestLapTime);
+                if (fastestLap != null) {
+                    preparedStatement.setInt(13, fastestLap);
                 } else {
-                    preparedStatement.setNull(13, Types.VARCHAR);
+                    preparedStatement.setNull(13, Types.INTEGER);
                 }
 
-                preparedStatement.setInt(14, statusID);
+                if (fastestLapTime != null) {
+                    preparedStatement.setString(14, fastestLapTime);
+                } else {
+                    preparedStatement.setNull(14, Types.VARCHAR);
+                }
+
+                preparedStatement.setInt(15, statusID);
 
                 preparedStatement.executeUpdate();
             }
@@ -482,11 +501,58 @@ public class Populate {
         }
     }
 
+    public void driverStanding() {
+        String sql = "INSERT INTO driverStanding (driverStandingID, raceID, driverID, points, position, wins) VALUES (?, ?, ?, ?, ?, ?)";
+        String file = "csv_files/driver_standings.csv";
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+             BufferedReader br = new BufferedReader(new FileReader(file));
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            String line;
+            br.readLine(); // Skip header
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+
+                try {
+                    int driverStandingID = Integer.parseInt(fields[0].trim());
+                    int raceID = Integer.parseInt(fields[1].trim());
+                    int driverID = Integer.parseInt(fields[2].trim());
+                    BigDecimal points = new BigDecimal(fields[3].trim());
+                    int position = Integer.parseInt(fields[4].trim());
+                    int wins = Integer.parseInt(fields[6].trim());
+
+                    // Debug: Print the values before executing the query
+                    System.out.println("Inserting: " + driverStandingID + ", " + raceID + ", " + driverID + ", " + points + ", " + position + ", " + wins);
+
+                    preparedStatement.setInt(1, driverStandingID);
+                    preparedStatement.setInt(2, raceID);
+                    preparedStatement.setInt(3, driverID);
+                    preparedStatement.setBigDecimal(4, points);
+                    preparedStatement.setInt(5, position);
+                    preparedStatement.setInt(6, wins);
+
+                    preparedStatement.executeUpdate();
+                } catch (NumberFormatException e) {
+                    System.out.println("Skipping invalid line: " + line);
+                    e.printStackTrace();
+                }
+            }
+
+            System.out.println("Driver standing table successfully populated");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("CSV file not found.");
+        } catch (IOException e) {
+            System.out.println("Error reading CSV file.");
+        }
+    }
 
 
-/*
     public void constructorResult() {
-        String sql = "INSERT INTO constructorResults (raceID,constructorID,points,status) VALUES (?, ?,?,?)";
+        String sql = "INSERT INTO constructorResults (constructorResultsID, raceID,constructorID,points,status) VALUES (?, ?,?,?,?)";
         file = "csv_files/constructor_results.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
@@ -498,20 +564,22 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
+                int constructorResultsID = Integer.parseInt(fields[0].trim());
                 int raceID = Integer.parseInt(fields[1].trim());
                 int constructorID = Integer.parseInt(fields[2].trim());
-                float points = Float.parseFloat(fields[3].trim());
+                BigDecimal points = new BigDecimal(fields[3].trim());
                 String status = fields[4].trim();
 
-                preparedStatement.setInt(1, raceID);
-                preparedStatement.setInt(2, constructorID);
-                preparedStatement.setInt(3, points);
+                preparedStatement.setInt(1, constructorResultsID);
+                preparedStatement.setInt(2, raceID);
+                preparedStatement.setInt(3, constructorID);
+                preparedStatement.setBigDecimal(4, points);
 
 
                 if (!status.equals("\\N") && !status.isEmpty()) {
-                    preparedStatement.setString(4, status);
+                    preparedStatement.setString(5, status);
                 } else {
-                    preparedStatement.setNull(4, Types.VARCHAR);
+                    preparedStatement.setNull(5, Types.VARCHAR);
                 }
 
                 preparedStatement.executeUpdate();
@@ -529,8 +597,9 @@ public class Populate {
         }
     }
 
+
     public void constructorStanding() {
-        String sql = "INSERT INTO constructorStanding (raceID,wins,points,position,constructorID) VALUES (?, ?,?,?,?)";
+        String sql = "INSERT INTO constructorStanding (constructorStandingID, raceID,wins,points,position,constructorID) VALUES (?, ?,?,?,?,?)";
         file = "csv_files/constructor_standings.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
@@ -542,17 +611,19 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
+                int constructorStandingID = Integer.parseInt(fields[0].trim());
                 int raceID = Integer.parseInt(fields[1].trim());
-                int wins = Integer.parseInt(fields[2].trim());
-                Float points = Float.parseFloat(fields[3].trim());
+                int wins = Integer.parseInt(fields[6].trim());
+                BigDecimal points = new BigDecimal(fields[3].trim());
                 int position = Integer.parseInt(fields[4].trim());
-                int constructorID = Integer.parseInt(fields[5].trim());
+                int constructorID = Integer.parseInt(fields[2].trim());
 
-                preparedStatement.setInt(1, raceID);
-                preparedStatement.setInt(2, wins);
-                preparedStatement.setInt(3, points);
-                preparedStatement.setInt(4, position);
-                preparedStatement.setInt(5, constructorID);
+                preparedStatement.setInt(1, constructorStandingID);
+                preparedStatement.setInt(2, raceID);
+                preparedStatement.setInt(3, wins);
+                preparedStatement.setBigDecimal(4, points);
+                preparedStatement.setInt(5, position);
+                preparedStatement.setInt(6, constructorID);
 
                 preparedStatement.executeUpdate();
             }
@@ -568,48 +639,7 @@ public class Populate {
             System.out.println("Error reading csv file.");
         }
     }
-*/
 
-    public void driverStanding() {
-        String sql = "INSERT INTO driverStanding (raceID, driverID, points, position, wins) VALUES (?, ?,?,?,?)";
-        file = "csv_files/driver_standings.csv";
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-             BufferedReader br = new BufferedReader(new FileReader(file));
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            String line;
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-
-                int raceID = Integer.parseInt(fields[1].trim());
-                int driverID = Integer.parseInt(fields[2].trim());
-                float points = Float.parseFloat(fields[3].trim());
-                int position = Integer.parseInt(fields[4].trim());
-                int wins = Integer.parseInt(fields[6].trim());
-
-
-                preparedStatement.setInt(1, raceID);
-                preparedStatement.setInt(2, driverID);
-                preparedStatement.setFloat(3, points);
-                preparedStatement.setInt(4, position);
-                preparedStatement.setInt(5, wins);
-
-                preparedStatement.executeUpdate();
-            }
-
-
-            System.out.println("constructor_Results table successfully populated");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            System.out.println("csv file not found.");
-        } catch (IOException e) {
-            System.out.println("Error reading csv file.");
-        }
-    }
 
 
     public void qualifyingRecord() {
@@ -713,26 +743,6 @@ public class Populate {
         }
     }
 
-
-
-    private void status() {
-        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-            BufferedReader reader = new BufferedReader(new FileReader("csv_files/status.csv"));
-            reader.readLine(); // Skip header
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO status (status) VALUES (?)");
-                stmt.setString(1, columns[1]);
-                stmt.executeUpdate();
-                stmt.close();
-            }
-            reader.close();
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     private String parseTime1(String lapTime) throws ParseException {
         // Remove surrounding double quotes if they exist
