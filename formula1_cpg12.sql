@@ -17,7 +17,7 @@ drop table if exists pitstop;
 drop table if exists status;
 drop table if exists qualifyingRecord;
 drop table if exists laptime;
-drop table if exists records; 
+drop table if exists records;
 drop table if exists completesLapTime;
 
 CREATE TABLE city (
