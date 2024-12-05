@@ -54,12 +54,13 @@ public class Populate {
                 + "trustServerCertificate=false;"
                 + "loginTimeout=30;";
 
-//        city();
-//        circuit();
+        city();
+        circuit();
+        race();
 //        constructor();
 //        driver();
 
-        race();
+
 //        constructorResult();
 
 //        status();
@@ -653,7 +654,6 @@ public class Populate {
         }
     }
 */
-
     private void driver() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/drivers.csv"));
