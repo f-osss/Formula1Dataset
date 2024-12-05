@@ -172,7 +172,7 @@ create table result(
                        constructorID INT NOT NULL,
                        number INT NULL,
                        grid INT NOT NULL,
-                       positionOrder INT NULL,
+                       positionOrder INT NOT NULL,
                        points DECIMAL(10, 2) NOT NULL,
                        laps INT NOT NULL,
                        time NVARCHAR(255) NULL,

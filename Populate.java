@@ -1,746 +1,1094 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.sql.*;
-import java.util.Properties;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.Duration;
-import java.time.format.DateTimeParseException;
-
+import java.util.Properties;
 
 public class Populate {
-    private String file;
-    private String connectionUrl;
+   private String file;
+   private String connectionUrl;
 
-    public static void main(String[] args) {
-        Populate populate = new Populate();
-        populate.loadConfigAndPopulate();
-    }
+   public Populate() {
+   }
 
-    public void loadConfigAndPopulate() {
-        Properties prop = new Properties();
-        String fileName = "auth.cfg";
+   public static void main(String[] var0) {
+      Populate var1 = new Populate();
+      var1.loadConfigAndPopulate();
+   }
 
-        try {
-            FileInputStream configFile = new FileInputStream(fileName);
-            prop.load(configFile);
-            configFile.close();
-        } catch (FileNotFoundException ex) {
-            System.out.println("Could not find config file.");
-            System.exit(1);
-        } catch (IOException ex) {
-            System.out.println("Error reading config file.");
-            System.exit(1);
-        }
+   public void loadConfigAndPopulate() {
+      Properties var1 = new Properties();
+      String var2 = "auth.cfg";
 
-        String username = prop.getProperty("username");
-        String password = prop.getProperty("password");
+      try {
+         FileInputStream var3 = new FileInputStream(var2);
+         var1.load(var3);
+         var3.close();
+      } catch (FileNotFoundException var5) {
+         System.out.println("Could not find config file.");
+         System.exit(1);
+      } catch (IOException var6) {
+         System.out.println("Error reading config file.");
+         System.exit(1);
+      }
 
-        if (username == null || password == null) {
-            System.out.println("Username or password not provided.");
-            System.exit(1);
-        }
+      String var7 = var1.getProperty("username");
+      String var4 = var1.getProperty("password");
+      if (var7 == null || var4 == null) {
+         System.out.println("Username or password not provided.");
+         System.exit(1);
+      }
 
-        connectionUrl = "jdbc:sqlserver://uranium.cs.umanitoba.ca:1433;"
-                + "database=cs3380;"
-                + "user=" + username + ";"
-                + "password=" + password + ";"
-                + "encrypt=false;"
-                + "trustServerCertificate=false;"
-                + "loginTimeout=30;";
+      this.connectionUrl = "jdbc:sqlserver://uranium.cs.umanitoba.ca:1433;database=cs3380;user=" + var7 + ";password=" + var4 + ";encrypt=false;trustServerCertificate=false;loginTimeout=30;";
+      this.race();
+   }
 
-//        city();
-//        circuit();
-//        constructor();
-//        driver();
+   public void city() {
+      String var1 = "INSERT INTO city (name, country) VALUES (?, ?)";
+      this.file = "csv_files/city.csv";
 
-        race();
-//        constructorResult();
+      try {
+         Connection var2 = DriverManager.getConnection(this.connectionUrl);
 
-//        status();
-//
-//        constructorStanding();
-//        qualifyingRecord();
-//        driver();
-//        LapTime();
-//       driver();
-//        Pitstop();
+         try {
+            BufferedReader var3 = new BufferedReader(new FileReader(this.file));
 
+            try {
+               PreparedStatement var4 = var2.prepareStatement(var1);
 
-    }
+               try {
+                  var3.readLine();
 
-    public void city() {
-        String sql = "INSERT INTO city (name, country) VALUES (?, ?)";
-        file = "csv_files/city.csv";
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-             BufferedReader br = new BufferedReader(new FileReader(file));
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                  while(true) {
+                     String var5;
+                     if ((var5 = var3.readLine()) == null) {
+                        System.out.println("city table successfully populated");
+                        break;
+                     }
 
-            String line;
-            br.readLine();
+                     String[] var6 = var5.split(",");
+                     String var7 = var6[1].trim();
+                     String var8 = var6[2].trim();
+                     var4.setString(1, var7);
+                     var4.setString(2, var8);
+                     var4.executeUpdate();
+                  }
+               } catch (Throwable var12) {
+                  if (var4 != null) {
+                     try {
+                        var4.close();
+                     } catch (Throwable var11) {
+                        var12.addSuppressed(var11);
+                     }
+                  }
 
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
+                  throw var12;
+               }
 
-                String name = fields[1].trim();
-                String country = fields[2].trim();
+               if (var4 != null) {
+                  var4.close();
+               }
+            } catch (Throwable var13) {
+               try {
+                  var3.close();
+               } catch (Throwable var10) {
+                  var13.addSuppressed(var10);
+               }
 
-
-                preparedStatement.setString(1, name);
-                preparedStatement.setString(2, country);
-
-                preparedStatement.executeUpdate();
+               throw var13;
             }
 
-            System.out.println("city table successfully populated");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            System.out.println("csv file not found.");
-        } catch (IOException e) {
-            System.out.println("Error reading csv file.");
-        }
-    }
-
-    public void constructor() {
-        String sql = "INSERT INTO constructor (constructorRef, name, nationality) VALUES (?, ?, ?)";
-        file = "csv_files/constructors.csv";
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-             BufferedReader br = new BufferedReader(new FileReader(file));
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            String line;
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-
-                String constructorRef = fields[1].trim();
-                String name = fields[2].trim();
-                String nationality = fields[3].trim();
-
-                preparedStatement.setString(1, constructorRef);
-                preparedStatement.setString(2, name);
-                preparedStatement.setString(3, nationality);
-
-                preparedStatement.executeUpdate();
+            var3.close();
+         } catch (Throwable var14) {
+            if (var2 != null) {
+               try {
+                  var2.close();
+               } catch (Throwable var9) {
+                  var14.addSuppressed(var9);
+               }
             }
 
-            System.out.println("constructor table successfully populated");
+            throw var14;
+         }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            System.out.println("csv file not found.");
-        } catch (IOException e) {
-            System.out.println("Error reading csv file.");
-        }
-    }
+         if (var2 != null) {
+            var2.close();
+         }
+      } catch (SQLException var15) {
+         var15.printStackTrace();
+      } catch (FileNotFoundException var16) {
+         System.out.println("csv file not found.");
+      } catch (IOException var17) {
+         System.out.println("Error reading csv file.");
+      }
 
+   }
 
-    public void constructorResult() {
-        String sql = "INSERT INTO constructorResults (raceID,constructorID,points,status) VALUES (?, ?,?,?)";
-        file = "csv_files/constructor_results.csv";
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-             BufferedReader br = new BufferedReader(new FileReader(file));
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+   public void constructor() {
+      String var1 = "INSERT INTO constructor (constructorRef, name, nationality) VALUES (?, ?, ?)";
+      this.file = "csv_files/constructors.csv";
 
-            String line;
-            br.readLine();
+      try {
+         Connection var2 = DriverManager.getConnection(this.connectionUrl);
 
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
+         try {
+            BufferedReader var3 = new BufferedReader(new FileReader(this.file));
 
-                int raceID = Integer.parseInt(fields[1].trim());
-                int constructorID = Integer.parseInt(fields[2].trim());
-                int points = Integer.parseInt(fields[3].trim());
-                String status = fields[4].trim();
+            try {
+               PreparedStatement var4 = var2.prepareStatement(var1);
 
-                preparedStatement.setInt(1, raceID);
-                preparedStatement.setInt(2, constructorID);
-                preparedStatement.setInt(3, points);
+               try {
+                  var3.readLine();
 
+                  while(true) {
+                     String var5;
+                     if ((var5 = var3.readLine()) == null) {
+                        System.out.println("constructor table successfully populated");
+                        break;
+                     }
 
-                if (!status.equals("\\N") && !status.isEmpty()) {
-                    preparedStatement.setString(4, status);
-                } else {
-                    preparedStatement.setNull(4, Types.VARCHAR);
-                }
+                     String[] var6 = var5.split(",");
+                     String var7 = var6[1].trim();
+                     String var8 = var6[2].trim();
+                     String var9 = var6[3].trim();
+                     var4.setString(1, var7);
+                     var4.setString(2, var8);
+                     var4.setString(3, var9);
+                     var4.executeUpdate();
+                  }
+               } catch (Throwable var13) {
+                  if (var4 != null) {
+                     try {
+                        var4.close();
+                     } catch (Throwable var12) {
+                        var13.addSuppressed(var12);
+                     }
+                  }
 
-                preparedStatement.executeUpdate();
+                  throw var13;
+               }
+
+               if (var4 != null) {
+                  var4.close();
+               }
+            } catch (Throwable var14) {
+               try {
+                  var3.close();
+               } catch (Throwable var11) {
+                  var14.addSuppressed(var11);
+               }
+
+               throw var14;
             }
 
-
-            System.out.println("constructor_Results table successfully populated");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            System.out.println("csv file not found.");
-        } catch (IOException e) {
-            System.out.println("Error reading csv file.");
-        }
-    }
-
-    public void constructorStanding() {
-        String sql = "INSERT INTO constructorStanding (raceID,wins,points,position,constructorID) VALUES (?, ?,?,?,?)";
-        file = "csv_files/constructor_standings.csv";
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-             BufferedReader br = new BufferedReader(new FileReader(file));
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            String line;
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-
-                int raceID = Integer.parseInt(fields[1].trim());
-                int wins = Integer.parseInt(fields[2].trim());
-                int points = Integer.parseInt(fields[3].trim());
-                int position = Integer.parseInt(fields[4].trim());
-                int constructorID = Integer.parseInt(fields[5].trim());
-
-                preparedStatement.setInt(1, raceID);
-                preparedStatement.setInt(2, wins);
-                preparedStatement.setInt(3, points);
-                preparedStatement.setInt(4, position);
-                preparedStatement.setInt(5, constructorID);
-
-                preparedStatement.executeUpdate();
+            var3.close();
+         } catch (Throwable var15) {
+            if (var2 != null) {
+               try {
+                  var2.close();
+               } catch (Throwable var10) {
+                  var15.addSuppressed(var10);
+               }
             }
 
+            throw var15;
+         }
 
-            System.out.println("constructor_Results table successfully populated");
+         if (var2 != null) {
+            var2.close();
+         }
+      } catch (SQLException var16) {
+         var16.printStackTrace();
+      } catch (FileNotFoundException var17) {
+         System.out.println("csv file not found.");
+      } catch (IOException var18) {
+         System.out.println("Error reading csv file.");
+      }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            System.out.println("csv file not found.");
-        } catch (IOException e) {
-            System.out.println("Error reading csv file.");
-        }
-    }
+   }
 
+   public void constructorResult() {
+      String var1 = "INSERT INTO constructorResults (raceID,constructorID,points,status) VALUES (?, ?,?,?)";
+      this.file = "csv_files/constructor_results.csv";
 
-    public void qualifyingRecord() {
-        String sql = "INSERT INTO qualifyingRecord (raceID, driverID, constructorID, number, position, q1, q2, q3) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        file = "csv_files/qualifying.csv";
+      try {
+         Connection var2 = DriverManager.getConnection(this.connectionUrl);
 
-        System.out.println("tryign");
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-             BufferedReader br = new BufferedReader(new FileReader(file));
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+         try {
+            BufferedReader var3 = new BufferedReader(new FileReader(this.file));
 
-            String line;
-            br.readLine(); // Skip the header row
+            try {
+               PreparedStatement var4 = var2.prepareStatement(var1);
 
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
+               try {
+                  var3.readLine();
 
-                int raceID = Integer.parseInt(fields[1].trim());
-                int driverID = Integer.parseInt(fields[2].trim());
-                int constructorID = Integer.parseInt(fields[3].trim());
-                int number = Integer.parseInt(fields[4].trim());
-                int position = Integer.parseInt(fields[5].trim());
+                  while(true) {
+                     String var5;
+                     if ((var5 = var3.readLine()) == null) {
+                        System.out.println("constructor_Results table successfully populated");
+                        break;
+                     }
 
-                // Parse q1, q2, q3 or set them as NULL if `\N`
-                Double q1 = fields[6].trim().equals("\\N") ? null : parseTimeToDecimal(fields[6].trim());
-                Double q2 = fields[7].trim().equals("\\N") ? null : parseTimeToDecimal(fields[7].trim());
-                Double q3 = fields[8].trim().equals("\\N") ? null : parseTimeToDecimal(fields[8].trim());
+                     String[] var6 = var5.split(",");
+                     int var7 = Integer.parseInt(var6[1].trim());
+                     int var8 = Integer.parseInt(var6[2].trim());
+                     int var9 = Integer.parseInt(var6[3].trim());
+                     String var10 = var6[4].trim();
+                     var4.setInt(1, var7);
+                     var4.setInt(2, var8);
+                     var4.setInt(3, var9);
+                     if (!var10.equals("\\N") && !var10.isEmpty()) {
+                        var4.setString(4, var10);
+                     } else {
+                        var4.setNull(4, 12);
+                     }
 
-                preparedStatement.setInt(1, raceID);
-                preparedStatement.setInt(2, driverID);
-                preparedStatement.setInt(3, constructorID);
-                preparedStatement.setInt(4, number);
-                preparedStatement.setInt(5, position);
+                     var4.executeUpdate();
+                  }
+               } catch (Throwable var14) {
+                  if (var4 != null) {
+                     try {
+                        var4.close();
+                     } catch (Throwable var13) {
+                        var14.addSuppressed(var13);
+                     }
+                  }
 
-                // Use `setNull` for null values, or `setDouble` for non-null
-                if (q1 == null) {
-                    preparedStatement.setNull(6, java.sql.Types.DECIMAL);
-                } else {
-                    preparedStatement.setDouble(6, q1);
-                }
-                if (q2 == null) {
-                    preparedStatement.setNull(7, java.sql.Types.DECIMAL);
-                } else {
-                    preparedStatement.setDouble(7, q2);
-                }
-                if (q3 == null) {
-                    preparedStatement.setNull(8, java.sql.Types.DECIMAL);
-                } else {
-                    preparedStatement.setDouble(8, q3);
-                }
+                  throw var14;
+               }
 
-                preparedStatement.executeUpdate();
-                System.out.println("tryign");
+               if (var4 != null) {
+                  var4.close();
+               }
+            } catch (Throwable var15) {
+               try {
+                  var3.close();
+               } catch (Throwable var12) {
+                  var15.addSuppressed(var12);
+               }
+
+               throw var15;
             }
 
-            System.out.println("qualifyingRecord table successfully populated");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            System.out.println("csv file not found.");
-        } catch (IOException e) {
-            System.out.println("Error reading csv file.");
-        }
-    }
-
-    // Helper method to convert time (hh:mm:ss.s) to DECIMAL
-    private Double parseTimeToDecimal(String time) {
-        try {
-            String[] parts = time.split(":");
-            double minutes = Double.parseDouble(parts[0]) * 60; // Convert hours to seconds
-            double seconds = Double.parseDouble(parts[1]);
-            return minutes + seconds;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid time format: " + time, e);
-        }
-    }
-
-
-    public void circuit() {
-        String sql = "INSERT INTO circuit (cityID, circuitRef, name, long, lat, altitude) VALUES (?, ?, ?, ?, ?, ?)";
-        file = "csv_files/circuits.csv";
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-             BufferedReader br = new BufferedReader(new FileReader(file));
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            String line;
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-
-                int cityID = Integer.parseInt(fields[1].trim());
-                String circuitRef = fields[2].trim();
-                String name = fields[3].trim();
-                double longitude = Double.parseDouble(fields[6].trim());
-                double latitude = Double.parseDouble(fields[7].trim());
-                int altitude = Integer.parseInt(fields[8].trim());
-
-                preparedStatement.setInt(1, cityID);
-                preparedStatement.setString(2, circuitRef);
-                preparedStatement.setString(3, name);
-                preparedStatement.setDouble(4, longitude);
-                preparedStatement.setDouble(5, latitude);
-                preparedStatement.setInt(6, altitude);
-
-                preparedStatement.executeUpdate();
+            var3.close();
+         } catch (Throwable var16) {
+            if (var2 != null) {
+               try {
+                  var2.close();
+               } catch (Throwable var11) {
+                  var16.addSuppressed(var11);
+               }
             }
 
-            System.out.println("Circuit table successfully populated!");
+            throw var16;
+         }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            System.out.println("csv file not found.");
-        } catch (IOException e) {
-            System.out.println("Error reading csv file.");
-        }
-    }
+         if (var2 != null) {
+            var2.close();
+         }
+      } catch (SQLException var17) {
+         var17.printStackTrace();
+      } catch (FileNotFoundException var18) {
+         System.out.println("csv file not found.");
+      } catch (IOException var19) {
+         System.out.println("Error reading csv file.");
+      }
 
+   }
 
-    public void race() {
-        String sql = "INSERT INTO race (year, round, circuitID, name, date, time) VALUES (?, ?, ?, ?, ?, ?)";
-        file = "csv_files/races.csv";
+   public void constructorStanding() {
+      String var1 = "INSERT INTO constructorStanding (raceID,wins,points,position,constructorID) VALUES (?, ?,?,?,?)";
+      this.file = "csv_files/constructor_standings.csv";
 
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-             BufferedReader br = new BufferedReader(new FileReader(file));
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+      try {
+         Connection var2 = DriverManager.getConnection(this.connectionUrl);
 
-            String line;
-            br.readLine();
-            int count = 0;
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
+         try {
+            BufferedReader var3 = new BufferedReader(new FileReader(this.file));
 
-                int year = Integer.parseInt(fields[1].trim());
-                int round = Integer.parseInt(fields[2].trim());
-                int circuitID = Integer.parseInt(fields[3].trim());
-                String name = fields[4].trim();
-                String date = fields[5].trim();
-                String time = fields[6].trim();
+            try {
+               PreparedStatement var4 = var2.prepareStatement(var1);
 
-                preparedStatement.setInt(1, year);
-                preparedStatement.setInt(2, round);
-                preparedStatement.setInt(3, circuitID);
-                preparedStatement.setString(4, name);
+               try {
+                  var3.readLine();
 
-                // Use helper methods for date and time parsing
-                java.sql.Date sqlDate = parseDate(date);
-                java.sql.Time sqlTime = parseTime(time);
+                  while(true) {
+                     String var5;
+                     if ((var5 = var3.readLine()) == null) {
+                        System.out.println("constructor_Results table successfully populated");
+                        break;
+                     }
 
-                if (sqlDate != null) {
-                    preparedStatement.setDate(5, sqlDate);
-                } else {
-                    preparedStatement.setNull(5, java.sql.Types.DATE);
-                }
+                     String[] var6 = var5.split(",");
+                     int var7 = Integer.parseInt(var6[1].trim());
+                     int var8 = Integer.parseInt(var6[2].trim());
+                     int var9 = Integer.parseInt(var6[3].trim());
+                     int var10 = Integer.parseInt(var6[4].trim());
+                     int var11 = Integer.parseInt(var6[5].trim());
+                     var4.setInt(1, var7);
+                     var4.setInt(2, var8);
+                     var4.setInt(3, var9);
+                     var4.setInt(4, var10);
+                     var4.setInt(5, var11);
+                     var4.executeUpdate();
+                  }
+               } catch (Throwable var15) {
+                  if (var4 != null) {
+                     try {
+                        var4.close();
+                     } catch (Throwable var14) {
+                        var15.addSuppressed(var14);
+                     }
+                  }
 
-                if (sqlTime != null) {
-                    preparedStatement.setTime(6, sqlTime);
-                } else {
-                    preparedStatement.setNull(6, java.sql.Types.TIME);
-                }
+                  throw var15;
+               }
 
-                preparedStatement.executeUpdate();
-                count++;
-                System.out.println(count + "imserted");
-                System.out.println(circuitID);
+               if (var4 != null) {
+                  var4.close();
+               }
+            } catch (Throwable var16) {
+               try {
+                  var3.close();
+               } catch (Throwable var13) {
+                  var16.addSuppressed(var13);
+               }
+
+               throw var16;
             }
 
-            System.out.println("races table successfully populated");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            System.out.println("csv file not found.");
-        } catch (IOException e) {
-            System.out.println("Error reading csv file.");
-        }
-    }
-
-    // Helper method to parse date
-    private java.sql.Date parseDate(String date) {
-        try {
-            // Remove quotes and trim the input
-            date = date.replace("\"", "").trim();
-            // Return null for missing or invalid dates
-            return date.equals("\\N") || date.isEmpty() ? null : java.sql.Date.valueOf(date);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid date format: " + date, e);
-        }
-    }
-
-    // Helper method to parse time
-    private java.sql.Time parseTime(String time) {
-        try {
-            // Remove quotes and trim the input
-            time = time.replace("\"", "").trim();
-            // Return null for missing or invalid times
-            return time.equals("\\N") || time.isEmpty() ? null : java.sql.Time.valueOf(time);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid time format: " + time, e);
-        }
-    }
-
-
-    public void sprintResult() {
-        String sql = "INSERT INTO sprintResult (raceID, driverID, constructorID, number, grid, position, positionOrder, points, laps, time, milliseconds, fastestLap, fastestLapTime, statusID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        file = "csv_files/sprint_results.csv";
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-             BufferedReader br = new BufferedReader(new FileReader(file));
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            String line;
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-
-
-                int raceID = Integer.parseInt(fields[1].trim());
-                int driverID = Integer.parseInt(fields[2].trim());
-                int constructorID = Integer.parseInt(fields[3].trim());
-                int number = Integer.parseInt(fields[4].trim());
-                int grid = Integer.parseInt(fields[5].trim());
-                Integer position = fields[6].trim().equals("\\N") ? null : Integer.parseInt(fields[6].trim());
-                int positionOrder = Integer.parseInt(fields[8].trim());
-                int points = Integer.parseInt(fields[9].trim());
-                int laps = Integer.parseInt(fields[10].trim());
-                String time = fields[11].trim().equals("\\N") ? null : fields[10].trim();
-                Integer milliseconds = fields[12].trim().equals("\\N") ? null : Integer.parseInt(fields[12].trim());
-                Integer fastestLap = fields[13].trim().equals("\\N") ? null : Integer.parseInt(fields[13].trim());
-                String fastestLapTime = fields[14].trim().equals("\\N") ? null : fields[14].trim();
-                int statusID = Integer.parseInt(fields[15].trim());
-
-
-                preparedStatement.setInt(1, raceID);
-                preparedStatement.setInt(2, driverID);
-                preparedStatement.setInt(3, constructorID);
-                preparedStatement.setInt(4, number);
-                preparedStatement.setInt(5, grid);
-
-                if (position != null) {
-                    preparedStatement.setInt(6, position);
-                } else {
-                    preparedStatement.setNull(6, Types.INTEGER);
-                }
-
-                preparedStatement.setInt(7, positionOrder);
-                preparedStatement.setInt(8, points);
-                preparedStatement.setInt(9, laps);
-                if (time != null) {
-                    preparedStatement.setString(10, time);
-                } else {
-                    preparedStatement.setNull(10, Types.VARCHAR);
-                }
-
-                if (milliseconds != null) {
-                    preparedStatement.setInt(11, milliseconds);
-                } else {
-                    preparedStatement.setNull(11, Types.INTEGER);
-                }
-
-                if (fastestLap != null) {
-                    preparedStatement.setInt(12, fastestLap);
-                } else {
-                    preparedStatement.setNull(12, Types.INTEGER);
-                }
-
-                if (fastestLapTime != null) {
-                    preparedStatement.setString(13, fastestLapTime);
-                } else {
-                    preparedStatement.setNull(13, Types.VARCHAR);
-                }
-
-                preparedStatement.setInt(14, statusID);
-
-                preparedStatement.executeUpdate();
+            var3.close();
+         } catch (Throwable var17) {
+            if (var2 != null) {
+               try {
+                  var2.close();
+               } catch (Throwable var12) {
+                  var17.addSuppressed(var12);
+               }
             }
 
-            System.out.println("sprintResult table successfully populated");
+            throw var17;
+         }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            System.out.println("CSV file not found.");
-        } catch (IOException e) {
-            System.out.println("Error reading CSV file.");
-        }
-    }
+         if (var2 != null) {
+            var2.close();
+         }
+      } catch (SQLException var18) {
+         var18.printStackTrace();
+      } catch (FileNotFoundException var19) {
+         System.out.println("csv file not found.");
+      } catch (IOException var20) {
+         System.out.println("Error reading csv file.");
+      }
 
-    private void driver() {
-        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-            BufferedReader reader = new BufferedReader(new FileReader("csv_files/drivers.csv"));
-            reader.readLine(); // Skip header
+   }
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO driver (driverRef, forename, surname,number,nationality, code, dob) VALUES (?, ?, ?, ?,?,?,?)");
-                stmt.setString(1, columns[1].trim());
-                stmt.setString(2, columns[4].trim());
-                stmt.setString(3, columns[5].trim());
+   public void qualifyingRecord() {
+      String var1 = "INSERT INTO qualifyingRecord (raceID, driverID, constructorID, number, position, q1, q2, q3) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+      this.file = "csv_files/qualifying.csv";
+      System.out.println("tryign");
 
-                Integer number = columns[2].trim().equals("\\N") ? null : Integer.parseInt(columns[2].trim());
+      try {
+         Connection var2 = DriverManager.getConnection(this.connectionUrl);
 
-                if (number != null) {
-                    stmt.setInt(4, number);
-                } else {
-                    stmt.setNull(4, Types.INTEGER);
-                }
+         try {
+            BufferedReader var3 = new BufferedReader(new FileReader(this.file));
 
-                stmt.setString(5, columns[7].trim());
-                stmt.setString(6, columns[3].trim());
-                stmt.setDate(7, Date.valueOf(columns[6]));
-                stmt.executeUpdate();
-                stmt.close();
+            try {
+               PreparedStatement var4 = var2.prepareStatement(var1);
+
+               try {
+                  var3.readLine();
+
+                  while(true) {
+                     String var5;
+                     if ((var5 = var3.readLine()) == null) {
+                        System.out.println("qualifyingRecord table successfully populated");
+                        break;
+                     }
+
+                     String[] var6 = var5.split(",");
+                     int var7 = Integer.parseInt(var6[1].trim());
+                     int var8 = Integer.parseInt(var6[2].trim());
+                     int var9 = Integer.parseInt(var6[3].trim());
+                     int var10 = Integer.parseInt(var6[4].trim());
+                     int var11 = Integer.parseInt(var6[5].trim());
+                     Double var12 = var6[6].trim().equals("\\N") ? null : this.parseTimeToDecimal(var6[6].trim());
+                     Double var13 = var6[7].trim().equals("\\N") ? null : this.parseTimeToDecimal(var6[7].trim());
+                     Double var14 = var6[8].trim().equals("\\N") ? null : this.parseTimeToDecimal(var6[8].trim());
+                     var4.setInt(1, var7);
+                     var4.setInt(2, var8);
+                     var4.setInt(3, var9);
+                     var4.setInt(4, var10);
+                     var4.setInt(5, var11);
+                     if (var12 == null) {
+                        var4.setNull(6, 3);
+                     } else {
+                        var4.setDouble(6, var12);
+                     }
+
+                     if (var13 == null) {
+                        var4.setNull(7, 3);
+                     } else {
+                        var4.setDouble(7, var13);
+                     }
+
+                     if (var14 == null) {
+                        var4.setNull(8, 3);
+                     } else {
+                        var4.setDouble(8, var14);
+                     }
+
+                     var4.executeUpdate();
+                     System.out.println("tryign");
+                  }
+               } catch (Throwable var18) {
+                  if (var4 != null) {
+                     try {
+                        var4.close();
+                     } catch (Throwable var17) {
+                        var18.addSuppressed(var17);
+                     }
+                  }
+
+                  throw var18;
+               }
+
+               if (var4 != null) {
+                  var4.close();
+               }
+            } catch (Throwable var19) {
+               try {
+                  var3.close();
+               } catch (Throwable var16) {
+                  var19.addSuppressed(var16);
+               }
+
+               throw var19;
             }
-            reader.close();
-            System.out.println("driver table successfully populated");
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    private void status() {
-        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-            BufferedReader reader = new BufferedReader(new FileReader("csv_files/status.csv"));
-            reader.readLine(); // Skip header
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO status (status) VALUES (?)");
-                stmt.setString(1, columns[1]);
-                stmt.executeUpdate();
-                stmt.close();
+            var3.close();
+         } catch (Throwable var20) {
+            if (var2 != null) {
+               try {
+                  var2.close();
+               } catch (Throwable var15) {
+                  var20.addSuppressed(var15);
+               }
             }
-            reader.close();
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    private String parseTime1(String lapTime) throws ParseException {
-        // Remove surrounding double quotes if they exist
-        lapTime = lapTime.replace("\"", "").trim();
+            throw var20;
+         }
 
-        // Format is expected as "m:ss.SSS"
-        SimpleDateFormat inputFormat = new SimpleDateFormat("m:ss.SSS");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+         if (var2 != null) {
+            var2.close();
+         }
+      } catch (SQLException var21) {
+         var21.printStackTrace();
+      } catch (FileNotFoundException var22) {
+         System.out.println("csv file not found.");
+      } catch (IOException var23) {
+         System.out.println("Error reading csv file.");
+      }
 
-        // Parse input time and reformat
-        return outputFormat.format(inputFormat.parse(lapTime));
-    }
+   }
 
-    // Insert data into 'laptime' table from CSV file
-    private void LapTime() {
-        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-            BufferedReader reader = new BufferedReader(new FileReader("csv_files/lap_times.csv"));
-            reader.readLine(); // Skip header
+   private Double parseTimeToDecimal(String var1) {
+      try {
+         String[] var2 = var1.split(":");
+         double var3 = Double.parseDouble(var2[0]) * 60.0;
+         double var5 = Double.parseDouble(var2[1]);
+         return var3 + var5;
+      } catch (Exception var7) {
+         throw new IllegalArgumentException("Invalid time format: " + var1, var7);
+      }
+   }
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement(
-                        "INSERT INTO laptime (raceID, driverID, lap, position, time, milliseconds) VALUES (?, ?, ?, ?, ?, ?)"
-                );
+   public void circuit() {
+      String var1 = "INSERT INTO circuit (cityID, circuitRef, name, long, lat, altitude) VALUES (?, ?, ?, ?, ?, ?)";
+      this.file = "csv_files/circuits.csv";
 
-                stmt.setInt(1, Integer.parseInt(columns[0].trim())); // raceID
-                stmt.setInt(2, Integer.parseInt(columns[1].trim())); // driverID
-                stmt.setInt(3, Integer.parseInt(columns[2].trim())); // lap
-                stmt.setInt(4, Integer.parseInt(columns[3].trim())); // position
+      try {
+         Connection var2 = DriverManager.getConnection(this.connectionUrl);
 
-                // Parse and set time
-                String formattedTime = parseTime1(columns[4].trim()).replace("00:", "");
-                stmt.setString(5, formattedTime);
+         try {
+            BufferedReader var3 = new BufferedReader(new FileReader(this.file));
 
-                stmt.setInt(6, Integer.parseInt(columns[5].trim())); // milliseconds
-                stmt.executeUpdate();
-                stmt.close();
+            try {
+               PreparedStatement var4 = var2.prepareStatement(var1);
+
+               try {
+                  var3.readLine();
+
+                  while(true) {
+                     String var5;
+                     if ((var5 = var3.readLine()) == null) {
+                        System.out.println("Circuit table successfully populated!");
+                        break;
+                     }
+
+                     String[] var6 = var5.split(",");
+                     int var7 = Integer.parseInt(var6[1].trim());
+                     String var8 = var6[2].trim();
+                     String var9 = var6[3].trim();
+                     double var10 = Double.parseDouble(var6[6].trim());
+                     double var12 = Double.parseDouble(var6[7].trim());
+                     int var14 = Integer.parseInt(var6[8].trim());
+                     var4.setInt(1, var7);
+                     var4.setString(2, var8);
+                     var4.setString(3, var9);
+                     var4.setDouble(4, var10);
+                     var4.setDouble(5, var12);
+                     var4.setInt(6, var14);
+                     var4.executeUpdate();
+                  }
+               } catch (Throwable var18) {
+                  if (var4 != null) {
+                     try {
+                        var4.close();
+                     } catch (Throwable var17) {
+                        var18.addSuppressed(var17);
+                     }
+                  }
+
+                  throw var18;
+               }
+
+               if (var4 != null) {
+                  var4.close();
+               }
+            } catch (Throwable var19) {
+               try {
+                  var3.close();
+               } catch (Throwable var16) {
+                  var19.addSuppressed(var16);
+               }
+
+               throw var19;
             }
-            reader.close();
-        } catch (IOException | SQLException | ParseException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public static String parseTime2(String timeString) throws ParseException {
-        try {
-            // Remove surrounding double quotes if they exist
-            timeString = timeString.replace("\"", "").trim();
-            // Define the formatter for HH:mm:ss
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-            LocalTime time = LocalTime.parse(timeString, formatter);
-            return time.toString();
-        } catch (Exception e) {
-            throw new ParseException("Unable to parse time: " + timeString, 0);
-        }
-    }
-
-    public static String parseTime3(String durationString) throws ParseException {
-        try {
-            // Remove surrounding double quotes if they exist
-            durationString = durationString.replace("\"", "").trim();
-
-            // Check if the format matches mm:ss.SSS
-            if (durationString.contains(":")) {
-                // Assume mm:ss.SSS format (e.g., "16:44.718")
-                String[] parts = durationString.split(":");
-                int minutes = Integer.parseInt(parts[0]);
-                String[] secondsAndMillis = parts[1].split("\\.");
-                int seconds = Integer.parseInt(secondsAndMillis[0]);
-                int millis = Integer.parseInt(secondsAndMillis[1]);
-
-                // Convert minutes and seconds to a LocalTime
-                LocalTime time = LocalTime.of(0, minutes, seconds, millis * 1_000_000);
-                return time.toString();
-            } else {
-                // Assume ss.SSS format (e.g., "22.534")
-                String[] parts = durationString.split("\\.");
-                int seconds = Integer.parseInt(parts[0]);
-                int millis = Integer.parseInt(parts[1]);
-
-                // Convert seconds and milliseconds to LocalTime
-                LocalTime time = LocalTime.of(0, 0, seconds, millis * 1_000_000);
-                return time.toString();
+            var3.close();
+         } catch (Throwable var20) {
+            if (var2 != null) {
+               try {
+                  var2.close();
+               } catch (Throwable var15) {
+                  var20.addSuppressed(var15);
+               }
             }
-        } catch (Exception e) {
-            throw new ParseException("Invalid duration format: " + durationString, 0);
-        }
-    }
 
+            throw var20;
+         }
 
-    // Insert data into 'pitstop' table from CSV file
-    private void Pitstop() {
-        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-            BufferedReader reader = new BufferedReader(new FileReader("csv_files/pit_stops.csv"));
-            reader.readLine(); // Skip header
+         if (var2 != null) {
+            var2.close();
+         }
+      } catch (SQLException var21) {
+         var21.printStackTrace();
+      } catch (FileNotFoundException var22) {
+         System.out.println("csv file not found.");
+      } catch (IOException var23) {
+         System.out.println("Error reading csv file.");
+      }
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",");
-                PreparedStatement stmt = connection.prepareStatement(
-                        "INSERT INTO pitstop (raceID, driverID, stop, lap, time, duration, milliseconds) VALUES (?, ?, ?, ?, ?, ?, ?)"
-                );
-                stmt.setInt(1, Integer.parseInt(columns[0].trim())); // raceID
-                stmt.setInt(2, Integer.parseInt(columns[1].trim())); // driverID
-                stmt.setInt(3, Integer.parseInt(columns[2].trim())); // stop
-                stmt.setInt(4, Integer.parseInt(columns[3].trim())); // lap
-                String formattedTime = parseTime2(columns[4].trim()); // Parse HH:mm:ss to a string
-                stmt.setString(5, formattedTime);
-                String formattedDur = parseTime3(columns[5].trim());
-                stmt.setString(6, formattedDur.replace("00:", ""));
-                stmt.setInt(7, Integer.parseInt(columns[6].trim())); // milliseconds
-                stmt.executeUpdate();
-                stmt.close();
+   }
+
+   public void race() {
+      String var1 = "INSERT INTO race (year, round, circuitID, name, date, time) VALUES (?, ?, ?, ?, ?, ?)";
+      this.file = "csv_files/races.csv";
+
+      try {
+         Connection var2 = DriverManager.getConnection(this.connectionUrl);
+
+         try {
+            BufferedReader var3 = new BufferedReader(new FileReader(this.file));
+
+            try {
+               PreparedStatement var4 = var2.prepareStatement(var1);
+
+               try {
+                  var3.readLine();
+                  int var6 = 0;
+
+                  String var5;
+                  while((var5 = var3.readLine()) != null) {
+                     String[] var7 = var5.split(",");
+                     int var8 = Integer.parseInt(var7[1].trim());
+                     int var9 = Integer.parseInt(var7[2].trim());
+                     int var10 = Integer.parseInt(var7[3].trim());
+                     String var11 = var7[4].trim();
+                     String var12 = var7[5].trim();
+                     String var13 = var7[6].trim();
+                     var4.setInt(1, var8);
+                     var4.setInt(2, var9);
+                     var4.setInt(3, var10);
+                     var4.setString(4, var11);
+                     Date var14 = this.parseDate(var12);
+                     Time var15 = this.parseTime(var13);
+                     if (var14 != null) {
+                        var4.setDate(5, var14);
+                     } else {
+                        var4.setNull(5, 91);
+                     }
+
+                     if (var15 != null) {
+                        var4.setTime(6, var15);
+                     } else {
+                        var4.setNull(6, 92);
+                     }
+
+                     var4.executeUpdate();
+                     ++var6;
+                     System.out.println("" + var6 + "imserted");
+                     System.out.println(var10);
+                  }
+
+                  System.out.println("races table successfully populated");
+               } catch (Throwable var19) {
+                  if (var4 != null) {
+                     try {
+                        var4.close();
+                     } catch (Throwable var18) {
+                        var19.addSuppressed(var18);
+                     }
+                  }
+
+                  throw var19;
+               }
+
+               if (var4 != null) {
+                  var4.close();
+               }
+            } catch (Throwable var20) {
+               try {
+                  var3.close();
+               } catch (Throwable var17) {
+                  var20.addSuppressed(var17);
+               }
+
+               throw var20;
             }
-            reader.close();
-            System.out.println("pitstop table successfully populated");
-        } catch (IOException | SQLException | ParseException e) {
-            e.printStackTrace();
-        }
-    }
 
-/** For fAIZA
- // Insert data into 'result' table from CSV file
- private void insertResultData() {
- try (Connection connection = DriverManager.getConnection(connectionUrl)) {
- BufferedReader reader = new BufferedReader(new FileReader("result.csv"));
- reader.readLine(); // Skip header
+            var3.close();
+         } catch (Throwable var21) {
+            if (var2 != null) {
+               try {
+                  var2.close();
+               } catch (Throwable var16) {
+                  var21.addSuppressed(var16);
+               }
+            }
 
- String line;
- while ((line = reader.readLine()) != null) {
- String[] columns = line.split(",");
- PreparedStatement stmt = connection.prepareStatement("INSERT INTO result (raceID, driverID, positionOrder, points, timeGap) VALUES (?, ?, ?, ?, ?)");
- stmt.setInt(1, Integer.parseInt(columns[0]));
- stmt.setInt(2, Integer.parseInt(columns[1]));
- stmt.setInt(3, Integer.parseInt(columns[2]));
- stmt.setInt(4, Integer.parseInt(columns[3]));
- stmt.setDouble(5, Double.parseDouble(columns[4]));
- stmt.executeUpdate();
- stmt.close();
- }
- reader.close();
- } catch (IOException | SQLException e) {
- e.printStackTrace();
- }
- }
+            throw var21;
+         }
 
+         if (var2 != null) {
+            var2.close();
+         }
+      } catch (SQLException var22) {
+         var22.printStackTrace();
+      } catch (FileNotFoundException var23) {
+         System.out.println("csv file not found.");
+      } catch (IOException var24) {
+         System.out.println("Error reading csv file.");
+      }
 
+   }
 
- // Insert data into 'records' table from CSV file
- private void insertRecordsData() {
- try (Connection connection = DriverManager.getConnection(connectionUrl)) {
- BufferedReader reader = new BufferedReader(new FileReader("records.csv"));
- reader.readLine(); // Skip header
+   private Date parseDate(String var1) {
+      try {
+         var1 = var1.replace("\"", "").trim();
+         return !var1.equals("\\N") && !var1.isEmpty() ? Date.valueOf(var1) : null;
+      } catch (IllegalArgumentException var3) {
+         throw new IllegalArgumentException("Invalid date format: " + var1, var3);
+      }
+   }
 
- String line;
- while ((line = reader.readLine()) != null) {
- String[] columns = line.split(",");
- PreparedStatement stmt = connection.prepareStatement("INSERT INTO records (raceID, driverID, recordType, value) VALUES (?, ?, ?, ?)");
- stmt.setInt(1, Integer.parseInt(columns[0]));
- stmt.setInt(2, Integer.parseInt(columns[1]));
- stmt.setString(3, columns[2]);
- stmt.setString(4, columns[3]);
- stmt.executeUpdate();
- stmt.close();
- }
- reader.close();
- } catch (IOException | SQLException e) {
- e.printStackTrace();
- }
- }
- **/
+   private Time parseTime(String var1) {
+      try {
+         var1 = var1.replace("\"", "").trim();
+         return !var1.equals("\\N") && !var1.isEmpty() ? Time.valueOf(var1) : null;
+      } catch (IllegalArgumentException var3) {
+         throw new IllegalArgumentException("Invalid time format: " + var1, var3);
+      }
+   }
 
+   public void sprintResult() {
+      String var1 = "INSERT INTO sprintResult (raceID, driverID, constructorID, number, grid, position, positionOrder, points, laps, time, milliseconds, fastestLap, fastestLapTime, statusID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      this.file = "csv_files/sprint_results.csv";
 
+      try {
+         Connection var2 = DriverManager.getConnection(this.connectionUrl);
+
+         try {
+            BufferedReader var3 = new BufferedReader(new FileReader(this.file));
+
+            try {
+               PreparedStatement var4 = var2.prepareStatement(var1);
+
+               try {
+                  var3.readLine();
+
+                  String var5;
+                  while((var5 = var3.readLine()) != null) {
+                     String[] var6 = var5.split(",");
+                     int var7 = Integer.parseInt(var6[1].trim());
+                     int var8 = Integer.parseInt(var6[2].trim());
+                     int var9 = Integer.parseInt(var6[3].trim());
+                     int var10 = Integer.parseInt(var6[4].trim());
+                     int var11 = Integer.parseInt(var6[5].trim());
+                     Integer var12 = var6[6].trim().equals("\\N") ? null : Integer.parseInt(var6[6].trim());
+                     int var13 = Integer.parseInt(var6[8].trim());
+                     int var14 = Integer.parseInt(var6[9].trim());
+                     int var15 = Integer.parseInt(var6[10].trim());
+                     String var16 = var6[11].trim().equals("\\N") ? null : var6[10].trim();
+                     Integer var17 = var6[12].trim().equals("\\N") ? null : Integer.parseInt(var6[12].trim());
+                     Integer var18 = var6[13].trim().equals("\\N") ? null : Integer.parseInt(var6[13].trim());
+                     String var19 = var6[14].trim().equals("\\N") ? null : var6[14].trim();
+                     int var20 = Integer.parseInt(var6[15].trim());
+                     var4.setInt(1, var7);
+                     var4.setInt(2, var8);
+                     var4.setInt(3, var9);
+                     var4.setInt(4, var10);
+                     var4.setInt(5, var11);
+                     if (var12 != null) {
+                        var4.setInt(6, var12);
+                     } else {
+                        var4.setNull(6, 4);
+                     }
+
+                     var4.setInt(7, var13);
+                     var4.setInt(8, var14);
+                     var4.setInt(9, var15);
+                     if (var16 != null) {
+                        var4.setString(10, var16);
+                     } else {
+                        var4.setNull(10, 12);
+                     }
+
+                     if (var17 != null) {
+                        var4.setInt(11, var17);
+                     } else {
+                        var4.setNull(11, 4);
+                     }
+
+                     if (var18 != null) {
+                        var4.setInt(12, var18);
+                     } else {
+                        var4.setNull(12, 4);
+                     }
+
+                     if (var19 != null) {
+                        var4.setString(13, var19);
+                     } else {
+                        var4.setNull(13, 12);
+                     }
+
+                     var4.setInt(14, var20);
+                     var4.executeUpdate();
+                  }
+
+                  System.out.println("sprintResult table successfully populated");
+               } catch (Throwable var24) {
+                  if (var4 != null) {
+                     try {
+                        var4.close();
+                     } catch (Throwable var23) {
+                        var24.addSuppressed(var23);
+                     }
+                  }
+
+                  throw var24;
+               }
+
+               if (var4 != null) {
+                  var4.close();
+               }
+            } catch (Throwable var25) {
+               try {
+                  var3.close();
+               } catch (Throwable var22) {
+                  var25.addSuppressed(var22);
+               }
+
+               throw var25;
+            }
+
+            var3.close();
+         } catch (Throwable var26) {
+            if (var2 != null) {
+               try {
+                  var2.close();
+               } catch (Throwable var21) {
+                  var26.addSuppressed(var21);
+               }
+            }
+
+            throw var26;
+         }
+
+         if (var2 != null) {
+            var2.close();
+         }
+      } catch (SQLException var27) {
+         var27.printStackTrace();
+      } catch (FileNotFoundException var28) {
+         System.out.println("CSV file not found.");
+      } catch (IOException var29) {
+         System.out.println("Error reading CSV file.");
+      }
+
+   }
+
+   private void driver() {
+      try {
+         Connection var1 = DriverManager.getConnection(this.connectionUrl);
+
+         try {
+            BufferedReader var2 = new BufferedReader(new FileReader("csv_files/drivers.csv"));
+            var2.readLine();
+
+            while(true) {
+               String var3;
+               if ((var3 = var2.readLine()) == null) {
+                  var2.close();
+                  System.out.println("driver table successfully populated");
+                  break;
+               }
+
+               String[] var4 = var3.split(",");
+               PreparedStatement var5 = var1.prepareStatement("INSERT INTO driver (driverRef, forename, surname,number,nationality, code, dob) VALUES (?, ?, ?, ?,?,?,?)");
+               var5.setString(1, var4[1].trim());
+               var5.setString(2, var4[4].trim());
+               var5.setString(3, var4[5].trim());
+               Integer var6 = var4[2].trim().equals("\\N") ? null : Integer.parseInt(var4[2].trim());
+               if (var6 != null) {
+                  var5.setInt(4, var6);
+               } else {
+                  var5.setNull(4, 4);
+               }
+
+               var5.setString(5, var4[7].trim());
+               var5.setString(6, var4[3].trim());
+               var5.setDate(7, Date.valueOf(var4[6]));
+               var5.executeUpdate();
+               var5.close();
+            }
+         } catch (Throwable var8) {
+            if (var1 != null) {
+               try {
+                  var1.close();
+               } catch (Throwable var7) {
+                  var8.addSuppressed(var7);
+               }
+            }
+
+            throw var8;
+         }
+
+         if (var1 != null) {
+            var1.close();
+         }
+      } catch (SQLException | IOException var9) {
+         var9.printStackTrace();
+      }
+
+   }
+
+   private void status() {
+      try {
+         Connection var1 = DriverManager.getConnection(this.connectionUrl);
+
+         try {
+            BufferedReader var2 = new BufferedReader(new FileReader("csv_files/status.csv"));
+            var2.readLine();
+
+            while(true) {
+               String var3;
+               if ((var3 = var2.readLine()) == null) {
+                  var2.close();
+                  break;
+               }
+
+               String[] var4 = var3.split(",");
+               PreparedStatement var5 = var1.prepareStatement("INSERT INTO status (status) VALUES (?)");
+               var5.setString(1, var4[1]);
+               var5.executeUpdate();
+               var5.close();
+            }
+         } catch (Throwable var7) {
+            if (var1 != null) {
+               try {
+                  var1.close();
+               } catch (Throwable var6) {
+                  var7.addSuppressed(var6);
+               }
+            }
+
+            throw var7;
+         }
+
+         if (var1 != null) {
+            var1.close();
+         }
+      } catch (SQLException | IOException var8) {
+         var8.printStackTrace();
+      }
+
+   }
+
+   private String parseTime1(String var1) throws ParseException {
+      var1 = var1.replace("\"", "").trim();
+      SimpleDateFormat var2 = new SimpleDateFormat("m:ss.SSS");
+      SimpleDateFormat var3 = new SimpleDateFormat("HH:mm:ss.SSS");
+      return var3.format(var2.parse(var1));
+   }
+
+   private void LapTime() {
+      try {
+         Connection var1 = DriverManager.getConnection(this.connectionUrl);
+
+         try {
+            BufferedReader var2 = new BufferedReader(new FileReader("csv_files/lap_times.csv"));
+            var2.readLine();
+
+            while(true) {
+               String var3;
+               if ((var3 = var2.readLine()) == null) {
+                  var2.close();
+                  break;
+               }
+
+               String[] var4 = var3.split(",");
+               PreparedStatement var5 = var1.prepareStatement("INSERT INTO laptime (raceID, driverID, lap, position, time, milliseconds) VALUES (?, ?, ?, ?, ?, ?)");
+               var5.setInt(1, Integer.parseInt(var4[0].trim()));
+               var5.setInt(2, Integer.parseInt(var4[1].trim()));
+               var5.setInt(3, Integer.parseInt(var4[2].trim()));
+               var5.setInt(4, Integer.parseInt(var4[3].trim()));
+               String var6 = this.parseTime1(var4[4].trim()).replace("00:", "");
+               var5.setString(5, var6);
+               var5.setInt(6, Integer.parseInt(var4[5].trim()));
+               var5.executeUpdate();
+               var5.close();
+            }
+         } catch (Throwable var8) {
+            if (var1 != null) {
+               try {
+                  var1.close();
+               } catch (Throwable var7) {
+                  var8.addSuppressed(var7);
+               }
+            }
+
+            throw var8;
+         }
+
+         if (var1 != null) {
+            var1.close();
+         }
+      } catch (SQLException | ParseException | IOException var9) {
+         var9.printStackTrace();
+      }
+
+   }
+
+   public static String parseTime2(String var0) throws ParseException {
+      try {
+         var0 = var0.replace("\"", "").trim();
+         DateTimeFormatter var1 = DateTimeFormatter.ofPattern("HH:mm:ss");
+         LocalTime var2 = LocalTime.parse(var0, var1);
+         return var2.toString();
+      } catch (Exception var3) {
+         throw new ParseException("Unable to parse time: " + var0, 0);
+      }
+   }
+
+   public static String parseTime3(String var0) throws ParseException {
+      try {
+         var0 = var0.replace("\"", "").trim();
+         String[] var1;
+         int var2;
+         if (var0.contains(":")) {
+            var1 = var0.split(":");
+            var2 = Integer.parseInt(var1[0]);
+            String[] var8 = var1[1].split("\\.");
+            int var9 = Integer.parseInt(var8[0]);
+            int var5 = Integer.parseInt(var8[1]);
+            LocalTime var6 = LocalTime.of(0, var2, var9, var5 * 1000000);
+            return var6.toString();
+         } else {
+            var1 = var0.split("\\.");
+            var2 = Integer.parseInt(var1[0]);
+            int var3 = Integer.parseInt(var1[1]);
+            LocalTime var4 = LocalTime.of(0, 0, var2, var3 * 1000000);
+            return var4.toString();
+         }
+      } catch (Exception var7) {
+         throw new ParseException("Invalid duration format: " + var0, 0);
+      }
+   }
+
+   private void Pitstop() {
+      try {
+         Connection var1 = DriverManager.getConnection(this.connectionUrl);
+
+         try {
+            BufferedReader var2 = new BufferedReader(new FileReader("csv_files/pit_stops.csv"));
+            var2.readLine();
+
+            while(true) {
+               String var3;
+               if ((var3 = var2.readLine()) == null) {
+                  var2.close();
+                  System.out.println("pitstop table successfully populated");
+                  break;
+               }
+
+               String[] var4 = var3.split(",");
+               PreparedStatement var5 = var1.prepareStatement("INSERT INTO pitstop (raceID, driverID, stop, lap, time, duration, milliseconds) VALUES (?, ?, ?, ?, ?, ?, ?)");
+               var5.setInt(1, Integer.parseInt(var4[0].trim()));
+               var5.setInt(2, Integer.parseInt(var4[1].trim()));
+               var5.setInt(3, Integer.parseInt(var4[2].trim()));
+               var5.setInt(4, Integer.parseInt(var4[3].trim()));
+               String var6 = parseTime2(var4[4].trim());
+               var5.setString(5, var6);
+               String var7 = parseTime3(var4[5].trim());
+               var5.setString(6, var7.replace("00:", ""));
+               var5.setInt(7, Integer.parseInt(var4[6].trim()));
+               var5.executeUpdate();
+               var5.close();
+            }
+         } catch (Throwable var9) {
+            if (var1 != null) {
+               try {
+                  var1.close();
+               } catch (Throwable var8) {
+                  var9.addSuppressed(var8);
+               }
+            }
+
+            throw var9;
+         }
+
+         if (var1 != null) {
+            var1.close();
+         }
+      } catch (SQLException | ParseException | IOException var10) {
+         var10.printStackTrace();
+      }
+
+   }
 }
