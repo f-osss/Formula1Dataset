@@ -56,8 +56,8 @@ public class Populate {
 
 //        constructor();
 //        constructorResult();
+//        city();
         circuit();
-        city();
 //        race();
 //        driver();
 //        status();
@@ -317,12 +317,12 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                int cityID = Integer.parseInt(fields[3].trim());
-                String circuitRef = fields[1].trim();
-                String name = fields[2].trim();
-                double longitude = Double.parseDouble(fields[5].trim());
-                double latitude = Double.parseDouble(fields[6].trim());
-                int altitude = Integer.parseInt(fields[7].trim());
+                int cityID = Integer.parseInt(fields[1].trim());
+                String circuitRef = fields[2].trim();
+                String name = fields[3].trim();
+                double longitude = Double.parseDouble(fields[6].trim());
+                double latitude = Double.parseDouble(fields[7].trim());
+                int altitude = Integer.parseInt(fields[8].trim());
 
                 preparedStatement.setInt(1, cityID);
                 preparedStatement.setString(2, circuitRef);
@@ -332,6 +332,7 @@ public class Populate {
                 preparedStatement.setInt(6, altitude);
 
                 preparedStatement.executeUpdate();
+                System.out.println(cityID + "inserted");
             }
 
             System.out.println("Circuit table successfully populated!");

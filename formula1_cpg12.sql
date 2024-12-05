@@ -26,15 +26,16 @@ CREATE TABLE city (
                       country VARCHAR(100) NOT NULL
 );
 
-create table circuit(
-                        circuitID  integer primary key IDENTITY(1,1),
-                        cityID     integer references city (cityID),
-                        circuitRef varchar(255)  not null,
-                        name       text  not null,
-                        long       decimal(9, 6) not null,
-                        lat        decimal(9, 6) not null,
-                        altitude   integer       not null
+create table circuit (
+                         circuitID  integer primary key IDENTITY(1,1),
+                         cityID     integer references city(cityID) ON DELETE CASCADE ON UPDATE CASCADE,
+                         circuitRef varchar(255) not null,
+                         name       text not null,
+                         long       decimal(9, 6) not null,
+                         lat        decimal(9, 6) not null,
+                         altitude   integer not null
 );
+
 
 
 create table constructor(

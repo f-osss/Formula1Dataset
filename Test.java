@@ -67,6 +67,6 @@ public class Test {
 
     public static void main(String[] args) {
         // Example usage
-        printTableContents("laptime"); // Replace "driver" with your desired table name
+        printTableContents("city"); // Replace "driver" with your desired table name
     }
 }
