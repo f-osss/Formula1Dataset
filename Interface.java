@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Scanner;
-
+/*
 public class Interface {
     private String connectionUrl;
 
@@ -64,7 +64,7 @@ public class Interface {
         System.out.println("Type `help` at any time to return to this menu.");
         System.out.println("Type `Q` to close the program.");
     }
-/*
+
     private static void handleCategory(String input) {
         switch (input) {
             case "1a":
@@ -101,8 +101,9 @@ public class Interface {
                 System.out.println("Invalid category. Type `help` to see the main menu.");
         }
     }
-*/
+
 
 
 
 }
+*/

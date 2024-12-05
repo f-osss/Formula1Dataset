@@ -143,7 +143,7 @@ public class Populate {
         }
     }
 
-
+/*
     public void constructorResult() {
         String sql = "INSERT INTO constructorResults (raceID,constructorID,points,status) VALUES (?, ?,?,?)";
         file = "csv_files/constructor_results.csv";
@@ -227,6 +227,7 @@ public class Populate {
             System.out.println("Error reading csv file.");
         }
     }
+*/
 
     public void driverStanding() {
         String sql = "INSERT INTO driverStanding (raceID, driverID, points, position, wins) VALUES (?, ?,?,?,?)";
@@ -561,6 +562,7 @@ public class Populate {
     /**
      *
      */
+    /*
     public void result() {
         String sql = "INSERT INTO result (raceID, driverID, constructorID, number, grid, positionOrder, points, laps, time, milliseconds, fastestLap, rank, fastestLapTime, fastestLapSpeed, statusID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        file = "csv_files/results.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -650,7 +652,7 @@ public class Populate {
             System.out.println("Error reading CSV file.");
         }
     }
-
+*/
 
     private void driver() {
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
