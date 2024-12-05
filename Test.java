@@ -38,7 +38,7 @@ public class Test {
     }
 
     public static void printTableContents(String tableName) {
-        String selectSql = "SELECT * FROM " + tableName;
+        String selectSql = "SELECT * FROM " + tableName ;
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(selectSql)) {
@@ -67,6 +67,6 @@ public class Test {
 
     public static void main(String[] args) {
         // Example usage
-        printTableContents("city"); // Replace "driver" with your desired table name
+        printTableContents("race"); // Replace "driver" with your desired table name
     }
 }

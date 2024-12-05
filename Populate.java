@@ -54,12 +54,14 @@ public class Populate {
                 + "trustServerCertificate=false;"
                 + "loginTimeout=30;";
 
-//        constructor();
-//        constructorResult();
 //        city();
-        circuit();
-//        race();
+//        circuit();
+//        constructor();
 //        driver();
+
+        race();
+//        constructorResult();
+
 //        status();
 //
 //        constructorStanding();
@@ -332,7 +334,6 @@ public class Populate {
                 preparedStatement.setInt(6, altitude);
 
                 preparedStatement.executeUpdate();
-                System.out.println(cityID + "inserted");
             }
 
             System.out.println("Circuit table successfully populated!");
@@ -357,7 +358,7 @@ public class Populate {
 
             String line;
             br.readLine();
-
+            int count = 0;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
@@ -390,6 +391,9 @@ public class Populate {
                 }
 
                 preparedStatement.executeUpdate();
+                count++;
+                System.out.println(count + "imserted");
+                System.out.println(circuitID);
             }
 
             System.out.println("races table successfully populated");
