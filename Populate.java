@@ -67,11 +67,8 @@ public class Populate {
 //        constructorResult();
 //        constructorStanding();
 //        Pitstop();
-        qualifyingRecord();
-//        driver();
-//        LapTime();
-//       driver();
-
+//        qualifyingRecord();
+        LapTime();
 
 
     }
@@ -758,9 +755,146 @@ public class Populate {
                 stmt.executeUpdate();
                 stmt.close();
             }
+            System.out.println("lap time table successfully populated");
             reader.close();
         } catch (IOException | SQLException | ParseException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void drivesFor(){
+        String sql = "INSERT INTO drivesFor (constructorID, driverID) VALUES (?, ?)";
+        file = "csv_files/compete.csv";
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+             BufferedReader br = new BufferedReader(new FileReader(file));
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            String line;
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+
+                int constructorID = Integer.parseInt(fields[1].trim());
+                int driverID = Integer.parseInt(fields[2].trim());
+
+
+                preparedStatement.setInt(1, constructorID);
+                preparedStatement.setInt(2, driverID);
+
+                preparedStatement.executeUpdate();
+            }
+
+            System.out.println("compete table successfully populated");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("csv file not found.");
+        } catch (IOException e) {
+            System.out.println("Error reading csv file.");
+        }
+    }
+
+    public void compete(){
+        String sql = "INSERT INTO compete (raceID, driverID) VALUES (?, ?)";
+        file = "csv_files/compete.csv";
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+             BufferedReader br = new BufferedReader(new FileReader(file));
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            String line;
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+
+                int raceID = Integer.parseInt(fields[1].trim());
+                int driverID = Integer.parseInt(fields[2].trim());
+
+
+                preparedStatement.setInt(1, raceID);
+                preparedStatement.setInt(2, driverID);
+
+                preparedStatement.executeUpdate();
+            }
+
+            System.out.println("compete table successfully populated");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("csv file not found.");
+        } catch (IOException e) {
+            System.out.println("Error reading csv file.");
+        }
+    }
+
+    public void records(){
+        String sql = "INSERT INTO records (raceID, lapID) VALUES (?, ?)";
+        file = "csv_files/records.csv";
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+             BufferedReader br = new BufferedReader(new FileReader(file));
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            String line;
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+
+                int raceID = Integer.parseInt(fields[1].trim());
+                int lapID = Integer.parseInt(fields[2].trim());
+
+
+                preparedStatement.setInt(1, raceID);
+                preparedStatement.setInt(2, lapID);
+
+                preparedStatement.executeUpdate();
+            }
+
+            System.out.println("records table successfully populated");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("csv file not found.");
+        } catch (IOException e) {
+            System.out.println("Error reading csv file.");
+        }
+    }
+
+    public void completesLapTime(){
+        String sql = "INSERT INTO completesLapTime (lapID, driverID) VALUES (?, ?)";
+        file = "csv_files/compete.csv";
+        try (Connection connection = DriverManager.getConnection(connectionUrl);
+             BufferedReader br = new BufferedReader(new FileReader(file));
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            String line;
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+
+                int lapID = Integer.parseInt(fields[1].trim());
+                int driverID = Integer.parseInt(fields[2].trim());
+
+
+                preparedStatement.setInt(1, lapID);
+                preparedStatement.setInt(2, driverID);
+
+                preparedStatement.executeUpdate();
+            }
+
+            System.out.println("compete table successfully populated");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("csv file not found.");
+        } catch (IOException e) {
+            System.out.println("Error reading csv file.");
         }
     }
 
