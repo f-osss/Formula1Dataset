@@ -116,9 +116,9 @@ CREATE TABLE qualifyingRecord
     constructorID INT            NOT NULL,
     number        INT            NOT NULL,
     position      INT            NOT NULL,
-    q1            DECIMAL(10, 3) NOT NULL,
-    q2            DECIMAL(10, 3) NULL,                                 -- Time for Q2 session (optional, NULL if not reached)
-    q3            DECIMAL(10, 3) NULL,                                 -- Time for Q3 session (optional, NULL if not reached)
+    q1            DECIMAL(10, 3) ,
+    q2            DECIMAL(10, 3) ,                                 -- Time for Q2 session (optional, NULL if not reached)
+    q3            DECIMAL(10, 3) ,                                 -- Time for Q3 session (optional, NULL if not reached)
     FOREIGN KEY (raceID) REFERENCES race (raceID),                     -- Links to Race table
     FOREIGN KEY (driverID) REFERENCES driver (driverID),               -- Links to Driver table
     FOREIGN KEY (constructorID) REFERENCES constructor (constructorID) -- Links to Constructor table
