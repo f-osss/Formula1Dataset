@@ -68,7 +68,9 @@ public class Populate {
 //        constructorStanding();
 //        Pitstop();
 //        qualifyingRecord();
-        LapTime();
+        drivesFor();
+//        compete();
+//        LapTime();
 
 
     }
@@ -767,9 +769,9 @@ public class Populate {
         }
     }
 
-    public void drivesFor(){
+    public void drivesFor() {
         String sql = "INSERT INTO drivesFor (constructorID, driverID) VALUES (?, ?)";
-        file = "csv_files/compete.csv";
+        file = "csv_files/drivesFor.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -780,17 +782,17 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                int constructorID = Integer.parseInt(fields[1].trim());
-                int driverID = Integer.parseInt(fields[2].trim());
+                int constructorID = Integer.parseInt(fields[0].trim());
+                int driverID = Integer.parseInt(fields[1].trim());
 
 
                 preparedStatement.setInt(1, constructorID);
                 preparedStatement.setInt(2, driverID);
-
+                
                 preparedStatement.executeUpdate();
             }
 
-            System.out.println("compete table successfully populated");
+            System.out.println("drivesFor table successfully populated");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -801,7 +803,7 @@ public class Populate {
         }
     }
 
-    public void compete(){
+    public void compete() {
         String sql = "INSERT INTO compete (raceID, driverID) VALUES (?, ?)";
         file = "csv_files/compete.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -814,8 +816,8 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                int raceID = Integer.parseInt(fields[1].trim());
-                int driverID = Integer.parseInt(fields[2].trim());
+                int raceID = Integer.parseInt(fields[0].trim());
+                int driverID = Integer.parseInt(fields[1].trim());
 
 
                 preparedStatement.setInt(1, raceID);
@@ -835,7 +837,7 @@ public class Populate {
         }
     }
 
-    public void records(){
+    public void records() {
         String sql = "INSERT INTO records (raceID, lapID) VALUES (?, ?)";
         file = "csv_files/records.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -869,7 +871,7 @@ public class Populate {
         }
     }
 
-    public void completesLapTime(){
+    public void completesLapTime() {
         String sql = "INSERT INTO completesLapTime (lapID, driverID) VALUES (?, ?)";
         file = "csv_files/compete.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
