@@ -121,69 +121,70 @@ public class Interface {
         System.out.println("9. How many races did each driver win?");
         System.out.println("10. Find drivers with a specific number of wins.");
         System.out.println("11. Identify the driver with the most race wins.");
+        System.out.println("12. Top drivers in a specific race");
         System.out.print("Select a query (e.g., '9' or '11'): ");
         handleQuery(Integer.parseInt(scanner.nextLine().trim()));
     }
 
     private static void display2b(Scanner scanner) {
         System.out.println("2b. Driver Performance Queries:");
-        System.out.println("12. Which driver improved the most throughout the season?");
-        System.out.println("13. Who was the worst driver in the season?");
-        System.out.println("14. Find the average race position for each driver.");
-        System.out.println("15. Sort drivers by total points earned.");
-        System.out.println("16. Driver who led the most laps in a race.");
-        System.out.println("17. How many drivers were disqualified in the season?");
+        System.out.println("13. Which driver improved the most throughout the season?");
+        System.out.println("14. Who was the worst driver in the season?");
+        System.out.println("15. Find the average race position for each driver.");
+        System.out.println("16. Sort drivers by total points earned.");
+        System.out.println("17. Driver who led the most laps in a race.");
+        System.out.println("18. How many drivers were disqualified in the season?");
         System.out.print("Select a query (e.g., '12' or '15'): ");
         handleQuery(Integer.parseInt(scanner.nextLine().trim()));
     }
 
     private static void display2c(Scanner scanner) {
         System.out.println("2c. Driver Race Results Queries:");
-        System.out.println("18. Show race results for a specific driver.");
-        System.out.println("19. Compare lap times between two drivers in a race.");
-        System.out.println("20. Find races in which a specific driver competed.");
-        System.out.println("21. Find the total number of pit stops per driver in all races.");
+        System.out.println("19. Show race results for a specific driver.");
+        System.out.println("20. Compare lap times between two drivers in a race.");
+        System.out.println("21. Find races in which a specific driver competed.");
+        System.out.println("22. Find the total number of pit stops per driver in all races.");
         System.out.print("Select a query (e.g., '18' or '21'): ");
         handleQuery(Integer.parseInt(scanner.nextLine().trim()));
     }
 
     private static void display2d(Scanner scanner) {
         System.out.println("2d. Miscellaneous Driver Queries:");
-        System.out.println("22. Identify drivers who have driven for multiple constructors.");
+        System.out.println("23. Identify drivers who have driven for multiple constructors.");
         System.out.print("Select a query (e.g., '22'): ");
         handleQuery(Integer.parseInt(scanner.nextLine().trim()));
     }
 
     private static void display3a(Scanner scanner) {
         System.out.println("3a. Constructor Wins Queries:");
-        System.out.println("23. Identify the constructor with the highest points in a season.");
-        System.out.println("24. Sort constructors by the number of wins.");
-        System.out.println("25. Top constructors across all races.");
+        System.out.println("24. Identify the constructor with the highest points in a season.");
+        System.out.println("25. Sort constructors by the number of wins.");
+        System.out.println("26. Top constructors across all races.");
         System.out.print("Select a query (e.g., '23' or '24'): ");
         handleQuery(Integer.parseInt(scanner.nextLine().trim()));
     }
 
     private static void display3b(Scanner scanner) {
         System.out.println("3b. Constructor Operational Performance Queries:");
-        System.out.println("26. Constructors with the most mechanical failures.");
-        System.out.println("27. Which constructor performed the fastest average pit stop?");
+        System.out.println("27. Constructors with the most mechanical failures.");
+        System.out.println("28. Which constructor performed the fastest average pit stop?");
         System.out.print("Select a query (e.g., '26' or '27'): ");
         handleQuery(Integer.parseInt(scanner.nextLine().trim()));
     }
 
     private static void display3c(Scanner scanner) {
         System.out.println("3c. Constructor Composition & Insights Queries:");
-        System.out.println("28. List constructors and their nationalities.");
-        System.out.println("29. Get details of drivers from a specific constructor.");
-        System.out.println("30. Find the number of drivers per constructor.");
+        System.out.println("29. List constructors and their nationalities.");
+        System.out.println("30. Get details of drivers from a specific constructor.");
+        System.out.println("31. Find the number of drivers per constructor.");
         System.out.print("Select a query (e.g., '28' or '30'): ");
         handleQuery(Integer.parseInt(scanner.nextLine().trim()));
     }
 
     private static void display4a(Scanner scanner) {
         System.out.println("4a. Races by Location Queries:");
-        System.out.println("31. List all countries where races were held.");
-        System.out.println("32. List all circuits in a specific country.");
+        System.out.println("32. List all countries where races were held.");
+        System.out.println("33. List all circuits in a specific country.");
         System.out.print("Select a query (e.g., '31' or '32'): ");
         handleQuery(Integer.parseInt(scanner.nextLine().trim()));
     }
@@ -233,33 +234,39 @@ public class Interface {
                 db.driverWithMostWins(Integer.parseInt(scanner.nextLine().trim()));
                 break;
             case 12:
+                System.out.print("Enter raceID: ");
+                int input6 = Integer.parseInt(scanner.nextLine().trim());
+                System.out.print("Enter limit: ");
+                int input7 = Integer.parseInt(scanner.nextLine().trim());
+                db.findTopDriversInRace(input6,input7);
+            case 13:
                 db.improvedDriver();
                 break;
-            case 13:
+            case 14:
                 db.worstDriver();
                 break;
-            case 14:
+            case 15:
                 db.findAverageRacePosition();
                 break;
-            case 15:
+            case 16:
                 db.sortDriversByPoints();
                 break;
-            case 16:
+            case 17:
                 System.out.print("Enter raceID: ");
                 int input1 = Integer.parseInt(scanner.nextLine().trim());
                 System.out.print("Enter limit: ");
                 int input2 = Integer.parseInt(scanner.nextLine().trim());
                 db.findDriverLedMostLaps(input1,input2);
                 break;
-            case 17:
+            case 18:
                 System.out.print("Enter year: ");
                 db.driversDisqualified(Integer.parseInt(scanner.nextLine().trim()));
                 break;
-            case 18:
+            case 19:
                 System.out.print("Enter driverID: ");
                 db.findRaceResultsByDriver(Integer.parseInt(scanner.nextLine().trim()));
                 break;
-            case 19:
+            case 20:
                 System.out.print("Enter raceID: ");
                 int input3 = Integer.parseInt(scanner.nextLine().trim());
                 System.out.print("Enter driverID1: ");
@@ -268,55 +275,53 @@ public class Interface {
                 int input5 = Integer.parseInt(scanner.nextLine().trim());
                 db.compareLapTimes(input3,input4,input5);
                 break;
-            case 20:
+            case 21:
                 System.out.print("Enter driverID: ");
                 db.racesForDriver(Integer.parseInt(scanner.nextLine().trim()));
                 break;
-            case 21:
+            case 22:
                 db.totalPitStopsPerDriver();
                 break;
-            case 22:
-                db.findDriversWithMultipleConstructors();
-                break;
             case 23:
-                System.out.print("Enter limit: ");
-                db.findConstructorHighestPoints(Integer.parseInt(scanner.nextLine().trim()));
+                db.findDriversWithMultipleConstructors();
                 break;
             case 24:
                 System.out.print("Enter limit: ");
-                db.constructorsByWins();
+                db.findConstructorHighestPoints(Integer.parseInt(scanner.nextLine().trim()));
                 break;
             case 25:
                 System.out.print("Enter limit: ");
-                db.topConstructors(Integer.parseInt(scanner.nextLine().trim()));
+                db.constructorsByWins();
                 break;
             case 26:
                 System.out.print("Enter limit: ");
-                db.constructorMostMechanicalFailures(Integer.parseInt(scanner.nextLine().trim()));
+                db.topConstructors(Integer.parseInt(scanner.nextLine().trim()));
                 break;
             case 27:
                 System.out.print("Enter limit: ");
-                db.fastestAveragePitStop(Integer.parseInt(scanner.nextLine().trim()));
+                db.constructorMostMechanicalFailures(Integer.parseInt(scanner.nextLine().trim()));
                 break;
             case 28:
-                db.listConstructorsAndNationalities();
+                System.out.print("Enter limit: ");
+                db.fastestAveragePitStop(Integer.parseInt(scanner.nextLine().trim()));
                 break;
             case 29:
+                db.listConstructorsAndNationalities();
+                break;
+            case 30:
                 System.out.print("Enter constructor name: ");
                 db.driversByConstructor(scanner.nextLine().trim());
                 break;
-            case 30:
+            case 31:
                 db.findDriversPerConstructor();
                 break;
-            case 31:
+            case 32:
                 db.listAllCountriesWithRaces();
                 break;
-            case 32:
+            case 33:
                 System.out.print("Enter country name: ");
                 db.listCircuitInCountry(scanner.nextLine().trim());
                 break;
-            case 33:
-                //db.;
             default:
                 System.out.println("Invalid query number. Type `help` to see the menu.");
 
