@@ -762,7 +762,7 @@ public class Populate {
         }
     }
 
-    public void drivesFor(){
+    public void drivesFor() {
         String sql = "INSERT INTO drivesFor (constructorID, driverID) VALUES (?, ?)";
         file = "csv_files/compete.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -796,7 +796,7 @@ public class Populate {
         }
     }
 
-    public void compete(){
+    public void compete() {
         String sql = "INSERT INTO compete (raceID, driverID) VALUES (?, ?)";
         file = "csv_files/compete.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -830,7 +830,7 @@ public class Populate {
         }
     }
 
-    public void records(){
+    public void records() {
         String sql = "INSERT INTO records (raceID, lapID) VALUES (?, ?)";
         file = "csv_files/records.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -864,7 +864,7 @@ public class Populate {
         }
     }
 
-    public void completesLapTime(){
+    public void completesLapTime() {
         String sql = "INSERT INTO completesLapTime (lapID, driverID) VALUES (?, ?)";
         file = "csv_files/compete.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
