@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 public class Interface {
     private String connectionUrl;
+    static Database db = new Database();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -194,10 +195,12 @@ public class Interface {
 
     private static void handleQuery(int queryNumber) {
         System.out.println("Executing query #" + queryNumber + "...");
-        // Replace with calls to methods in Database.java
-        //Database.executeQuery(queryNumber);
+
+        switch (queryNumber) {
+            case 1:
+                db.findRaceWithHighestAvgSpeed();
+        }
     }
-}
 
 
 
