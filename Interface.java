@@ -225,7 +225,7 @@ public class Interface {
                 db.racesDriverWon();
                 break;
             case 10:
-                System.out.print("Enter limit: ");
+                System.out.print("Enter number of wins: ");
                 db.topConstructors(Integer.parseInt(scanner.nextLine().trim()));
                 break;
             case 11:
