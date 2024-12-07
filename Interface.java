@@ -192,13 +192,84 @@ public class Interface {
         handleQuery(Integer.parseInt(scanner.nextLine().trim()));
     }
 
+
     private static void handleQuery(int queryNumber) {
         System.out.println("Executing query #" + queryNumber + "...");
-
+        Scanner scanner;
+         /*
         switch (queryNumber) {
             case 1:
+                System.out.print("Enter input: ");
+                db.findRaceWithHighestAvgSpeed(Integer.parseInt(scanner.nextLine().trim()));
+            case 2:
+                db.findFastestLapTimes();
+            case 3:
+                db.;
+            case 4:
+                db.;
+            case 5:
+                db.displayRaceInformation();
+            case 6:
+
+                db.racesWithHighAccidents();
+            case 7:
+                db.findClosestFinish();
+            case 8:
+                db.findRacesWithBelowAverageParticipation();
+            case 9:
+                db.;
+            case 10:
+                db.topConstructors();
+            case 11:
+                db.driverWithMostWins();
+            case 12:
+                db.improvedDriver();
+            case 13:
+                db.worstDriver();
+            case 14:
+                db.findAverageRacePosition();
+            case 15:
+                db.sortDriversByPoints();
+            case 16:
+                db.findDriverLedMostLaps();
+            case 17:
+                db.driversDisqualified();
+            case 18:
+                db.findRaceResultsByDriver();
+            case 19:
+                db.compareLapTimes();
+            case 20:
+                db.;
+            case 21:
+                db.totalPitStopsPerDriver();
+            case 22:
+                db.findDriversWithMultipleConstructors();
+            case 23:
+                db.findConstructorHighestPoints();
+            case 24:
                 db.findRaceWithHighestAvgSpeed();
+            case 25:
+                db.topConstructors();
+            case 26:
+                db.constructorMostMechanicalFailures();
+            case 27:
+                db.fastestAveragePitStop();
+            case 28:
+                db.listConstructorsAndNationalities();
+            case 29:
+                db.;
+            case 30:
+                db.findDriversPerConstructor();
+            case 31:
+                db.listAllCountriesWithRaces();
+            case 32:
+                db.listCircuitInCountry();
+            case 33:
+                db.;
+*/
         }
+
+
     }
 
 
