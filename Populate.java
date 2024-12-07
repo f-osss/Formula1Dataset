@@ -741,6 +741,7 @@ public class Populate {
                 PreparedStatement stmt = connection.prepareStatement(
                         "INSERT INTO laptime (raceID, driverID, lap, position, time, milliseconds) VALUES (?, ?, ?, ?, ?, ?)"
                 );
+                System.out.println("rid:" + columns[0].trim() + " did:" + columns[1].trim() + " time:" + columns[4].trim());
 
                 stmt.setInt(1, Integer.parseInt(columns[0].trim())); // raceID
                 stmt.setInt(2, Integer.parseInt(columns[1].trim())); // driverID
@@ -757,8 +758,12 @@ public class Populate {
             }
             System.out.println("lap time table successfully populated");
             reader.close();
-        } catch (IOException | SQLException | ParseException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("csv file not found.");
+        } catch (IOException e) {
+            System.out.println("Error reading csv file.");
         }
     }
 
@@ -936,16 +941,43 @@ public class Populate {
     }
 
 
-    private String parseTime1(String lapTime) throws ParseException {
+    private String parseTime1(String lapTime) {
         // Remove surrounding double quotes if they exist
         lapTime = lapTime.replace("\"", "").trim();
 
-        // Format is expected as "m:ss.SSS"
-        SimpleDateFormat inputFormat = new SimpleDateFormat("m:ss.SSS");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+        // Define formatter for output
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
-        // Parse input time and reformat
-        return outputFormat.format(inputFormat.parse(lapTime));
+        LocalTime parsedTime;
+
+        try {
+            // If the input matches m:ss.SSS, normalize it to H:mm:ss.SSS
+            if (lapTime.matches("\\d{1,2}:\\d{2}\\.\\d{3}")) {
+                // Split the input into minutes and seconds
+                String[] parts = lapTime.split("[:\\.]");
+                int minutes = Integer.parseInt(parts[0]);
+                int seconds = Integer.parseInt(parts[1]);
+                int millis = Integer.parseInt(parts[2]);
+
+                // Convert minutes to hours and minutes
+                int hours = minutes / 60;
+                minutes = minutes % 60;
+
+                // Create LocalTime instance
+                parsedTime = LocalTime.of(hours, minutes, seconds, millis * 1_000_000);
+            } else if (lapTime.matches("\\d{1,2}:\\d{2}:\\d{2}\\.\\d{3}")) {
+                // Parse as H:mm:ss.SSS
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("H:mm:ss.SSS");
+                parsedTime = LocalTime.parse(lapTime, inputFormatter);
+            } else {
+                throw new IllegalArgumentException("Invalid time format: " + lapTime);
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid time format: " + lapTime, e);
+        }
+
+        // Return the reformatted time as a String
+        return parsedTime.format(outputFormatter);
     }
 
     public static String parseTime2(String timeString) throws ParseException {
