@@ -246,8 +246,10 @@ public class Interface {
                 break;
             case 16:
                 System.out.print("Enter raceID: ");
-                System.out.print("\nEnter limit: ");
-                db.findDriverLedMostLaps(Integer.parseInt(scanner.nextLine().trim()), Integer.parseInt(scanner.nextLine().trim()));
+                int input1 = Integer.parseInt(scanner.nextLine().trim());
+                System.out.print("Enter limit: ");
+                int input2 = Integer.parseInt(scanner.nextLine().trim());
+                db.findDriverLedMostLaps(input1,input2);
                 break;
             case 17:
                 System.out.print("Enter year: ");
@@ -259,9 +261,12 @@ public class Interface {
                 break;
             case 19:
                 System.out.print("Enter raceID: ");
-                System.out.print("\nEnter driverID1: ");
-                System.out.print("\nEnter driverID2: ");
-                db.compareLapTimes(Integer.parseInt(scanner.nextLine().trim()),Integer.parseInt(scanner.nextLine().trim()),Integer.parseInt(scanner.nextLine().trim()));
+                int input3 = Integer.parseInt(scanner.nextLine().trim());
+                System.out.print("Enter driverID1: ");
+                int input4 = Integer.parseInt(scanner.nextLine().trim());
+                System.out.print("Enter driverID2: ");
+                int input5 = Integer.parseInt(scanner.nextLine().trim());
+                db.compareLapTimes(input3,input4,input5);
                 break;
             case 20:
                 System.out.print("Enter driverID: ");
