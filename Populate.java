@@ -68,7 +68,9 @@ public class Populate {
 //        constructorStanding();
 //        Pitstop();
 //        qualifyingRecord();
-        LapTime();
+        drivesFor();
+//        compete();
+//        LapTime();
 
 
     }
@@ -765,6 +767,7 @@ public class Populate {
     public void drivesFor() {
         String sql = "INSERT INTO drivesFor (constructorID, driverID) VALUES (?, ?)";
         file = "csv_files/compete.csv";
+        int count=0;
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -775,17 +778,18 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                int constructorID = Integer.parseInt(fields[1].trim());
-                int driverID = Integer.parseInt(fields[2].trim());
+                int constructorID = Integer.parseInt(fields[0].trim());
+                int driverID = Integer.parseInt(fields[1].trim());
 
 
                 preparedStatement.setInt(1, constructorID);
                 preparedStatement.setInt(2, driverID);
 
                 preparedStatement.executeUpdate();
+                System.out.println(count++);
             }
 
-            System.out.println("compete table successfully populated");
+            System.out.println("drivesFor table successfully populated");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -809,8 +813,8 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                int raceID = Integer.parseInt(fields[1].trim());
-                int driverID = Integer.parseInt(fields[2].trim());
+                int raceID = Integer.parseInt(fields[0].trim());
+                int driverID = Integer.parseInt(fields[1].trim());
 
 
                 preparedStatement.setInt(1, raceID);

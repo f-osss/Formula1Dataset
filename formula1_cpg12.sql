@@ -64,11 +64,9 @@ create table driver
 -- saida
 CREATE TABLE drivesFor
 (
-    constructorID INT NOT NULL,
-    driverID      INT NOT NULL,
-    PRIMARY KEY (constructorID, driverID),
-    FOREIGN KEY (constructorID) REFERENCES constructor (constructorID), -- Reference to Constructor table
-    FOREIGN KEY (driverID) REFERENCES driver (driverID)                 -- Reference to Driver table
+    constructorID  integer references constructor (constructorID) on delete cascade,
+    driverID       integer references driver (driverID) on delete cascade,
+    PRIMARY KEY (constructorID, driverID)
 )
 
 create table race
