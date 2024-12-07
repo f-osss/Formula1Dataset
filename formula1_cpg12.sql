@@ -67,7 +67,7 @@ CREATE TABLE drivesFor
     constructorID  integer references constructor (constructorID) on delete cascade,
     driverID       integer references driver (driverID) on delete cascade,
     PRIMARY KEY (constructorID, driverID)
-)
+);
 
 create table race
 (

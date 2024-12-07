@@ -766,8 +766,7 @@ public class Populate {
 
     public void drivesFor() {
         String sql = "INSERT INTO drivesFor (constructorID, driverID) VALUES (?, ?)";
-        file = "csv_files/compete.csv";
-        int count=0;
+        file = "csv_files/drivesFor.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -784,9 +783,8 @@ public class Populate {
 
                 preparedStatement.setInt(1, constructorID);
                 preparedStatement.setInt(2, driverID);
-
+                
                 preparedStatement.executeUpdate();
-                System.out.println(count++);
             }
 
             System.out.println("drivesFor table successfully populated");
