@@ -10,8 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.Duration;
-import java.time.format.DateTimeParseException;
 
 
 public class Populate {
@@ -68,8 +66,8 @@ public class Populate {
 //        constructorStanding();
 //        Pitstop();
 //        qualifyingRecord();
-        drivesFor();
-//        compete();
+//        drivesFor();
+        compete();
 //        LapTime();
 
 
@@ -783,7 +781,7 @@ public class Populate {
 
                 preparedStatement.setInt(1, constructorID);
                 preparedStatement.setInt(2, driverID);
-                
+
                 preparedStatement.executeUpdate();
             }
 
