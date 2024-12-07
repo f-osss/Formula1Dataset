@@ -195,8 +195,7 @@ public class Interface {
 
     private static void handleQuery(int queryNumber) {
         System.out.println("Executing query #" + queryNumber + "...");
-        Scanner scanner;
-         /*
+        Scanner scanner = new Scanner(System.in);
         switch (queryNumber) {
             case 1:
                 System.out.print("Enter input: ");
@@ -204,24 +203,27 @@ public class Interface {
             case 2:
                 db.findFastestLapTimes();
             case 3:
-                db.;
+                //db.;
             case 4:
-                db.;
+                //db.;
             case 5:
                 db.displayRaceInformation();
             case 6:
-
-                db.racesWithHighAccidents();
+                System.out.print("Enter input: ");
+                db.racesWithHighAccidents(Integer.parseInt(scanner.nextLine().trim()));
             case 7:
-                db.findClosestFinish();
+                System.out.print("Enter input: ");
+                db.findClosestFinish(Integer.parseInt(scanner.nextLine().trim()));
             case 8:
                 db.findRacesWithBelowAverageParticipation();
             case 9:
-                db.;
+                //db.;
             case 10:
-                db.topConstructors();
+                System.out.print("Enter input: ");
+                db.topConstructors(Integer.parseInt(scanner.nextLine().trim()));
             case 11:
-                db.driverWithMostWins();
+                System.out.print("Enter input: ");
+                db.driverWithMostWins(Integer.parseInt(scanner.nextLine().trim()));
             case 12:
                 db.improvedDriver();
             case 13:
@@ -231,46 +233,54 @@ public class Interface {
             case 15:
                 db.sortDriversByPoints();
             case 16:
-                db.findDriverLedMostLaps();
+                //db.findDriverLedMostLaps();
             case 17:
-                db.driversDisqualified();
+                System.out.print("Enter input: ");
+                db.driversDisqualified(Integer.parseInt(scanner.nextLine().trim()));
             case 18:
-                db.findRaceResultsByDriver();
+                System.out.print("Enter input: ");
+                db.findRaceResultsByDriver(Integer.parseInt(scanner.nextLine().trim()));
             case 19:
-                db.compareLapTimes();
+                //db.compareLapTimes();
             case 20:
-                db.;
+                //db.;
             case 21:
                 db.totalPitStopsPerDriver();
             case 22:
                 db.findDriversWithMultipleConstructors();
             case 23:
-                db.findConstructorHighestPoints();
+                System.out.print("Enter input: ");
+                db.findConstructorHighestPoints(Integer.parseInt(scanner.nextLine().trim()));
             case 24:
-                db.findRaceWithHighestAvgSpeed();
+                System.out.print("Enter input: ");
+                db.findRaceWithHighestAvgSpeed(Integer.parseInt(scanner.nextLine().trim()));
             case 25:
-                db.topConstructors();
+                System.out.print("Enter input: ");
+                db.topConstructors(Integer.parseInt(scanner.nextLine().trim()));
             case 26:
-                db.constructorMostMechanicalFailures();
+                System.out.print("Enter input: ");
+                db.constructorMostMechanicalFailures(Integer.parseInt(scanner.nextLine().trim()));
             case 27:
-                db.fastestAveragePitStop();
+                System.out.print("Enter input: ");
+                db.fastestAveragePitStop(Integer.parseInt(scanner.nextLine().trim()));
             case 28:
                 db.listConstructorsAndNationalities();
             case 29:
-                db.;
+                //db.;
             case 30:
                 db.findDriversPerConstructor();
             case 31:
                 db.listAllCountriesWithRaces();
             case 32:
-                db.listCircuitInCountry();
+                //db.listCircuitInCountry();
             case 33:
-                db.;
-*/
+                //db.;
+
         }
 
 
     }
+}
 
 
 
