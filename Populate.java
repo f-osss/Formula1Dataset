@@ -742,7 +742,6 @@ public class Populate {
                 PreparedStatement stmt = connection.prepareStatement(
                         "INSERT INTO laptime (raceID, driverID, lap, position, time, milliseconds) VALUES (?, ?, ?, ?, ?, ?)"
                 );
-                System.out.println("rid:" + columns[0].trim() + " did:" + columns[1].trim() + " time:" + columns[4].trim());
 
                 stmt.setInt(1, Integer.parseInt(columns[0].trim())); // raceID
                 stmt.setInt(2, Integer.parseInt(columns[1].trim())); // driverID

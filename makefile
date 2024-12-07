@@ -1,11 +1,11 @@
 
-build: SQLServerDemo.class
+build: Populate.class
 
-SQLServerDemo.class: SQLServerDemo.java
-	javac SQLServerDemo.java
+Populate.class: Populate.java
+	javac Populate.java
 
-run: SQLServerDemo.class
-	java -cp .:mssql-jdbc-11.2.0.jre11.jar SQLServerDemo
+run: Populate.class
+	java -cp .:mssql-jdbc-11.2.0.jre11.jar Populate
 
 clean:
-	rm SQLServerDemo.class
+	rm Populate.class

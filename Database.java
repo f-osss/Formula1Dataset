@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Properties;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -692,6 +693,229 @@ public class Database {
         }
     }
 
+    //drivers with specific number of wins
+    public void findDriversWithSpecificWins(Connection connection, int numWins) {
+        String sql = """
+        SELECT Driver.forename, Driver.surname, COUNT(DriverStanding.wins) AS win_count
+        FROM DriverStanding
+        INNER JOIN Driver ON DriverStanding.driverID = Driver.driverID
+        GROUP BY Driver.driverID, Driver.forename, Driver.surname
+        HAVING COUNT(DriverStanding.wins) = ?;
+    """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, numWins);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                System.out.println("Drivers with " + numWins + " Wins:");
+                System.out.printf("%-20s %-20s %-10s%n", "Forename", "Surname", "Wins");
+                System.out.println("----------------------------------------------");
+
+                boolean hasResults = false;
+                while (resultSet.next()) {
+                    hasResults = true;
+                    String forename = resultSet.getString("forename");
+                    String surname = resultSet.getString("surname");
+                    int wins = resultSet.getInt("win_count");
+
+                    System.out.printf("%-20s %-20s %-10d%n", forename, surname, wins);
+                }
+
+                if (!hasResults) {
+                    System.out.println("No drivers found with " + numWins + " wins.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //compare lap times between 2 drivers in a race
+    public void compareLapTimes(Connection connection, int raceID, int driverID1, int driverID2) {
+        String sql = """
+        SELECT Driver.forename, Driver.surname, LapTime.time
+        FROM LapTime
+        INNER JOIN Driver ON LapTime.driverID = Driver.driverID
+        WHERE LapTime.raceID = ? AND (Driver.driverID = ? OR Driver.driverID = ?)
+        ORDER BY LapTime.lap;
+    """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, raceID);
+            statement.setInt(2, driverID1);
+            statement.setInt(3, driverID2);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                System.out.println("Lap Times Comparison for Race ID: " + raceID);
+                System.out.printf("%-20s %-20s %-10s%n", "Forename", "Surname", "Lap Time");
+                System.out.println("----------------------------------------------");
+
+                boolean hasResults = false;
+                while (resultSet.next()) {
+                    hasResults = true;
+                    String forename = resultSet.getString("forename");
+                    String surname = resultSet.getString("surname");
+                    String lapTime = resultSet.getString("time");
+
+                    System.out.printf("%-20s %-20s %-10s%n", forename, surname, lapTime);
+                }
+
+                if (!hasResults) {
+                    System.out.println("No lap times found for the selected drivers in this race.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //race with the highest average speed for fastest lap
+    public void findRaceWithHighestAvgSpeed(Connection connection, int limit) {
+        String sql = """
+        SELECT TOP (?)
+            Race.name, AVG(Result.fastestLapSpeed) AS avg_speed
+        FROM Result
+        JOIN Race ON Result.raceID = Race.raceID
+        GROUP BY Race.raceID, Race.name
+        ORDER BY avg_speed DESC;
+    """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, limit);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                System.out.println("Races with the Highest Average Fastest Lap Speed:");
+                System.out.printf("%-30s %-20s%n", "Race Name", "Average Speed (km/h)");
+                System.out.println("--------------------------------------------");
+
+                boolean hasResults = false;
+                while (resultSet.next()) {
+                    hasResults = true;
+                    String raceName = resultSet.getString("name");
+                    double avgSpeed = resultSet.getDouble("avg_speed");
+
+                    System.out.printf("%-30s %-20.2f%n", raceName, avgSpeed);
+                }
+
+                if (!hasResults) {
+                    System.out.println("No data found.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //find the total number of pit stops per driver
+    public void totalPitStopsPerDriver(Connection connection) {
+        String sql = """
+        SELECT Driver.forename, Driver.surname, COUNT(PitStop.stop) AS total_pitstops
+        FROM PitStop
+        INNER JOIN Driver ON PitStop.driverID = Driver.driverID
+        GROUP BY Driver.driverID, Driver.forename, Driver.surname;
+    """;
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            System.out.println("Total Pit Stops Per Driver:");
+            System.out.printf("%-20s %-20s %-20s%n", "Driver", "Total Pit Stops");
+            System.out.println("---------------------------------------------");
+
+            boolean hasResults = false;
+            while (resultSet.next()) {
+                hasResults = true;
+                String forename = resultSet.getString("forename");
+                String surname = resultSet.getString("surname");
+                int totalPitStops = resultSet.getInt("total_pitstops");
+
+                System.out.printf("%-20s %-20s %-20d%n", forename, surname, totalPitStops);
+            }
+
+            if (!hasResults) {
+                System.out.println("No data found.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Find races in which a specific driver competed
+    public void racesForDriver(Connection connection, int driverID) {
+        String sql = """
+        DECLARE @driverID INT = ?; -- (user inputs this)
+        SELECT Race.name, Race.date
+        FROM Result
+        JOIN Race ON Result.raceID = Race.raceID
+        JOIN Driver ON Result.driverID = Driver.driverID
+        WHERE Driver.driverID = @driverID;
+    """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, driverID);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                System.out.println("Races for Driver ID " + driverID + ":");
+                System.out.printf("%-30s %-20s%n", "Race Name", "Race Date");
+                System.out.println("--------------------------------------------");
+
+                boolean hasResults = false;
+                while (resultSet.next()) {
+                    hasResults = true;
+                    String raceName = resultSet.getString("name");
+                    Date raceDate = resultSet.getDate("date");
+
+                    System.out.printf("%-30s %-20s%n", raceName, raceDate);
+                }
+
+                if (!hasResults) {
+                    System.out.println("No data found.");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //find driver with the most wins
+    public void driverWithMostWins(Connection connection, int topDrivers) {
+        String sql = "SELECT TOP (?) Driver.forename, Driver.surname, COUNT(*) AS totalWins "
+                + "FROM DriverStanding "
+                + "INNER JOIN Driver ON DriverStanding.driverID = Driver.driverID "
+                + "WHERE DriverStanding.position = 1 "
+                + "GROUP BY Driver.driverID, Driver.forename, Driver.surname "
+                + "ORDER BY totalWins DESC;";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, topDrivers);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                System.out.println("Top Drivers with Most Wins:");
+                System.out.printf("%-20s %-20s %-20s%n", "Driver", "Total Wins");
+                System.out.println("---------------------------------------------");
+
+                boolean hasResults = false;
+                while (resultSet.next()) {
+                    hasResults = true;
+                    String forename = resultSet.getString("forename");
+                    String surname = resultSet.getString("surname");
+                    int totalWins = resultSet.getInt("totalWins");
+
+                    System.out.printf("%-20s %-20s %-20d%n", forename, surname, totalWins);
+                }
+
+                if (!hasResults) {
+                    System.out.println("No data found.");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
 
     //Queries 23-33 by Chuka
     //23. Fastest Lap Times Across All Races
