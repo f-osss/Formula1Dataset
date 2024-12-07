@@ -66,7 +66,7 @@ public class Populate {
 //        constructorStanding();
 //        Pitstop();
 //        qualifyingRecord();
-        LapTime();
+//        LapTime();
 //        drivesFor();
 //        compete();
 
