@@ -48,7 +48,7 @@ public class Database {
     }
 
     //Queries
-    //How many races did each driver win
+    //1. How many races did each driver win
     public void racesDriverWon(Connection connection) {
         String sql = """
                     SELECT Driver.driverID, Driver.forename, Driver.surname, COUNT(Result.resultID) AS raceWon
@@ -78,7 +78,7 @@ public class Database {
 
     }
 
-    //How many drivers were disqualified in the season
+    //2. How many drivers were disqualified in the season
     public void driversDisqualified(Connection connection, int year) {
         String sql = """
                     SELECT Race.year, COUNT(DISTINCT Result.driverID) AS driversDisqualified
@@ -109,7 +109,7 @@ public class Database {
         }
     }
 
-    //Which driver improved the most throughout the season
+    //3. Which driver improved the most throughout the season
     public void improvedDriver(Connection connection) {
         String sql = """
                     WITH DriverSeasonPoints AS (
@@ -159,7 +159,7 @@ public class Database {
         }
     }
 
-    //Constructors who have the most mechanical failures
+    //4. Constructors who have the most mechanical failures
     public void constructorMostMechanicalFailures(Connection connection, int limit) {
         String sql = """
                     SELECT TOP (?)
@@ -208,7 +208,7 @@ public class Database {
         }
     }
 
-    //Find races with the highest number of accidents and collisions
+    //5. Find races with the highest number of accidents and collisions
     public void racesWithHighAccidents(Connection connection, int limit) {
         String sql = """
                     SELECT TOP (?)
@@ -255,7 +255,7 @@ public class Database {
         }
     }
 
-    // Find which constructor performed the fastest average pit stop
+    //6. Find which constructor performed the fastest average pit stop
     public void fastestAveragePitStop(Connection connection, int limit) {
         String sql = """
                     SELECT TOP (?)
@@ -302,23 +302,23 @@ public class Database {
         }
     }
 
-    // Find the worst driver in the season
+    //7. Find the worst driver in the season
     public void worstDriver(Connection connection) {
         String sql = """
-        SELECT TOP 1
-            Driver.driverID,
-            Driver.forename,
-            Driver.surname,
-            SUM(Result.points) AS totalPoints
-        FROM
-            Result
-        JOIN
-            Driver ON Result.driverID = Driver.driverID
-        GROUP BY
-            Driver.driverID, Driver.forename, Driver.surname
-        ORDER BY
-            totalPoints ASC;
-    """;
+                    SELECT TOP 1
+                        Driver.driverID,
+                        Driver.forename,
+                        Driver.surname,
+                        SUM(Result.points) AS totalPoints
+                    FROM
+                        Result
+                    JOIN
+                        Driver ON Result.driverID = Driver.driverID
+                    GROUP BY
+                        Driver.driverID, Driver.forename, Driver.surname
+                    ORDER BY
+                        totalPoints ASC;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -347,15 +347,15 @@ public class Database {
         }
     }
 
-    // List constructors and their nationalities
+    //8.List constructors and their nationalities
     public void listConstructorsAndNationalities(Connection connection) {
         String sql = """
-        SELECT
-            name,
-            nationality
-        FROM
-            Constructor;
-    """;
+                    SELECT
+                        name,
+                        nationality
+                    FROM
+                        Constructor;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -382,16 +382,16 @@ public class Database {
         }
     }
 
-    // List all countries where races occurred
+    //9. List all countries where races occurred
     public void listAllCountriesWithRaces(Connection connection) {
         String sql = """
-        SELECT DISTINCT
-            country
-        FROM
-            City
-        ORDER BY
-            country ASC;
-    """;
+                    SELECT DISTINCT
+                        country
+                    FROM
+                        City
+                    ORDER BY
+                        country ASC;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -417,16 +417,16 @@ public class Database {
         }
     }
 
-    // Display race information
+    //10. Display race information
     public void displayRaceInformation(Connection connection) {
         String sql = """
-        SELECT
-            raceID,
-            year,
-            name
-        FROM
-            Race;
-    """;
+                    SELECT
+                        raceID,
+                        year,
+                        name
+                    FROM
+                        Race;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -454,19 +454,19 @@ public class Database {
         }
     }
 
-    //circuits in a specific country
+    //11. circuits in a specific country
     public void listCircuitInCountry(Connection connection, String country) {
         String sql = """
-        SELECT 
-            Circuit.name AS circuit_name, 
-            City.name AS city_name
-        FROM 
-            Circuit
-        INNER JOIN 
-            City ON Circuit.cityID = City.cityID
-        WHERE 
-            City.country = ?;
-    """;
+                    SELECT 
+                        Circuit.name AS circuit_name, 
+                        City.name AS city_name
+                    FROM 
+                        Circuit
+                    INNER JOIN 
+                        City ON Circuit.cityID = City.cityID
+                    WHERE 
+                        City.country = ?;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, country);
@@ -494,22 +494,22 @@ public class Database {
         }
     }
 
-    // Get details of drivers from a specific constructor
+    //12. Get details of drivers from a specific constructor
     public void driversByConstructor(Connection connection, String constructorName) {
         String sql = """
-        SELECT
-            Driver.forename,
-            Driver.surname,
-            Constructor.name
-        FROM
-            Driver
-        INNER JOIN
-            DrivesFor ON Driver.driverID = DrivesFor.driverID
-        INNER JOIN
-            Constructor ON DrivesFor.constructorID = Constructor.constructorID
-        WHERE
-            Constructor.name = ?;
-    """;
+                    SELECT
+                        Driver.forename,
+                        Driver.surname,
+                        Constructor.name
+                    FROM
+                        Driver
+                    INNER JOIN
+                        DrivesFor ON Driver.driverID = DrivesFor.driverID
+                    INNER JOIN
+                        Constructor ON DrivesFor.constructorID = Constructor.constructorID
+                    WHERE
+                        Constructor.name = ?;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, constructorName);
@@ -539,17 +539,17 @@ public class Database {
         }
     }
 
-    // Count the number of races per year
+    //13. Count the number of races per year
     public void countRacesPerYear(Connection connection) {
         String sql = """
-        SELECT
-            year,
-            COUNT(raceID) AS race_count
-        FROM
-            Race
-        GROUP BY
-            year;
-    """;
+                    SELECT
+                        year,
+                        COUNT(raceID) AS race_count
+                    FROM
+                        Race
+                    GROUP BY
+                        year;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -570,20 +570,20 @@ public class Database {
         }
     }
 
-    // Fastest lap times in all races
+    //14. Fastest lap times in all races
     public void fastestLapTimes(Connection connection, int limit) {
         String sql = """
-        SELECT TOP (?)
-            Driver.forename,
-            Driver.surname,
-            LapTime.time
-        FROM
-            LapTime
-        JOIN
-            Driver ON LapTime.driverID = Driver.driverID
-        ORDER BY
-            LapTime.milliseconds ASC;
-    """;
+                    SELECT TOP (?)
+                        Driver.forename,
+                        Driver.surname,
+                        LapTime.time
+                    FROM
+                        LapTime
+                    JOIN
+                        Driver ON LapTime.driverID = Driver.driverID
+                    ORDER BY
+                        LapTime.milliseconds ASC;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, limit);
@@ -613,23 +613,23 @@ public class Database {
         }
     }
 
-    // Sort constructors by number of wins
+    //15. Sort constructors by number of wins
     public void constructorsByWins(Connection connection) {
         String sql = """
-        SELECT
-            Constructor.name,
-            COUNT(Result.resultID) AS win_count
-        FROM
-            Result
-        INNER JOIN
-            Constructor ON Result.constructorID = Constructor.constructorID
-        WHERE
-            Result.positionOrder = 1
-        GROUP BY
-            Constructor.name
-        ORDER BY
-            win_count DESC;
-    """;
+                    SELECT
+                        Constructor.name,
+                        COUNT(Result.resultID) AS win_count
+                    FROM
+                        Result
+                    INNER JOIN
+                        Constructor ON Result.constructorID = Constructor.constructorID
+                    WHERE
+                        Result.positionOrder = 1
+                    GROUP BY
+                        Constructor.name
+                    ORDER BY
+                        win_count DESC;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -656,16 +656,16 @@ public class Database {
         }
     }
 
-    //Top Constructor across all races
+    //16. Top Constructor across all races
     public void topConstructors(Connection connection, int limit) {
         String sql = """
-        SELECT TOP (?) Constructor.name, COUNT(Result.resultID) AS top_finish_count
-        FROM Result
-        INNER JOIN Constructor ON Result.constructorID = Constructor.constructorID
-        WHERE Result.positionOrder <= 3
-        GROUP BY Constructor.name
-        ORDER BY top_finish_count DESC;
-    """;
+                    SELECT TOP (?) Constructor.name, COUNT(Result.resultID) AS top_finish_count
+                    FROM Result
+                    INNER JOIN Constructor ON Result.constructorID = Constructor.constructorID
+                    WHERE Result.positionOrder <= 3
+                    GROUP BY Constructor.name
+                    ORDER BY top_finish_count DESC;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, limit);
@@ -693,15 +693,15 @@ public class Database {
         }
     }
 
-    //drivers with specific number of wins
+    //17. drivers with specific number of wins
     public void findDriversWithSpecificWins(Connection connection, int numWins) {
         String sql = """
-        SELECT Driver.forename, Driver.surname, COUNT(DriverStanding.wins) AS win_count
-        FROM DriverStanding
-        INNER JOIN Driver ON DriverStanding.driverID = Driver.driverID
-        GROUP BY Driver.driverID, Driver.forename, Driver.surname
-        HAVING COUNT(DriverStanding.wins) = ?;
-    """;
+                    SELECT Driver.forename, Driver.surname, COUNT(DriverStanding.wins) AS win_count
+                    FROM DriverStanding
+                    INNER JOIN Driver ON DriverStanding.driverID = Driver.driverID
+                    GROUP BY Driver.driverID, Driver.forename, Driver.surname
+                    HAVING COUNT(DriverStanding.wins) = ?;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, numWins);
@@ -730,15 +730,15 @@ public class Database {
         }
     }
 
-    //compare lap times between 2 drivers in a race
+    //18. compare lap times between 2 drivers in a race
     public void compareLapTimes(Connection connection, int raceID, int driverID1, int driverID2) {
         String sql = """
-        SELECT Driver.forename, Driver.surname, LapTime.time
-        FROM LapTime
-        INNER JOIN Driver ON LapTime.driverID = Driver.driverID
-        WHERE LapTime.raceID = ? AND (Driver.driverID = ? OR Driver.driverID = ?)
-        ORDER BY LapTime.lap;
-    """;
+                    SELECT Driver.forename, Driver.surname, LapTime.time
+                    FROM LapTime
+                    INNER JOIN Driver ON LapTime.driverID = Driver.driverID
+                    WHERE LapTime.raceID = ? AND (Driver.driverID = ? OR Driver.driverID = ?)
+                    ORDER BY LapTime.lap;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, raceID);
@@ -769,16 +769,16 @@ public class Database {
         }
     }
 
-    //race with the highest average speed for fastest lap
+    //19. race with the highest average speed for fastest lap
     public void findRaceWithHighestAvgSpeed(Connection connection, int limit) {
         String sql = """
-        SELECT TOP (?)
-            Race.name, AVG(Result.fastestLapSpeed) AS avg_speed
-        FROM Result
-        JOIN Race ON Result.raceID = Race.raceID
-        GROUP BY Race.raceID, Race.name
-        ORDER BY avg_speed DESC;
-    """;
+                    SELECT TOP (?)
+                        Race.name, AVG(Result.fastestLapSpeed) AS avg_speed
+                    FROM Result
+                    JOIN Race ON Result.raceID = Race.raceID
+                    GROUP BY Race.raceID, Race.name
+                    ORDER BY avg_speed DESC;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, limit);
@@ -806,14 +806,14 @@ public class Database {
         }
     }
 
-    //find the total number of pit stops per driver
+    //20. find the total number of pit stops per driver
     public void totalPitStopsPerDriver(Connection connection) {
         String sql = """
-        SELECT Driver.forename, Driver.surname, COUNT(PitStop.stop) AS total_pitstops
-        FROM PitStop
-        INNER JOIN Driver ON PitStop.driverID = Driver.driverID
-        GROUP BY Driver.driverID, Driver.forename, Driver.surname;
-    """;
+                    SELECT Driver.forename, Driver.surname, COUNT(PitStop.stop) AS total_pitstops
+                    FROM PitStop
+                    INNER JOIN Driver ON PitStop.driverID = Driver.driverID
+                    GROUP BY Driver.driverID, Driver.forename, Driver.surname;
+                """;
 
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
@@ -841,16 +841,16 @@ public class Database {
         }
     }
 
-    //Find races in which a specific driver competed
+    //21. Find races in which a specific driver competed
     public void racesForDriver(Connection connection, int driverID) {
         String sql = """
-        DECLARE @driverID INT = ?; -- (user inputs this)
-        SELECT Race.name, Race.date
-        FROM Result
-        JOIN Race ON Result.raceID = Race.raceID
-        JOIN Driver ON Result.driverID = Driver.driverID
-        WHERE Driver.driverID = @driverID;
-    """;
+                    DECLARE @driverID INT = ?; -- (user inputs this)
+                    SELECT Race.name, Race.date
+                    FROM Result
+                    JOIN Race ON Result.raceID = Race.raceID
+                    JOIN Driver ON Result.driverID = Driver.driverID
+                    WHERE Driver.driverID = @driverID;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, driverID);
@@ -879,7 +879,7 @@ public class Database {
         }
     }
 
-    //find driver with the most wins
+    //22. find driver with the most wins
     public void driverWithMostWins(Connection connection, int topDrivers) {
         String sql = "SELECT TOP (?) Driver.forename, Driver.surname, COUNT(*) AS totalWins "
                 + "FROM DriverStanding "
@@ -915,25 +915,25 @@ public class Database {
             e.printStackTrace();
         }
     }
-    
 
-    //Queries 23-33 by Chuka
     //23. Fastest Lap Times Across All Races
     public void findFastestLapTimes(Connection connection) {
-        try {
-            String sql = "SELECT raceID, driverID, MIN(fastestLapTime) AS fastestLapTime FROM LapTime GROUP BY raceID, driverID";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
+        String sql = "SELECT raceID, driverID, MIN(fastestLapTime) AS fastestLapTime FROM LapTime GROUP BY raceID, driverID";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
 
             System.out.println("Fastest Lap Times Across All Races:");
             System.out.printf("%-10s %-10s %-15s%n", "Race ID", "Driver ID", "Fastest Lap Time");
             System.out.println("--------------------------------------");
+
             while (resultSet.next()) {
-                System.out.printf("%-10d %-10d %-15.2f%n", resultSet.getInt("raceID"),
-                        resultSet.getInt("driverID"), resultSet.getDouble("fastestLapTime"));
+                System.out.printf("%-10d %-10d %-15.2f%n",
+                        resultSet.getInt("raceID"),
+                        resultSet.getInt("driverID"),
+                        resultSet.getDouble("fastestLapTime"));
             }
-            resultSet.close();
-            statement.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -941,19 +941,21 @@ public class Database {
 
     //24. Average Race Position for Each Driver
     public void findAverageRacePosition(Connection connection) {
-        try {
-            String sql = "SELECT driverID, AVG(positionOrder) AS avgPosition FROM Result GROUP BY driverID ORDER BY avgPosition";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
+        String sql = "SELECT driverID, AVG(positionOrder) AS avgPosition FROM Result GROUP BY driverID ORDER BY avgPosition";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
 
             System.out.println("Average Race Position for Each Driver:");
             System.out.printf("%-10s %-15s%n", "Driver ID", "Average Position");
             System.out.println("-----------------------------");
+
             while (resultSet.next()) {
-                System.out.printf("%-10d %-15.2f%n", resultSet.getInt("driverID"), resultSet.getDouble("avgPosition"));
+                System.out.printf("%-10d %-15.2f%n",
+                        resultSet.getInt("driverID"),
+                        resultSet.getDouble("avgPosition"));
             }
-            resultSet.close();
-            statement.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -961,23 +963,24 @@ public class Database {
 
     //25. Races with the Closest Finish
     public void findClosestFinish(Connection connection, int limit) {
-        try {
-            String sql = "SELECT TOP (?) Race.name, MIN(Result.timeGap) AS smallest_gap " +
-                    "FROM Result JOIN Race ON Result.raceID = Race.raceID " +
-                    "WHERE Result.positionOrder = 1 OR Result.positionOrder = 2 " +
-                    "GROUP BY Race.name ORDER BY smallest_gap ASC";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, limit);
-            ResultSet resultSet = statement.executeQuery();
+        String sql = "SELECT TOP (?) Race.name, MIN(Result.timeGap) AS smallest_gap " +
+                "FROM Result JOIN Race ON Result.raceID = Race.raceID " +
+                "WHERE Result.positionOrder = 1 OR Result.positionOrder = 2 " +
+                "GROUP BY Race.name ORDER BY smallest_gap ASC";
 
-            System.out.println("Races with the Closest Finish:");
-            System.out.printf("%-20s %-15s%n", "Race Name", "Smallest Gap");
-            System.out.println("------------------------------------");
-            while (resultSet.next()) {
-                System.out.printf("%-20s %-15.2f%n", resultSet.getString("name"), resultSet.getDouble("smallest_gap"));
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, limit);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                System.out.println("Races with the Closest Finish:");
+                System.out.printf("%-20s %-15s%n", "Race Name", "Smallest Gap");
+                System.out.println("------------------------------------");
+
+                while (resultSet.next()) {
+                    System.out.printf("%-20s %-15.2f%n", resultSet.getString("name"), resultSet.getDouble("smallest_gap"));
+                }
             }
-            resultSet.close();
-            statement.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -985,213 +988,227 @@ public class Database {
 
     //26. Number of Drivers per Constructor
     public void findDriversPerConstructor(Connection connection) {
-        try {
-            String sql = "SELECT Constructor.name, COUNT(DrivesFor.driverID) AS driver_count " +
-                    "FROM Constructor JOIN DrivesFor ON Constructor.constructorID = DrivesFor.constructorID " +
-                    "GROUP BY Constructor.name";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
+        String sql = "SELECT Constructor.name, COUNT(DrivesFor.driverID) AS driver_count " +
+                "FROM Constructor JOIN DrivesFor ON Constructor.constructorID = DrivesFor.constructorID " +
+                "GROUP BY Constructor.name";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
 
             System.out.println("Number of Drivers per Constructor:");
             System.out.printf("%-20s %-15s%n", "Constructor Name", "Driver Count");
             System.out.println("----------------------------------");
+
             while (resultSet.next()) {
                 System.out.printf("%-20s %-15d%n", resultSet.getString("name"), resultSet.getInt("driver_count"));
             }
-            resultSet.close();
-            statement.close();
+
         } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     //27. Sort Drivers by Total Points Earned
     public void sortDriversByPoints(Connection connection) {
-        try {
-            String sql = "SELECT Driver.forename, Driver.surname, SUM(DriverStanding.points) AS total_points " +
-                    "FROM DriverStanding JOIN Driver ON DriverStanding.driverID = Driver.driverID " +
-                    "GROUP BY Driver.driverID ORDER BY total_points DESC";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
+        String sql = "SELECT Driver.forename, Driver.surname, SUM(DriverStanding.points) AS total_points " +
+                "FROM DriverStanding JOIN Driver ON DriverStanding.driverID = Driver.driverID " +
+                "GROUP BY Driver.driverID ORDER BY total_points DESC";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
 
             System.out.println("Drivers Sorted by Total Points Earned:");
             System.out.printf("%-15s %-15s %-15s%n", "First Name", "Last Name", "Total Points");
             System.out.println("----------------------------------------------");
+
             while (resultSet.next()) {
                 System.out.printf("%-15s %-15s %-15.2f%n", resultSet.getString("forename"),
                         resultSet.getString("surname"), resultSet.getDouble("total_points"));
             }
-            resultSet.close();
-            statement.close();
+
         } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     //28. Driver Who Led the Most Laps in a Race
     public void findDriverLedMostLaps(Connection connection, int raceID, int limit) {
-        try {
-            String sql = "SELECT TOP (?) Driver.forename, Driver.surname, SUM(Result.laps) AS total_laps " +
-                    "FROM Result INNER JOIN Driver ON Result.driverID = Driver.driverID " +
-                    "WHERE Result.raceID = ? GROUP BY Driver.driverID, Driver.forename, Driver.surname " +
-                    "ORDER BY total_laps DESC";
-            PreparedStatement statement = connection.prepareStatement(sql);
+        String sql = "SELECT TOP (?) Driver.forename, Driver.surname, SUM(Result.laps) AS total_laps " +
+                "FROM Result INNER JOIN Driver ON Result.driverID = Driver.driverID " +
+                "WHERE Result.raceID = ? " +
+                "GROUP BY Driver.driverID, Driver.forename, Driver.surname " +
+                "ORDER BY total_laps DESC";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, limit);
             statement.setInt(2, raceID);
-            ResultSet resultSet = statement.executeQuery();
 
-            System.out.println("Drivers Who Led the Most Laps in a Race:");
-            System.out.printf("%-15s %-15s %-15s%n", "First Name", "Last Name", "Total Laps");
-            System.out.println("--------------------------------------------");
-            while (resultSet.next()) {
-                System.out.printf("%-15s %-15s %-15d%n", resultSet.getString("forename"),
-                        resultSet.getString("surname"), resultSet.getInt("total_laps"));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                System.out.println("Drivers Who Led the Most Laps in a Race:");
+                System.out.printf("%-15s %-15s %-15s%n", "First Name", "Last Name", "Total Laps");
+                System.out.println("--------------------------------------------");
+
+                while (resultSet.next()) {
+                    System.out.printf("%-15s %-15s %-15d%n", resultSet.getString("forename"),
+                            resultSet.getString("surname"), resultSet.getInt("total_laps"));
+                }
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     //29. Race Results for a Specific Driver
     public void findRaceResultsByDriver(Connection connection, int driverID) {
-        try {
-            String sql = "SELECT Race.name, Result.positionOrder, Result.points " +
-                    "FROM Result JOIN Race ON Result.raceID = Race.raceID WHERE Result.driverID = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, driverID);
-            ResultSet resultSet = statement.executeQuery();
+        String sql = "SELECT Race.name, Result.positionOrder, Result.points " +
+                "FROM Result JOIN Race ON Result.raceID = Race.raceID WHERE Result.driverID = ?";
 
-            System.out.println("Race Results for Driver ID: " + driverID);
-            System.out.printf("%-20s %-15s %-15s%n", "Race Name", "Position Order", "Points");
-            System.out.println("----------------------------------------------");
-            while (resultSet.next()) {
-                System.out.printf("%-20s %-15d %-15.2f%n", resultSet.getString("name"),
-                        resultSet.getInt("positionOrder"), resultSet.getDouble("points"));
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, driverID);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                System.out.println("Race Results for Driver ID: " + driverID);
+                System.out.printf("%-20s %-15s %-15s%n", "Race Name", "Position Order", "Points");
+                System.out.println("----------------------------------------------");
+
+                while (resultSet.next()) {
+                    System.out.printf("%-20s %-15d %-15.2f%n", resultSet.getString("name"),
+                            resultSet.getInt("positionOrder"), resultSet.getDouble("points"));
+                }
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     //30. Top Drivers in a Specific Race
     public void findTopDriversInRace(Connection connection, int raceID, int limit) {
-        try {
-            String sql = "SELECT TOP (?) Driver.forename, Driver.surname, Result.positionOrder, Result.points " +
-                    "FROM Result JOIN Driver ON Result.driverID = Driver.driverID " +
-                    "WHERE Result.raceID = ? ORDER BY Result.positionOrder ASC";
-            PreparedStatement statement = connection.prepareStatement(sql);
+        String sql = "SELECT TOP (?) Driver.forename, Driver.surname, Result.positionOrder, Result.points " +
+                "FROM Result JOIN Driver ON Result.driverID = Driver.driverID " +
+                "WHERE Result.raceID = ? ORDER BY Result.positionOrder ASC";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, limit);
             statement.setInt(2, raceID);
-            ResultSet resultSet = statement.executeQuery();
 
-            System.out.println("Top Drivers in Race ID: " + raceID);
-            System.out.printf("%-15s %-15s %-15s %-15s%n", "First Name", "Last Name", "Position Order", "Points");
-            System.out.println("---------------------------------------------------------------");
-            while (resultSet.next()) {
-                System.out.printf("%-15s %-15s %-15d %-15.2f%n", resultSet.getString("forename"),
-                        resultSet.getString("surname"), resultSet.getInt("positionOrder"), resultSet.getDouble("points"));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                System.out.println("Top Drivers in Race ID: " + raceID);
+                System.out.printf("%-15s %-15s %-15s %-15s%n", "First Name", "Last Name", "Position Order", "Points");
+                System.out.println("---------------------------------------------------------------");
+
+                while (resultSet.next()) {
+                    System.out.printf("%-15s %-15s %-15d %-15.2f%n", resultSet.getString("forename"),
+                            resultSet.getString("surname"), resultSet.getInt("positionOrder"), resultSet.getDouble("points"));
+                }
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     //31. Constructor with the Highest Points in a Season
     public void findConstructorHighestPoints(Connection connection, int limit) {
-        try {
-            String sql = "SELECT TOP (?) Constructor.name, SUM(ConstructorStanding.points) AS totalPoints " +
-                    "FROM ConstructorStanding INNER JOIN Constructor ON ConstructorStanding.constructorID = Constructor.constructorID " +
-                    "GROUP BY Constructor.constructorID, Constructor.name ORDER BY totalPoints DESC";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, limit);
-            ResultSet resultSet = statement.executeQuery();
+        String sql = "SELECT TOP (?) Constructor.name, SUM(ConstructorStanding.points) AS totalPoints " +
+                "FROM ConstructorStanding INNER JOIN Constructor ON ConstructorStanding.constructorID = Constructor.constructorID " +
+                "GROUP BY Constructor.constructorID, Constructor.name ORDER BY totalPoints DESC";
 
-            System.out.println("Constructors with Highest Points:");
-            System.out.printf("%-20s %-15s%n", "Constructor Name", "Total Points");
-            System.out.println("-----------------------------------");
-            while (resultSet.next()) {
-                System.out.printf("%-20s %-15.2f%n", resultSet.getString("name"), resultSet.getDouble("totalPoints"));
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, limit);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                System.out.println("Constructors with Highest Points:");
+                System.out.printf("%-20s %-15s%n", "Constructor Name", "Total Points");
+                System.out.println("-----------------------------------");
+
+                while (resultSet.next()) {
+                    System.out.printf("%-20s %-15.2f%n", resultSet.getString("name"), resultSet.getDouble("totalPoints"));
+                }
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     //32. Find races with below-average participation
     public void findRacesWithBelowAverageParticipation(Connection connection) {
-        try {
-            String sql = """
-                    SELECT Race.raceID, Race.name, Race.date, COUNT(Result.driverID) AS participant_count
-                    FROM Race
-                    JOIN Result ON Race.raceID = Result.raceID
-                    GROUP BY Race.raceID, Race.name, Race.date
-                    HAVING participant_count < (
-                        SELECT AVG(total_participants)
-                        FROM (
-                            SELECT COUNT(driverID) AS total_participants
-                            FROM Result
-                            GROUP BY raceID
-                        ) AS race_participation
-                    )
-                    ORDER BY participant_count ASC;
-                    """;
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
+        String sql = """
+            SELECT Race.raceID, Race.name, Race.date, COUNT(Result.driverID) AS participant_count
+            FROM Race
+            JOIN Result ON Race.raceID = Result.raceID
+            GROUP BY Race.raceID, Race.name, Race.date
+            HAVING participant_count < (
+                SELECT AVG(total_participants)
+                FROM (
+                    SELECT COUNT(driverID) AS total_participants
+                    FROM Result
+                    GROUP BY raceID
+                ) AS race_participation
+            )
+            ORDER BY participant_count ASC;
+            """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
 
             System.out.println("Races With Below-Average Participation:");
             System.out.printf("%-10s %-25s %-15s %-15s%n", "Race ID", "Race Name", "Date", "Participants");
             System.out.println("---------------------------------------------------------------");
+
             while (resultSet.next()) {
-                System.out.printf("%-10d %-25s %-15s %-15d%n",
-                        resultSet.getInt("raceID"),
-                        resultSet.getString("name"),
-                        resultSet.getDate("date"),
-                        resultSet.getInt("participant_count"));
+                int raceID = resultSet.getInt("raceID");
+                String raceName = resultSet.getString("name");
+                Date raceDate = resultSet.getDate("date");
+                int participantCount = resultSet.getInt("participant_count");
+
+                String formattedDate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(raceDate);
+
+                System.out.printf("%-10d %-25s %-15s %-15d%n", raceID, raceName, formattedDate, participantCount);
             }
-            resultSet.close();
-            statement.close();
+
         } catch (SQLException e) {
+            System.err.println("Error fetching races with below-average participation: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     //33. Identify drivers who have driven for multiple constructors
     public void findDriversWithMultipleConstructors(Connection connection) {
-        try {
-            String sql = """
-                    SELECT Driver.forename, Driver.surname
-                    FROM Driver
-                    WHERE driverID IN (
-                        SELECT driverID
-                        FROM DrivesFor
-                        GROUP BY driverID
-                        HAVING COUNT(DISTINCT constructorID) > 1
-                    );
-                    """;
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
+        String sql = """
+            SELECT Driver.forename, Driver.surname
+            FROM Driver
+            WHERE driverID IN (
+                SELECT driverID
+                FROM DrivesFor
+                GROUP BY driverID
+                HAVING COUNT(DISTINCT constructorID) > 1
+            );
+            """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
 
             System.out.println("Drivers Who Have Driven for Multiple Constructors:");
             System.out.printf("%-15s %-15s%n", "First Name", "Last Name");
             System.out.println("---------------------------------------");
+
             while (resultSet.next()) {
-                System.out.printf("%-15s %-15s%n", resultSet.getString("forename"), resultSet.getString("surname"));
+                String forename = resultSet.getString("forename");
+                String surname = resultSet.getString("surname");
+
+                System.out.printf("%-15s %-15s%n", forename, surname);
             }
-            resultSet.close();
-            statement.close();
+
         } catch (SQLException e) {
+            System.err.println("Error fetching drivers with multiple constructors: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
 
 }
 
