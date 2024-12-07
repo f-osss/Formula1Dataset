@@ -133,12 +133,10 @@ CREATE TABLE completesLapTime
 );
 
 
-
-create table compete
-(
-    raceID   integer references race (raceID) on delete cascade,
-    driverID integer references driver (driverID) on delete cascade,
-    primary key (raceID, driverID)
+CREATE TABLE compete (
+    competeID     INTEGER IDENTITY(1,1) PRIMARY KEY,
+    raceID        INTEGER REFERENCES race (raceID) ON DELETE CASCADE,
+    driverID      INTEGER REFERENCES driver (driverID) ON DELETE CASCADE
 );
 
 create table status
