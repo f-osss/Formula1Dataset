@@ -11,8 +11,7 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
 public class Database {
-    private String connectionUrl;
-    private Connection connection
+    private Connection connection;
 
     public Database() {
         Properties prop = new Properties();
@@ -38,7 +37,7 @@ public class Database {
             System.exit(1);
         }
 
-        connectionUrl = "jdbc:sqlserver://uranium.cs.umanitoba.ca:1433;"
+        String connectionUrl = "jdbc:sqlserver://uranium.cs.umanitoba.ca:1433;"
                 + "database=cs3380;"
                 + "user=" + username + ";"
                 + "password=" + password + ";"

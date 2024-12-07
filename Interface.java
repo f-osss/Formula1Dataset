@@ -1,7 +1,6 @@
 import java.util.Scanner;
 
 public class Interface {
-    private String connectionUrl;
     static Database db = new Database();
 
     public static void main(String[] args) {
