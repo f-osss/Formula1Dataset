@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 
 public class Database {
     private String connectionUrl;
+    private Connection connection
 
     public Database() {
         Properties prop = new Properties();
@@ -45,11 +46,18 @@ public class Database {
                 + "trustServerCertificate=false;"
                 + "loginTimeout=30;";
 
+        try {
+            connection = DriverManager.getConnection(connectionUrl);
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database.");
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     //Queries
     //1. How many races did each driver win
-    public void racesDriverWon(Connection connection) {
+    public void racesDriverWon() {
         String sql = """
                     SELECT Driver.driverID, Driver.forename, Driver.surname, COUNT(Result.resultID) AS raceWon
                     FROM Result
@@ -79,7 +87,7 @@ public class Database {
     }
 
     //2. How many drivers were disqualified in the season
-    public void driversDisqualified(Connection connection, int year) {
+    public void driversDisqualified(int year) {
         String sql = """
                     SELECT Race.year, COUNT(DISTINCT Result.driverID) AS driversDisqualified
                     FROM Result
@@ -110,7 +118,7 @@ public class Database {
     }
 
     //3. Which driver improved the most throughout the season
-    public void improvedDriver(Connection connection) {
+    public void improvedDriver() {
         String sql = """
                     WITH DriverSeasonPoints AS (
                         SELECT
@@ -160,7 +168,7 @@ public class Database {
     }
 
     //4. Constructors who have the most mechanical failures
-    public void constructorMostMechanicalFailures(Connection connection, int limit) {
+    public void constructorMostMechanicalFailures(int limit) {
         String sql = """
                     SELECT TOP (?)
                         Constructor.constructorID,
@@ -209,7 +217,7 @@ public class Database {
     }
 
     //5. Find races with the highest number of accidents and collisions
-    public void racesWithHighAccidents(Connection connection, int limit) {
+    public void racesWithHighAccidents(int limit) {
         String sql = """
                     SELECT TOP (?)
                         Race.name,
@@ -256,7 +264,7 @@ public class Database {
     }
 
     //6. Find which constructor performed the fastest average pit stop
-    public void fastestAveragePitStop(Connection connection, int limit) {
+    public void fastestAveragePitStop(int limit) {
         String sql = """
                     SELECT TOP (?)
                         Constructor.constructorID,
@@ -303,7 +311,7 @@ public class Database {
     }
 
     //7. Find the worst driver in the season
-    public void worstDriver(Connection connection) {
+    public void worstDriver() {
         String sql = """
                     SELECT TOP 1
                         Driver.driverID,
@@ -348,7 +356,7 @@ public class Database {
     }
 
     //8.List constructors and their nationalities
-    public void listConstructorsAndNationalities(Connection connection) {
+    public void listConstructorsAndNationalities() {
         String sql = """
                     SELECT
                         name,
@@ -383,7 +391,7 @@ public class Database {
     }
 
     //9. List all countries where races occurred
-    public void listAllCountriesWithRaces(Connection connection) {
+    public void listAllCountriesWithRaces() {
         String sql = """
                     SELECT DISTINCT
                         country
@@ -418,7 +426,7 @@ public class Database {
     }
 
     //10. Display race information
-    public void displayRaceInformation(Connection connection) {
+    public void displayRaceInformation() {
         String sql = """
                     SELECT
                         raceID,
@@ -455,7 +463,7 @@ public class Database {
     }
 
     //11. circuits in a specific country
-    public void listCircuitInCountry(Connection connection, String country) {
+    public void listCircuitInCountry( String country) {
         String sql = """
                     SELECT 
                         Circuit.name AS circuit_name, 
@@ -495,7 +503,7 @@ public class Database {
     }
 
     //12. Get details of drivers from a specific constructor
-    public void driversByConstructor(Connection connection, String constructorName) {
+    public void driversByConstructor(String constructorName) {
         String sql = """
                     SELECT
                         Driver.forename,
@@ -540,7 +548,7 @@ public class Database {
     }
 
     //13. Count the number of races per year
-    public void countRacesPerYear(Connection connection) {
+    public void countRacesPerYear() {
         String sql = """
                     SELECT
                         year,
@@ -571,7 +579,7 @@ public class Database {
     }
 
     //14. Fastest lap times in all races
-    public void fastestLapTimes(Connection connection, int limit) {
+    public void fastestLapTimes(int limit) {
         String sql = """
                     SELECT TOP (?)
                         Driver.forename,
@@ -614,7 +622,7 @@ public class Database {
     }
 
     //15. Sort constructors by number of wins
-    public void constructorsByWins(Connection connection) {
+    public void constructorsByWins() {
         String sql = """
                     SELECT
                         Constructor.name,
@@ -657,7 +665,7 @@ public class Database {
     }
 
     //16. Top Constructor across all races
-    public void topConstructors(Connection connection, int limit) {
+    public void topConstructors(int limit) {
         String sql = """
                     SELECT TOP (?) Constructor.name, COUNT(Result.resultID) AS top_finish_count
                     FROM Result
@@ -694,7 +702,7 @@ public class Database {
     }
 
     //17. drivers with specific number of wins
-    public void findDriversWithSpecificWins(Connection connection, int numWins) {
+    public void findDriversWithSpecificWins( int numWins) {
         String sql = """
                     SELECT Driver.forename, Driver.surname, COUNT(DriverStanding.wins) AS win_count
                     FROM DriverStanding
@@ -731,7 +739,7 @@ public class Database {
     }
 
     //18. compare lap times between 2 drivers in a race
-    public void compareLapTimes(Connection connection, int raceID, int driverID1, int driverID2) {
+    public void compareLapTimes( int raceID, int driverID1, int driverID2) {
         String sql = """
                     SELECT Driver.forename, Driver.surname, LapTime.time
                     FROM LapTime
@@ -770,7 +778,7 @@ public class Database {
     }
 
     //19. race with the highest average speed for fastest lap
-    public void findRaceWithHighestAvgSpeed(Connection connection, int limit) {
+    public void findRaceWithHighestAvgSpeed(int limit) {
         String sql = """
                     SELECT TOP (?)
                         Race.name, AVG(Result.fastestLapSpeed) AS avg_speed
@@ -807,7 +815,7 @@ public class Database {
     }
 
     //20. find the total number of pit stops per driver
-    public void totalPitStopsPerDriver(Connection connection) {
+    public void totalPitStopsPerDriver() {
         String sql = """
                     SELECT Driver.forename, Driver.surname, COUNT(PitStop.stop) AS total_pitstops
                     FROM PitStop
@@ -842,7 +850,7 @@ public class Database {
     }
 
     //21. Find races in which a specific driver competed
-    public void racesForDriver(Connection connection, int driverID) {
+    public void racesForDriver( int driverID) {
         String sql = """
                     DECLARE @driverID INT = ?; -- (user inputs this)
                     SELECT Race.name, Race.date
@@ -880,7 +888,7 @@ public class Database {
     }
 
     //22. find driver with the most wins
-    public void driverWithMostWins(Connection connection, int topDrivers) {
+    public void driverWithMostWins(int topDrivers) {
         String sql = "SELECT TOP (?) Driver.forename, Driver.surname, COUNT(*) AS totalWins "
                 + "FROM DriverStanding "
                 + "INNER JOIN Driver ON DriverStanding.driverID = Driver.driverID "
@@ -917,7 +925,7 @@ public class Database {
     }
 
     //23. Fastest Lap Times Across All Races
-    public void findFastestLapTimes(Connection connection) {
+    public void findFastestLapTimes() {
         String sql = "SELECT raceID, driverID, MIN(fastestLapTime) AS fastestLapTime FROM LapTime GROUP BY raceID, driverID";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
@@ -940,7 +948,7 @@ public class Database {
     }
 
     //24. Average Race Position for Each Driver
-    public void findAverageRacePosition(Connection connection) {
+    public void findAverageRacePosition() {
         String sql = "SELECT driverID, AVG(positionOrder) AS avgPosition FROM Result GROUP BY driverID ORDER BY avgPosition";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
@@ -962,7 +970,7 @@ public class Database {
     }
 
     //25. Races with the Closest Finish
-    public void findClosestFinish(Connection connection, int limit) {
+    public void findClosestFinish(int limit) {
         String sql = "SELECT TOP (?) Race.name, MIN(Result.timeGap) AS smallest_gap " +
                 "FROM Result JOIN Race ON Result.raceID = Race.raceID " +
                 "WHERE Result.positionOrder = 1 OR Result.positionOrder = 2 " +
@@ -987,7 +995,7 @@ public class Database {
     }
 
     //26. Number of Drivers per Constructor
-    public void findDriversPerConstructor(Connection connection) {
+    public void findDriversPerConstructor() {
         String sql = "SELECT Constructor.name, COUNT(DrivesFor.driverID) AS driver_count " +
                 "FROM Constructor JOIN DrivesFor ON Constructor.constructorID = DrivesFor.constructorID " +
                 "GROUP BY Constructor.name";
@@ -1010,7 +1018,7 @@ public class Database {
     }
 
     //27. Sort Drivers by Total Points Earned
-    public void sortDriversByPoints(Connection connection) {
+    public void sortDriversByPoints() {
         String sql = "SELECT Driver.forename, Driver.surname, SUM(DriverStanding.points) AS total_points " +
                 "FROM DriverStanding JOIN Driver ON DriverStanding.driverID = Driver.driverID " +
                 "GROUP BY Driver.driverID ORDER BY total_points DESC";
@@ -1034,7 +1042,7 @@ public class Database {
     }
 
     //28. Driver Who Led the Most Laps in a Race
-    public void findDriverLedMostLaps(Connection connection, int raceID, int limit) {
+    public void findDriverLedMostLaps( int raceID, int limit) {
         String sql = "SELECT TOP (?) Driver.forename, Driver.surname, SUM(Result.laps) AS total_laps " +
                 "FROM Result INNER JOIN Driver ON Result.driverID = Driver.driverID " +
                 "WHERE Result.raceID = ? " +
@@ -1062,7 +1070,7 @@ public class Database {
     }
 
     //29. Race Results for a Specific Driver
-    public void findRaceResultsByDriver(Connection connection, int driverID) {
+    public void findRaceResultsByDriver(int driverID) {
         String sql = "SELECT Race.name, Result.positionOrder, Result.points " +
                 "FROM Result JOIN Race ON Result.raceID = Race.raceID WHERE Result.driverID = ?";
 
@@ -1086,7 +1094,7 @@ public class Database {
     }
 
     //30. Top Drivers in a Specific Race
-    public void findTopDriversInRace(Connection connection, int raceID, int limit) {
+    public void findTopDriversInRace(int raceID, int limit) {
         String sql = "SELECT TOP (?) Driver.forename, Driver.surname, Result.positionOrder, Result.points " +
                 "FROM Result JOIN Driver ON Result.driverID = Driver.driverID " +
                 "WHERE Result.raceID = ? ORDER BY Result.positionOrder ASC";
@@ -1112,7 +1120,7 @@ public class Database {
     }
 
     //31. Constructor with the Highest Points in a Season
-    public void findConstructorHighestPoints(Connection connection, int limit) {
+    public void findConstructorHighestPoints(int limit) {
         String sql = "SELECT TOP (?) Constructor.name, SUM(ConstructorStanding.points) AS totalPoints " +
                 "FROM ConstructorStanding INNER JOIN Constructor ON ConstructorStanding.constructorID = Constructor.constructorID " +
                 "GROUP BY Constructor.constructorID, Constructor.name ORDER BY totalPoints DESC";
@@ -1136,22 +1144,22 @@ public class Database {
     }
 
     //32. Find races with below-average participation
-    public void findRacesWithBelowAverageParticipation(Connection connection) {
+    public void findRacesWithBelowAverageParticipation() {
         String sql = """
-            SELECT Race.raceID, Race.name, Race.date, COUNT(Result.driverID) AS participant_count
-            FROM Race
-            JOIN Result ON Race.raceID = Result.raceID
-            GROUP BY Race.raceID, Race.name, Race.date
-            HAVING participant_count < (
-                SELECT AVG(total_participants)
-                FROM (
-                    SELECT COUNT(driverID) AS total_participants
-                    FROM Result
-                    GROUP BY raceID
-                ) AS race_participation
-            )
-            ORDER BY participant_count ASC;
-            """;
+                SELECT Race.raceID, Race.name, Race.date, COUNT(Result.driverID) AS participant_count
+                FROM Race
+                JOIN Result ON Race.raceID = Result.raceID
+                GROUP BY Race.raceID, Race.name, Race.date
+                HAVING participant_count < (
+                    SELECT AVG(total_participants)
+                    FROM (
+                        SELECT COUNT(driverID) AS total_participants
+                        FROM Result
+                        GROUP BY raceID
+                    ) AS race_participation
+                )
+                ORDER BY participant_count ASC;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
@@ -1178,17 +1186,17 @@ public class Database {
     }
 
     //33. Identify drivers who have driven for multiple constructors
-    public void findDriversWithMultipleConstructors(Connection connection) {
+    public void findDriversWithMultipleConstructors() {
         String sql = """
-            SELECT Driver.forename, Driver.surname
-            FROM Driver
-            WHERE driverID IN (
-                SELECT driverID
-                FROM DrivesFor
-                GROUP BY driverID
-                HAVING COUNT(DISTINCT constructorID) > 1
-            );
-            """;
+                SELECT Driver.forename, Driver.surname
+                FROM Driver
+                WHERE driverID IN (
+                    SELECT driverID
+                    FROM DrivesFor
+                    GROUP BY driverID
+                    HAVING COUNT(DISTINCT constructorID) > 1
+                );
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
