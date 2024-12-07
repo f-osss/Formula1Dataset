@@ -234,7 +234,7 @@ public class Interface {
                 db.sortDriversByPoints();
             case 16:
                 System.out.print("Enter raceID: ");
-                System.out.print("Enter limit: ");
+                System.out.print("\nEnter limit: ");
                 db.findDriverLedMostLaps(Integer.parseInt(scanner.nextLine().trim()), Integer.parseInt(scanner.nextLine().trim()));
             case 17:
                 System.out.print("Enter year: ");
@@ -244,8 +244,8 @@ public class Interface {
                 db.findRaceResultsByDriver(Integer.parseInt(scanner.nextLine().trim()));
             case 19:
                 System.out.print("Enter raceID: ");
-                System.out.print("Enter driverID1: ");
-                System.out.print("Enter driverID2: ");
+                System.out.print("\nEnter driverID1: ");
+                System.out.print("\nEnter driverID2: ");
                 db.compareLapTimes(Integer.parseInt(scanner.nextLine().trim()),Integer.parseInt(scanner.nextLine().trim()),Integer.parseInt(scanner.nextLine().trim()));
             case 20:
                 System.out.print("Enter driverID: ");
