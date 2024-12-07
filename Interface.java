@@ -225,8 +225,8 @@ public class Interface {
                 db.racesDriverWon();
                 break;
             case 10:
-                System.out.print("Enter limit: ");
-                db.topConstructors(Integer.parseInt(scanner.nextLine().trim()));
+                System.out.print("Enter number of wins: ");
+                db.findDriversWithSpecificWins(Integer.parseInt(scanner.nextLine().trim()));
                 break;
             case 11:
                 System.out.print("Enter limit: ");
@@ -279,7 +279,7 @@ public class Interface {
                 break;
             case 24:
                 System.out.print("Enter limit: ");
-                db.findRaceWithHighestAvgSpeed(Integer.parseInt(scanner.nextLine().trim()));
+                db.constructorsByWins();
                 break;
             case 25:
                 System.out.print("Enter limit: ");
