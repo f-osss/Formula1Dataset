@@ -462,7 +462,7 @@ public class Database {
     }
 
     //11. circuits in a specific country
-    public void listCircuitInCountry( String country) {
+    public void listCircuitInCountry(String country) {
         String sql = """
                     SELECT 
                         Circuit.name AS circuit_name, 
@@ -504,19 +504,19 @@ public class Database {
     //12. Get details of drivers from a specific constructor
     public void driversByConstructor(String constructorName) {
         String sql = """
-            SELECT
-                Driver.forename,
-                Driver.surname,
-                Constructor.name
-            FROM
-                Driver
-            INNER JOIN
-                DrivesFor ON Driver.driverID = DrivesFor.driverID
-            INNER JOIN
-                Constructor ON DrivesFor.constructorID = Constructor.constructorID
-            WHERE
-                CAST(Constructor.name AS NVARCHAR(255)) = ?;
-        """;
+                    SELECT
+                        Driver.forename,
+                        Driver.surname,
+                        Constructor.name
+                    FROM
+                        Driver
+                    INNER JOIN
+                        DrivesFor ON Driver.driverID = DrivesFor.driverID
+                    INNER JOIN
+                        Constructor ON DrivesFor.constructorID = Constructor.constructorID
+                    WHERE
+                        CAST(Constructor.name AS NVARCHAR(255)) = ?;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, constructorName);
@@ -623,20 +623,20 @@ public class Database {
     //15. Sort constructors by number of wins
     public void constructorsByWins() {
         String sql = """
-            SELECT
-                CAST(Constructor.name AS NVARCHAR(255)) AS name,
-                COUNT(Result.resultID) AS win_count
-            FROM
-                Result
-            INNER JOIN
-                Constructor ON Result.constructorID = Constructor.constructorID
-            WHERE
-                Result.positionOrder = 1
-            GROUP BY
-                CAST(Constructor.name AS NVARCHAR(255))
-            ORDER BY
-                win_count DESC;
-        """;
+                    SELECT
+                        CAST(Constructor.name AS NVARCHAR(255)) AS name,
+                        COUNT(Result.resultID) AS win_count
+                    FROM
+                        Result
+                    INNER JOIN
+                        Constructor ON Result.constructorID = Constructor.constructorID
+                    WHERE
+                        Result.positionOrder = 1
+                    GROUP BY
+                        CAST(Constructor.name AS NVARCHAR(255))
+                    ORDER BY
+                        win_count DESC;
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -666,11 +666,12 @@ public class Database {
     //16. Top Constructor across all races
     public void topConstructors(int limit) {
         String sql = """
-                    SELECT TOP (?) Constructor.name, COUNT(Result.resultID) AS top_finish_count
+                    SELECT TOP (?) CAST(Constructor.name AS NVARCHAR(255)) AS name,
+                           COUNT(Result.resultID) AS top_finish_count
                     FROM Result
                     INNER JOIN Constructor ON Result.constructorID = Constructor.constructorID
                     WHERE Result.positionOrder <= 3
-                    GROUP BY Constructor.name
+                    GROUP BY CAST(Constructor.name AS NVARCHAR(255))
                     ORDER BY top_finish_count DESC;
                 """;
 
@@ -701,7 +702,7 @@ public class Database {
     }
 
     //17. drivers with specific number of wins
-    public void findDriversWithSpecificWins( int numWins) {
+    public void findDriversWithSpecificWins(int numWins) {
         String sql = """
                     SELECT Driver.forename, Driver.surname, COUNT(DriverStanding.wins) AS win_count
                     FROM DriverStanding
@@ -738,7 +739,7 @@ public class Database {
     }
 
     //18. compare lap times between 2 drivers in a race
-    public void compareLapTimes( int raceID, int driverID1, int driverID2) {
+    public void compareLapTimes(int raceID, int driverID1, int driverID2) {
         String sql = """
                     SELECT Driver.forename, Driver.surname, LapTime.time
                     FROM LapTime
@@ -849,7 +850,7 @@ public class Database {
     }
 
     //21. Find races in which a specific driver competed
-    public void racesForDriver( int driverID) {
+    public void racesForDriver(int driverID) {
         String sql = """
                     DECLARE @driverID INT = ?; -- (user inputs this)
                     SELECT Race.name, Race.date
@@ -1044,7 +1045,7 @@ public class Database {
     }
 
     //28. Driver Who Led the Most Laps in a Race
-    public void findDriverLedMostLaps( int raceID, int limit) {
+    public void findDriverLedMostLaps(int raceID, int limit) {
         String sql = "SELECT TOP (?) Driver.forename, Driver.surname, SUM(Result.laps) AS total_laps " +
                 "FROM Result INNER JOIN Driver ON Result.driverID = Driver.driverID " +
                 "WHERE Result.raceID = ? " +
