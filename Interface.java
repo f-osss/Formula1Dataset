@@ -99,7 +99,7 @@ public class Interface {
     private static void display1a(Scanner scanner) {
         System.out.println("1a. Lap Time Performance Queries:");
         System.out.println("1. Find the race with the highest average speed for fastest laps");
-        System.out.println("2. Find the fastest lap times across all races");
+        System.out.println("2. Find the fastest lap times for each driver across all races");
         System.out.println("3. Fastest lap times in all races");
         System.out.print("Select a query (e.g., '1' or '2'): ");
         handleQuery(Integer.parseInt(scanner.nextLine().trim()));
@@ -199,7 +199,7 @@ public class Interface {
                 db.findRaceWithHighestAvgSpeed(Integer.parseInt(scanner.nextLine().trim()));
                 break;
             case 2:
-                db.findFastestLapTimes();
+                db.findFastestLapTimesForDriver();
                 break;
             case 3:
                 System.out.print("Enter limit: ");

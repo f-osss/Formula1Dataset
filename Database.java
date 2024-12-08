@@ -923,8 +923,8 @@ public class Database {
         }
     }
 
-    //23. Fastest Lap Times Across All Races
-    public void findFastestLapTimes() {
+    //23. Fastest Lap Times For each driver Across All Races
+    public void findFastestLapTimesForDriver() {
         String sql = "SELECT raceID, driverID, MIN(fastestLapTime) AS fastestLapTime FROM LapTime GROUP BY raceID, driverID";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
