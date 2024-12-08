@@ -119,32 +119,45 @@ public class Database {
     //3. Which driver improved the most throughout the season
     public void improvedDriver() {
         String sql = """
-                    WITH DriverSeasonPoints AS (
-                        SELECT
-                            Driver.driverID,
-                            Driver.forename,
-                            Driver.surname,
-                            SUM(CASE WHEN Race.round = 1 THEN DriverStanding.points ELSE 0 END) AS seasonStartPoints,
-                            SUM(CASE WHEN Race.round = (SELECT MAX(round) FROM Race WHERE year = Race.year) THEN DriverStanding.points ELSE 0 END) AS seasonEndPoints
-                        FROM
-                            DriverStanding
-                        JOIN
-                            Driver ON DriverStanding.driverID = Driver.driverID
-                        JOIN
-                            Race ON DriverStanding.raceID = Race.raceID
-                        GROUP BY
-                            Driver.driverID, Driver.forename, Driver.surname, Race.year
-                    )
-                    SELECT TOP 1
-                        driverID,
-                        forename,
-                        surname,
-                        (seasonEndPoints - seasonStartPoints) AS improvement
-                    FROM
-                        DriverSeasonPoints
-                    ORDER BY
-                        improvement DESC;
-                """;
+            WITH SeasonMaxRounds AS (
+                SELECT
+                    year,
+                    MAX(round) AS maxRound
+                FROM
+                    Race
+                GROUP BY
+                    year
+            ),
+            DriverSeasonPoints AS (
+                SELECT
+                    Driver.driverID,
+                    Driver.forename,
+                    Driver.surname,
+                    Race.year,
+                    SUM(CASE WHEN Race.round = 1 THEN DriverStanding.points ELSE 0 END) AS seasonStartPoints,
+                    SUM(CASE WHEN Race.round = SeasonMaxRounds.maxRound THEN DriverStanding.points ELSE 0 END) AS seasonEndPoints
+                FROM
+                    DriverStanding
+                JOIN
+                    Driver ON DriverStanding.driverID = Driver.driverID
+                JOIN
+                    Race ON DriverStanding.raceID = Race.raceID
+                JOIN
+                    SeasonMaxRounds ON Race.year = SeasonMaxRounds.year
+                GROUP BY
+                    Driver.driverID, Driver.forename, Driver.surname, Race.year
+            )
+            SELECT TOP 1
+                driverID,
+                forename,
+                surname,
+                (seasonEndPoints - seasonStartPoints) AS improvement
+            FROM
+                DriverSeasonPoints
+            ORDER BY
+                improvement DESC;
+        """;
+
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
