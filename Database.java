@@ -1123,9 +1123,12 @@ public class Database {
 
     //31. Constructor with the Highest Points in a Season
     public void findConstructorHighestPoints(int limit) {
-        String sql = "SELECT TOP " + limit + "Constructor.name, SUM(ConstructorStanding.points) AS totalPoints " +
-                "FROM ConstructorStanding INNER JOIN Constructor ON ConstructorStanding.constructorID = Constructor.constructorID " +
-                "GROUP BY Constructor.constructorID, Constructor.name ORDER BY totalPoints DESC";
+        String sql = "SELECT TOP " + limit + "CAST(Constructor.name AS NVARCHAR(MAX)) AS name, " +
+                "SUM(ConstructorStanding.points) AS totalPoints " +
+                "FROM ConstructorStanding " +
+                "INNER JOIN Constructor ON ConstructorStanding.constructorID = Constructor.constructorID " +
+                "GROUP BY Constructor.constructorID, CAST(Constructor.name AS NVARCHAR(MAX)) " +
+                "ORDER BY totalPoints DESC";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
