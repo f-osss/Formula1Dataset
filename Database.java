@@ -182,7 +182,7 @@ public class Database {
                     WHERE
                         Status.statusID = 26
                     GROUP BY
-                        Constructor.constructorID, Constructor.name
+                        Constructor.constructorID, CAST(Constructor.name AS NVARCHAR(255))
                     ORDER BY
                         mechanicalFailures DESC;
                 """;
