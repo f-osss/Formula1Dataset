@@ -504,19 +504,19 @@ public class Database {
     //12. Get details of drivers from a specific constructor
     public void driversByConstructor(String constructorName) {
         String sql = """
-                    SELECT
-                        Driver.forename,
-                        Driver.surname,
-                        Constructor.name
-                    FROM
-                        Driver
-                    INNER JOIN
-                        DrivesFor ON Driver.driverID = DrivesFor.driverID
-                    INNER JOIN
-                        Constructor ON DrivesFor.constructorID = Constructor.constructorID
-                    WHERE
-                        Constructor.name = ?;
-                """;
+            SELECT
+                Driver.forename,
+                Driver.surname,
+                Constructor.name
+            FROM
+                Driver
+            INNER JOIN
+                DrivesFor ON Driver.driverID = DrivesFor.driverID
+            INNER JOIN
+                Constructor ON DrivesFor.constructorID = Constructor.constructorID
+            WHERE
+                CAST(Constructor.name AS NVARCHAR(255)) = ?;
+        """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, constructorName);
