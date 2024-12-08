@@ -666,13 +666,15 @@ public class Database {
     //16. Top Constructor across all races
     public void topConstructors(int limit) {
         String sql = """
-                    SELECT TOP (?) Constructor.name, COUNT(Result.resultID) AS top_finish_count
-                    FROM Result
-                    INNER JOIN Constructor ON Result.constructorID = Constructor.constructorID
-                    WHERE Result.positionOrder <= 3
-                    GROUP BY Constructor.name
-                    ORDER BY top_finish_count DESC;
-                """;
+            SELECT TOP (?) CAST(Constructor.name AS NVARCHAR(255)) AS name,
+                   COUNT(Result.resultID) AS top_finish_count
+            FROM Result
+            INNER JOIN Constructor ON Result.constructorID = Constructor.constructorID
+            WHERE Result.positionOrder <= 3
+            GROUP BY CAST(Constructor.name AS NVARCHAR(255))
+            ORDER BY top_finish_count DESC;
+        """;
+
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, limit);
