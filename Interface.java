@@ -204,7 +204,7 @@ public class Interface {
 
 
     private static void handleQuery(int queryNumber) {
-        System.out.println("Executing query #" + queryNumber + "...");
+        System.out.println("\nExecuting query #" + queryNumber + "...");
         Scanner scanner = new Scanner(System.in);
         switch (queryNumber) {
             case 1:
@@ -338,9 +338,8 @@ public class Interface {
                 break;
             default:
                 System.out.println("Invalid query number.");
-
         }
-//
+        System.out.println("-------------------------------------------------------------------------");
 
     }
 
