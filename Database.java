@@ -171,7 +171,7 @@ public class Database {
         String sql = """
                     SELECT TOP (?)
                         Constructor.constructorID,
-                        Constructor.name,
+                        CAST(Constructor.name AS NVARCHAR(255)) AS name,
                         COUNT(Result.resultID) AS mechanicalFailures
                     FROM
                         Result
