@@ -8,13 +8,16 @@ public class Interface {
         String input;
 
         System.out.println("Welcome to the F1 Database Command Line Interface!");
-        System.out.println("Explore race statistics, driver performances, lap times, and much more...");
+        System.out.println("Explore Formula 1 Races, Drivers, Constructors and much more...");
+        System.out.println("-------------------------------------------------------------------------");
 
         while (true) {
-            System.out.println("\n-------------------------------------------------------------------------");
-            System.out.println("Enter `h` or 'help' at any time to get the main menu");
+            System.out.println("Enter `h` or 'help' to get the main menu");
             System.out.println("Enter 'q' to close the program");
-            System.out.print("\nUser input: ");
+            System.out.println("Enter `d` to delete database data");
+            System.out.println("Enter `r` to repopulate database data");
+            System.out.print(">>> User input: ");
+
             input = scanner.nextLine().trim();
 
             if (input.equalsIgnoreCase("q")) {
@@ -27,6 +30,10 @@ public class Interface {
                 handleSubcategory(input.toLowerCase(), scanner);
             } else if (input.matches("\\d+")) { // Handles query selection like '13'
                 handleQuery(Integer.parseInt(input));
+            } else if (input.equalsIgnoreCase("d")) {
+
+            } else if (input.equalsIgnoreCase("r")) {
+
             } else {
                 System.out.println("Invalid input. Enter `h` or 'help' to see the menu or `q` to quit.");
             }
@@ -39,7 +46,7 @@ public class Interface {
         System.out.println("-------------------------------------------------------------------------");
         System.out.println("F1 Database main menu:");
         System.out.println("Please select one of the categories to see the available queries.");
-        System.out.println("For example, to see Driver Queries for Driver wins, enter `2a`");
+        System.out.println("For example, to see Driver wins, enter `2a`");
         System.out.println();
         System.out.println("1. Race Queries");
         System.out.println("   a. Lap Time Performance");
@@ -58,6 +65,7 @@ public class Interface {
         System.out.println();
         System.out.println("4. Miscellaneous");
         System.out.println("   a. Races by Location");
+        System.out.println("-------------------------------------------------------------------------");
     }
 
     private static void handleSubcategory(String subcategory, Scanner scanner) {
