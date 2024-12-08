@@ -39,7 +39,7 @@ public class Interface {
             } else if (input.equalsIgnoreCase("r")) {
                 //po.loadConfigAndPopulate();
             } else {
-                System.out.println("Invalid input. Enter `h` or 'help' to see the menu or `q` to quit.");
+                System.out.println("Invalid input.");
             }
         }
 
@@ -105,7 +105,7 @@ public class Interface {
                 display4a(scanner);
                 break;
             default:
-                System.out.println("Invalid subcategory. Type `help` to see the menu.");
+                System.out.println("Invalid subcategory.");
         }
     }
 
@@ -337,7 +337,7 @@ public class Interface {
                 db.listCircuitInCountry(scanner.nextLine().trim());
                 break;
             default:
-                System.out.println("Invalid query number. Type `help` to see the menu.");
+                System.out.println("Invalid query number.");
 
         }
 //
