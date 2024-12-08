@@ -267,7 +267,7 @@ public class Database {
         String sql = """
                     SELECT TOP (?)
                         Constructor.constructorID,
-                        Constructor.name,
+                        CAST(Constructor.name AS NVARCHAR(255)) AS name,
                         AVG(PitStop.milliseconds) AS averagePitStop
                     FROM
                         PitStop
@@ -276,7 +276,7 @@ public class Database {
                     JOIN
                         Constructor ON DrivesFor.constructorID = Constructor.constructorID
                     GROUP BY
-                        Constructor.constructorID, Constructor.name
+                        Constructor.constructorID, CAST(Constructor.name AS NVARCHAR(255))
                     ORDER BY
                         averagePitStop ASC;
                 """;
