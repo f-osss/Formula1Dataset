@@ -71,7 +71,6 @@ public class Populate {
 //        compete();
 
 
-
     }
 
     public void city() {
@@ -1026,4 +1025,34 @@ public class Populate {
     }
 
 
+    public void deleteDatabaseData() {
+        String sqlFilePath = "formula1_cpg12.sql"; // File containing SQL commands
+
+        try (BufferedReader br = new BufferedReader(new FileReader(sqlFilePath))) {
+            StringBuilder sql = new StringBuilder();
+            String line;
+
+            // Read the SQL file line by line
+            while ((line = br.readLine()) != null) {
+                sql.append(line).append("\n");
+            }
+
+            try (Connection connection = DriverManager.getConnection(connectionUrl);
+                 PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+                int rowsAffected = statement.executeUpdate();
+                System.out.println("Database data deleted successfully. Rows affected: " + rowsAffected);
+            } catch (SQLException e) {
+                System.err.println("SQL Error while deleting database data: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error reading SQL file for deleting data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }
+
+
+

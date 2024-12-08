@@ -1,7 +1,11 @@
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Interface {
     static Database db = new Database();
+    static Populate po = new Populate();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -31,9 +35,9 @@ public class Interface {
             } else if (input.matches("\\d+")) { // Handles query selection like '13'
                 handleQuery(Integer.parseInt(input));
             } else if (input.equalsIgnoreCase("d")) {
-
+                //po.deleteDatabaseData();
             } else if (input.equalsIgnoreCase("r")) {
-
+                //po.loadConfigAndPopulate();
             } else {
                 System.out.println("Invalid input. Enter `h` or 'help' to see the menu or `q` to quit.");
             }
@@ -339,6 +343,8 @@ public class Interface {
 //
 
     }
+
+
 }
 
 
