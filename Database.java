@@ -998,10 +998,10 @@ public class Database {
 
     //26. Number of Drivers per Constructor
     public void findDriversPerConstructor() {
-        String sql = "SELECT constructor.name, COUNT(drivesFor.driverID) AS driver_count " +
+        String sql = "SELECT CAST(constructor.name AS NVARCHAR(MAX)) AS name, COUNT(drivesFor.driverID) AS driver_count " +
                 "FROM constructor " +
                 "JOIN drivesFor ON constructor.constructorID = drivesFor.constructorID " +
-                "GROUP BY constructor.name";
+                "GROUP BY CAST(constructor.name AS NVARCHAR(MAX))";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
