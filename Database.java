@@ -623,20 +623,20 @@ public class Database {
     //15. Sort constructors by number of wins
     public void constructorsByWins() {
         String sql = """
-                    SELECT
-                        Constructor.name,
-                        COUNT(Result.resultID) AS win_count
-                    FROM
-                        Result
-                    INNER JOIN
-                        Constructor ON Result.constructorID = Constructor.constructorID
-                    WHERE
-                        Result.positionOrder = 1
-                    GROUP BY
-                        Constructor.name
-                    ORDER BY
-                        win_count DESC;
-                """;
+            SELECT
+                CAST(Constructor.name AS NVARCHAR(255)) AS name,
+                COUNT(Result.resultID) AS win_count
+            FROM
+                Result
+            INNER JOIN
+                Constructor ON Result.constructorID = Constructor.constructorID
+            WHERE
+                Result.positionOrder = 1
+            GROUP BY
+                CAST(Constructor.name AS NVARCHAR(255))
+            ORDER BY
+                win_count DESC;
+        """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
