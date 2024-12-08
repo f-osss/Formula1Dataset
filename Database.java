@@ -1150,11 +1150,11 @@ public class Database {
     //32. Find races with below-average participation
     public void findRacesWithBelowAverageParticipation() {
         String sql = """
-                SELECT Race.raceID, Race.name, Race.date, COUNT(Result.driverID) AS participant_count
+                SELECT Race.raceID, CAST(Race.name AS NVARCHAR(MAX)) AS name, Race.date, COUNT(Result.driverID) AS participant_count
                 FROM Race
                 JOIN Result ON Race.raceID = Result.raceID
-                GROUP BY Race.raceID, Race.name, Race.date
-                HAVING participant_count < (
+                GROUP BY Race.raceID, CAST(Race.name AS NVARCHAR(MAX)), Race.date
+                HAVING COUNT(Result.driverID) < (
                     SELECT AVG(total_participants)
                     FROM (
                         SELECT COUNT(driverID) AS total_participants
@@ -1163,7 +1163,8 @@ public class Database {
                     ) AS race_participation
                 )
                 ORDER BY participant_count ASC;
-                """;
+            """;
+
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
