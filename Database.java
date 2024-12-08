@@ -925,20 +925,20 @@ public class Database {
 
     //23. Fastest Lap Times For each driver Across All Races
     public void findFastestLapTimesForDriver() {
-        String sql = "SELECT raceID, driverID, MIN(fastestLapTime) AS fastestLapTime FROM LapTime GROUP BY raceID, driverID";
+        String sql = "SELECT raceID, driverID, MIN(milliseconds) AS ms FROM laptime GROUP BY raceID, driverID";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
             System.out.println("Fastest Lap Times Across All Races:");
-            System.out.printf("%-10s %-10s %-15s%n", "Race ID", "Driver ID", "Fastest Lap Time");
+            System.out.printf("%-10s %-10s %-15s%n", "Race ID", "Driver ID", "Fastest Lap Time (milliseconds)");
             System.out.println("--------------------------------------");
 
             while (resultSet.next()) {
                 System.out.printf("%-10d %-10d %-15.2f%n",
                         resultSet.getInt("raceID"),
                         resultSet.getInt("driverID"),
-                        resultSet.getDouble("fastestLapTime"));
+                        resultSet.getDouble("ms"));
             }
 
         } catch (SQLException e) {
@@ -970,13 +970,15 @@ public class Database {
 
     //25. Races with the Closest Finish
     public void findClosestFinish(int limit) {
-        String sql = "SELECT TOP (?) Race.name, MIN(Result.timeGap) AS smallest_gap " +
-                "FROM Result JOIN Race ON Result.raceID = Race.raceID " +
-                "WHERE Result.positionOrder = 1 OR Result.positionOrder = 2 " +
-                "GROUP BY Race.name ORDER BY smallest_gap ASC";
+        String sql = "SELECT TOP " + limit + " Race.name, Race.year, " +
+                "ABS(res2.milliseconds - res1.milliseconds) AS smallest_gap " +
+                "FROM Result res1 " +
+                "JOIN Result res2 ON res1.raceID = res2.raceID " +
+                "AND res1.positionOrder = 1 AND res2.positionOrder = 2 " +
+                "JOIN Race ON res1.raceID = Race.raceID " +
+                "ORDER BY smallest_gap ASC;";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, limit);
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 System.out.println("Races with the Closest Finish:");
@@ -995,9 +997,10 @@ public class Database {
 
     //26. Number of Drivers per Constructor
     public void findDriversPerConstructor() {
-        String sql = "SELECT Constructor.name, COUNT(DrivesFor.driverID) AS driver_count " +
-                "FROM Constructor JOIN DrivesFor ON Constructor.constructorID = DrivesFor.constructorID " +
-                "GROUP BY Constructor.name";
+        String sql = "SELECT constructor.name, COUNT(drivesFor.driverID) AS driver_count " +
+                "FROM constructor " +
+                "JOIN drivesFor ON constructor.constructorID = drivesFor.constructorID " +
+                "GROUP BY constructor.name";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
@@ -1020,7 +1023,7 @@ public class Database {
     public void sortDriversByPoints() {
         String sql = "SELECT Driver.forename, Driver.surname, SUM(DriverStanding.points) AS total_points " +
                 "FROM DriverStanding JOIN Driver ON DriverStanding.driverID = Driver.driverID " +
-                "GROUP BY Driver.driverID ORDER BY total_points DESC";
+                "GROUP BY Driver.driverID, Driver.forename, Driver.surname ORDER BY total_points DESC";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
@@ -1078,11 +1081,11 @@ public class Database {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 System.out.println("Race Results for Driver ID: " + driverID);
-                System.out.printf("%-20s %-15s %-15s%n", "Race Name", "Position Order", "Points");
-                System.out.println("----------------------------------------------");
+                System.out.printf("%-30s %-15s %-15s%n", "Race Name", "Position Order", "Points");
+                System.out.println("---------------------------------------------------------");
 
                 while (resultSet.next()) {
-                    System.out.printf("%-20s %-15d %-15.2f%n", resultSet.getString("name"),
+                    System.out.printf("%-30s %-15d %-15.2f%n", resultSet.getString("name"),
                             resultSet.getInt("positionOrder"), resultSet.getDouble("points"));
                 }
             }
@@ -1120,12 +1123,11 @@ public class Database {
 
     //31. Constructor with the Highest Points in a Season
     public void findConstructorHighestPoints(int limit) {
-        String sql = "SELECT TOP (?) Constructor.name, SUM(ConstructorStanding.points) AS totalPoints " +
+        String sql = "SELECT TOP " + limit + "Constructor.name, SUM(ConstructorStanding.points) AS totalPoints " +
                 "FROM ConstructorStanding INNER JOIN Constructor ON ConstructorStanding.constructorID = Constructor.constructorID " +
                 "GROUP BY Constructor.constructorID, Constructor.name ORDER BY totalPoints DESC";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, limit);
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 System.out.println("Constructors with Highest Points:");

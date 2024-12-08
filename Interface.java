@@ -240,6 +240,7 @@ public class Interface {
                 System.out.print("Enter limit: ");
                 int input7 = Integer.parseInt(scanner.nextLine().trim());
                 db.findTopDriversInRace(input6,input7);
+                break;
             case 13:
                 db.improvedDriver();
                 break;
