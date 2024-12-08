@@ -19,6 +19,7 @@ public class Interface {
 
             if (input.equalsIgnoreCase("q")) {
                 System.out.println("Exiting the program...");
+                System.out.println("Thank you for using our F1 Database Command Line Interface!");
                 break;
             } else if (input.equalsIgnoreCase("h") | input.equalsIgnoreCase("help")) {
                 displayMainMenu();
@@ -37,8 +38,8 @@ public class Interface {
     private static void displayMainMenu() {
         System.out.println("-------------------------------------------------------------------------");
         System.out.println("F1 Database main menu:");
-        System.out.println("Please select one of the categories to see the available actions.");
-        System.out.println("For example, to see Race Queries, enter `1a`");
+        System.out.println("Please select one of the categories to see the available queries.");
+        System.out.println("For example, to see Driver Queries for Driver wins, enter `2a`");
         System.out.println();
         System.out.println("1. Race Queries");
         System.out.println("   a. Lap Time Performance");
