@@ -219,7 +219,7 @@ public class Database {
     public void racesWithHighAccidents(int limit) {
         String sql = """
                     SELECT TOP (?)
-                        Race.name,
+                        CAST(Race.name AS NVARCHAR(255)) AS raceName,
                         COUNT(Result.resultID) AS numAccidentsAndCollisions
                     FROM
                         Result
@@ -230,7 +230,7 @@ public class Database {
                     WHERE
                         Status.statusID = 3 OR Status.statusID = 4
                     GROUP BY
-                        Race.raceID, Race.name
+                        Race.raceID, CAST(Race.name AS NVARCHAR(255))
                     ORDER BY
                         numAccidentsAndCollisions DESC;
                 """;
@@ -246,7 +246,7 @@ public class Database {
                 boolean hasResults = false;
                 while (resultSet.next()) {
                     hasResults = true;
-                    String raceName = resultSet.getString("name");
+                    String raceName = resultSet.getString("raceName");
                     int numAccidentsAndCollisions = resultSet.getInt("numAccidentsAndCollisions");
 
                     System.out.printf("%-30s %-20d%n", raceName, numAccidentsAndCollisions);
