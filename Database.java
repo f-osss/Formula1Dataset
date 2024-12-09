@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 public class Database {
     private Connection connection;
@@ -53,6 +55,34 @@ public class Database {
             System.exit(1);
         }
     }
+
+    //read the sql file
+    public void executeSqlFile(String filePath) {
+        StringBuilder sql = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                sql.append(line).append("\n");
+            }
+            executeSqlStatements(sql.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void executeSqlStatements(String sql) {
+        try (Statement statement = connection.createStatement()) {
+            String[] queries = sql.split(";");
+            for (String query : queries) {
+                if (!query.trim().isEmpty()) {
+                    statement.executeUpdate(query.trim());
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     //Queries
     //1. How many races did each driver win

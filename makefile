@@ -1,11 +1,11 @@
 
-build: Populate.class
+build: Interface.class
 
-Populate.class: Populate.java
-	javac Populate.java
+Interface.class: Interface.java
+	javac Interface.java
 
-run: Populate.class
-	java -cp .:mssql-jdbc-11.2.0.jre11.jar Populate
+run: Interface.class
+	java -cp .:mssql-jdbc-11.2.0.jre11.jar Interface
 
 clean:
-	rm Populate.class
+	rm Interface.class

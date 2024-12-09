@@ -53,22 +53,22 @@ public class Populate {
                 + "trustServerCertificate=false;"
                 + "loginTimeout=30;";
 
-//        city();
-//        circuit();
-//        race();
-//        constructor();
-//        driver();
-//        result();
-//        status();
-//        sprintResult();
-//        driverStanding();
-//        constructorResult();
-//        constructorStanding();
-//        Pitstop();
-//        qualifyingRecord();
-//        LapTime();
-//        drivesFor();
-//        compete();
+        city();
+        circuit();
+        race();
+        constructor();
+        driver();
+        result();
+        status();
+        sprintResult();
+        driverStanding();
+        constructorResult();
+        constructorStanding();
+        Pitstop();
+        qualifyingRecord();
+        LapTime();
+        drivesFor();
+        compete();
 
 
     }
@@ -800,76 +800,8 @@ public class Populate {
         }
     }
 
-//    public void compete() {
-//        String sql = "INSERT INTO compete (raceID, driverID) VALUES (?, ?)";
-//        file = "csv_files/compete.csv";
-//        try (Connection connection = DriverManager.getConnection(connectionUrl);
-//             BufferedReader br = new BufferedReader(new FileReader(file));
-//             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-//
-//            String line;
-//            br.readLine();
-//
-//            while ((line = br.readLine()) != null) {
-//                String[] fields = line.split(",");
-//
-//                int raceID = Integer.parseInt(fields[0].trim());
-//                int driverID = Integer.parseInt(fields[1].trim());
-//
-//
-//                preparedStatement.setInt(1, raceID);
-//                preparedStatement.setInt(2, driverID);
-//
-//                preparedStatement.executeUpdate();
-//            }
-//
-//            System.out.println("compete table successfully populated");
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } catch (FileNotFoundException e) {
-//            System.out.println("csv file not found.");
-//        } catch (IOException e) {
-//            System.out.println("Error reading csv file.");
-//        }
-//    }
-
-    public void records() {
-        String sql = "INSERT INTO records (raceID, lapID) VALUES (?, ?)";
-        file = "csv_files/records.csv";
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-             BufferedReader br = new BufferedReader(new FileReader(file));
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            String line;
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-
-                int raceID = Integer.parseInt(fields[1].trim());
-                int lapID = Integer.parseInt(fields[2].trim());
-
-
-                preparedStatement.setInt(1, raceID);
-                preparedStatement.setInt(2, lapID);
-
-                preparedStatement.executeUpdate();
-            }
-
-            System.out.println("records table successfully populated");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            System.out.println("csv file not found.");
-        } catch (IOException e) {
-            System.out.println("Error reading csv file.");
-        }
-    }
-
-    public void completesLapTime() {
-        String sql = "INSERT INTO completesLapTime (lapID, driverID) VALUES (?, ?)";
+    public void compete() {
+        String sql = "INSERT INTO compete (raceID, driverID) VALUES (?, ?)";
         file = "csv_files/compete.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
              BufferedReader br = new BufferedReader(new FileReader(file));
@@ -881,11 +813,11 @@ public class Populate {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
 
-                int lapID = Integer.parseInt(fields[1].trim());
-                int driverID = Integer.parseInt(fields[2].trim());
+                int raceID = Integer.parseInt(fields[0].trim());
+                int driverID = Integer.parseInt(fields[1].trim());
 
 
-                preparedStatement.setInt(1, lapID);
+                preparedStatement.setInt(1, raceID);
                 preparedStatement.setInt(2, driverID);
 
                 preparedStatement.executeUpdate();
@@ -906,7 +838,7 @@ public class Populate {
     private Double parseTimeToDecimal(String time) {
         try {
             String[] parts = time.split(":");
-            double minutes = Double.parseDouble(parts[0]) * 60; // Convert hours to seconds
+            double minutes = Double.parseDouble(parts[0]) * 60;
             double seconds = Double.parseDouble(parts[1]);
             return minutes + seconds;
         } catch (Exception e) {
@@ -918,9 +850,7 @@ public class Populate {
     // Helper method to parse date
     private java.sql.Date parseDate(String date) {
         try {
-            // Remove quotes and trim the input
             date = date.replace("\"", "").trim();
-            // Return null for missing or invalid dates
             return date.equals("\\N") || date.isEmpty() ? null : java.sql.Date.valueOf(date);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid date format: " + date, e);
@@ -930,9 +860,7 @@ public class Populate {
     // Helper method to parse time
     private java.sql.Time parseTime(String time) {
         try {
-            // Remove quotes and trim the input
             time = time.replace("\"", "").trim();
-            // Return null for missing or invalid times
             return time.equals("\\N") || time.isEmpty() ? null : java.sql.Time.valueOf(time);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid time format: " + time, e);
@@ -941,31 +869,24 @@ public class Populate {
 
 
     private String parseTime1(String lapTime) {
-        // Remove surrounding double quotes if they exist
         lapTime = lapTime.replace("\"", "").trim();
 
-        // Define formatter for output
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
         LocalTime parsedTime;
 
         try {
-            // If the input matches m:ss.SSS, normalize it to H:mm:ss.SSS
             if (lapTime.matches("\\d{1,2}:\\d{2}\\.\\d{3}")) {
-                // Split the input into minutes and seconds
                 String[] parts = lapTime.split("[:\\.]");
                 int minutes = Integer.parseInt(parts[0]);
                 int seconds = Integer.parseInt(parts[1]);
                 int millis = Integer.parseInt(parts[2]);
 
-                // Convert minutes to hours and minutes
                 int hours = minutes / 60;
                 minutes = minutes % 60;
 
-                // Create LocalTime instance
                 parsedTime = LocalTime.of(hours, minutes, seconds, millis * 1_000_000);
             } else if (lapTime.matches("\\d{1,2}:\\d{2}:\\d{2}\\.\\d{3}")) {
-                // Parse as H:mm:ss.SSS
                 DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("H:mm:ss.SSS");
                 parsedTime = LocalTime.parse(lapTime, inputFormatter);
             } else {
@@ -975,15 +896,12 @@ public class Populate {
             throw new IllegalArgumentException("Invalid time format: " + lapTime, e);
         }
 
-        // Return the reformatted time as a String
         return parsedTime.format(outputFormatter);
     }
 
     public static String parseTime2(String timeString) throws ParseException {
         try {
-            // Remove surrounding double quotes if they exist
             timeString = timeString.replace("\"", "").trim();
-            // Define the formatter for HH:mm:ss
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             LocalTime time = LocalTime.parse(timeString, formatter);
             return time.toString();
@@ -994,7 +912,6 @@ public class Populate {
 
     public static String parseTime3(String durationString) throws ParseException {
         try {
-            // Remove surrounding double quotes if they exist
             durationString = durationString.replace("\"", "").trim();
 
             // Check if the format matches mm:ss.SSS

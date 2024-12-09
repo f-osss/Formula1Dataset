@@ -30,19 +30,19 @@ public class Interface {
                 break;
             } else if (input.equalsIgnoreCase("h") | input.equalsIgnoreCase("help")) {
                 displayMainMenu();
-            } else if (input.matches("\\d+[a-zA-Z]")) { // Handles subcategory input like '1a' or '2b'
+            } else if (input.matches("\\d+[a-zA-Z]")) {
                 handleSubcategory(input.toLowerCase(), scanner);
-            } else if (input.matches("\\d+")) { // Handles query selection like '13'
+            } else if (input.matches("\\d+")) {
                 handleQuery(Integer.parseInt(input));
             } else if (input.equalsIgnoreCase("d")) {
                 try {
-                    //po.deleteDatabaseData();
+                    db.executeSqlFile("formula1_cpg12.sql");
                 } catch(Exception e){
                     e.printStackTrace();
                 }
             } else if (input.equalsIgnoreCase("r")) {
                 try {
-                    //po.loadConfigAndPopulate();
+                    po.loadConfigAndPopulate();
                 } catch(Exception e){
                     e.printStackTrace();
                 }

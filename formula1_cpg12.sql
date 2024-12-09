@@ -17,8 +17,6 @@ drop table if exists pitstop;
 drop table if exists status;
 drop table if exists qualifyingRecord;
 drop table if exists laptime;
-drop table if exists records;
-drop table if exists completesLapTime;
 
 CREATE TABLE city
 (
@@ -92,7 +90,6 @@ CREATE TABLE constructorResults
     FOREIGN KEY (constructorID) REFERENCES constructor (constructorID) -- Reference to the Constructor table
 );
 
---saida
 CREATE TABLE constructorStanding
 (
     constructorStandingID INT PRIMARY KEY,
@@ -115,22 +112,13 @@ CREATE TABLE qualifyingRecord
     number        INT            NOT NULL,
     position      INT            NOT NULL,
     q1            DECIMAL(10, 3) ,
-    q2            DECIMAL(10, 3) ,                                 -- Time for Q2 session (optional, NULL if not reached)
+    q2            DECIMAL(10, 3) ,
     q3            DECIMAL(10, 3) ,                                 -- Time for Q3 session (optional, NULL if not reached)
     FOREIGN KEY (raceID) REFERENCES race (raceID),                     -- Links to Race table
     FOREIGN KEY (driverID) REFERENCES driver (driverID),               -- Links to Driver table
     FOREIGN KEY (constructorID) REFERENCES constructor (constructorID) -- Links to Constructor table
 );
 
-
-CREATE TABLE completesLapTime
-(
-    lapID    INT            NOT NULL,
-    driverID INT            NOT NULL,
-    lapTime  DECIMAL(10, 3) NOT NULL,
-    PRIMARY KEY (lapID, driverID),                      -- Composite primary key to ensure each driver’s lap is unique
-    FOREIGN KEY (driverID) REFERENCES driver (driverID) -- Reference to Driver table
-);
 
 
 CREATE TABLE compete (
@@ -218,11 +206,4 @@ create table laptime
     milliseconds INT NOT NULL,
     PRIMARY KEY (raceID, driverID, lap),
     FOREIGN KEY (driverID) REFERENCES Driver (driverID)
-);
-
-create table records
-(
-    raceID INT NOT NULL,
-    lapID  INT NOT NULL,
-    PRIMARY KEY (raceID, lapID)
 );
