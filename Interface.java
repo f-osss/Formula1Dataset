@@ -45,7 +45,6 @@ public class Interface {
             } else if (input.equalsIgnoreCase("r")) {
                 try {
                     po.loadConfigAndPopulate();
-
                     System.out.println("Tables populated successfully");
                 } catch (Exception e) {
                     e.printStackTrace();
