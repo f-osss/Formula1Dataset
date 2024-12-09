@@ -121,7 +121,7 @@ public class Interface {
         }
     }
 
-    private static void display1a(Scanner scanner) {
+        private static void display1a (Scanner scanner){
         System.out.println("1a. Lap Time Performance Queries:");
         System.out.println("1. Find the race with the highest average speed for fastest laps");
         System.out.println("2. Find the fastest lap times for each driver across all races");
@@ -135,7 +135,7 @@ public class Interface {
 
     }
 
-    private static void display1b(Scanner scanner) {
+        private static void display1b (Scanner scanner){
         System.out.println("1b. Race Statistics Queries:");
         System.out.println("4. Count the number of races per year");
         System.out.println("5. Display race information");
@@ -151,7 +151,7 @@ public class Interface {
 
     }
 
-    private static void display2a(Scanner scanner) {
+        private static void display2a (Scanner scanner){
         System.out.println("2a. Driver Wins Queries:");
         System.out.println("9. How many races did each driver win?");
         System.out.println("10. Find drivers with a specific number of wins.");
@@ -166,7 +166,7 @@ public class Interface {
 
     }
 
-    private static void display2b(Scanner scanner) {
+        private static void display2b (Scanner scanner){
         System.out.println("2b. Driver Performance Queries:");
         System.out.println("13. Which driver improved the most throughout the season?");
         System.out.println("14. Who was the worst driver in the season?");
@@ -183,7 +183,7 @@ public class Interface {
 
     }
 
-    private static void display2c(Scanner scanner) {
+        private static void display2c (Scanner scanner){
         System.out.println("2c. Driver Race Results Queries:");
         System.out.println("19. Show race results for a specific driver.");
         System.out.println("20. Compare lap times between two drivers in a race.");
@@ -198,7 +198,7 @@ public class Interface {
 
     }
 
-    private static void display2d(Scanner scanner) {
+        private static void display2d (Scanner scanner){
         System.out.println("2d. Miscellaneous Driver Queries:");
         System.out.println("23. Identify drivers who have driven for multiple constructors.");
         System.out.print("Select a query (e.g., '22'): ");
@@ -210,7 +210,7 @@ public class Interface {
 
     }
 
-    private static void display3a(Scanner scanner) {
+        private static void display3a (Scanner scanner){
         System.out.println("3a. Constructor Wins Queries:");
         System.out.println("24. Identify the constructor with the highest points in a season.");
         System.out.println("25. Sort constructors by the number of wins.");
@@ -224,7 +224,7 @@ public class Interface {
 
     }
 
-    private static void display3b(Scanner scanner) {
+        private static void display3b (Scanner scanner){
         System.out.println("3b. Constructor Operational Performance Queries:");
         System.out.println("27. Constructors with the most mechanical failures.");
         System.out.println("28. Which constructor performed the fastest average pit stop?");
@@ -237,7 +237,7 @@ public class Interface {
 
     }
 
-    private static void display3c(Scanner scanner) {
+        private static void display3c (Scanner scanner){
         System.out.println("3c. Constructor Composition & Insights Queries:");
         System.out.println("29. List constructors and their nationalities.");
         System.out.println("30. Get details of drivers from a specific constructor.");
@@ -251,7 +251,7 @@ public class Interface {
 
     }
 
-    private static void display4a(Scanner scanner) {
+        private static void display4a (Scanner scanner){
         System.out.println("4a. Races by Location Queries:");
         System.out.println("32. List all countries where races were held.");
         System.out.println("33. List all circuits in a specific country.");
@@ -263,7 +263,6 @@ public class Interface {
         }
 
     }
-
 
     private static void handleQuery(int queryNumber) {
         System.out.println("\nExecuting query #" + queryNumber + "...");
