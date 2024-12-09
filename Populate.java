@@ -53,7 +53,7 @@ public class Populate {
                 + "trustServerCertificate=false;"
                 + "loginTimeout=30;";
 
-        System.out.println("Tables are being populated...");
+        System.out.println("Tables are being populated, might take while...");
         city();
         circuit();
         race();
