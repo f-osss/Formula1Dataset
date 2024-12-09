@@ -149,44 +149,44 @@ public class Database {
     //3. Which driver improved the most throughout the season
     public void improvedDriver() {
         String sql = """
-            WITH SeasonMaxRounds AS (
-                SELECT
-                    year,
-                    MAX(round) AS maxRound
-                FROM
-                    Race
-                GROUP BY
-                    year
-            ),
-            DriverSeasonPoints AS (
-                SELECT
-                    Driver.driverID,
-                    Driver.forename,
-                    Driver.surname,
-                    Race.year,
-                    SUM(CASE WHEN Race.round = 1 THEN DriverStanding.points ELSE 0 END) AS seasonStartPoints,
-                    SUM(CASE WHEN Race.round = SeasonMaxRounds.maxRound THEN DriverStanding.points ELSE 0 END) AS seasonEndPoints
-                FROM
-                    DriverStanding
-                JOIN
-                    Driver ON DriverStanding.driverID = Driver.driverID
-                JOIN
-                    Race ON DriverStanding.raceID = Race.raceID
-                JOIN
-                    SeasonMaxRounds ON Race.year = SeasonMaxRounds.year
-                GROUP BY
-                    Driver.driverID, Driver.forename, Driver.surname, Race.year
-            )
-            SELECT TOP 1
-                driverID,
-                forename,
-                surname,
-                (seasonEndPoints - seasonStartPoints) AS improvement
-            FROM
-                DriverSeasonPoints
-            ORDER BY
-                improvement DESC;
-        """;
+                    WITH SeasonMaxRounds AS (
+                        SELECT
+                            year,
+                            MAX(round) AS maxRound
+                        FROM
+                            Race
+                        GROUP BY
+                            year
+                    ),
+                    DriverSeasonPoints AS (
+                        SELECT
+                            Driver.driverID,
+                            Driver.forename,
+                            Driver.surname,
+                            Race.year,
+                            SUM(CASE WHEN Race.round = 1 THEN DriverStanding.points ELSE 0 END) AS seasonStartPoints,
+                            SUM(CASE WHEN Race.round = SeasonMaxRounds.maxRound THEN DriverStanding.points ELSE 0 END) AS seasonEndPoints
+                        FROM
+                            DriverStanding
+                        JOIN
+                            Driver ON DriverStanding.driverID = Driver.driverID
+                        JOIN
+                            Race ON DriverStanding.raceID = Race.raceID
+                        JOIN
+                            SeasonMaxRounds ON Race.year = SeasonMaxRounds.year
+                        GROUP BY
+                            Driver.driverID, Driver.forename, Driver.surname, Race.year
+                    )
+                    SELECT TOP 1
+                        driverID,
+                        forename,
+                        surname,
+                        (seasonEndPoints - seasonStartPoints) AS improvement
+                    FROM
+                        DriverSeasonPoints
+                    ORDER BY
+                        improvement DESC;
+                """;
 
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
@@ -824,10 +824,10 @@ public class Database {
     public void findRaceWithHighestAvgSpeed(int limit) {
         String sql = """
                     SELECT TOP (?)
-                        Race.name, AVG(Result.fastestLapSpeed) AS avg_speed
+                        CAST(Race.name AS NVARCHAR(255)) AS name, AVG(Result.fastestLapSpeed) AS avg_speed
                     FROM Result
                     JOIN Race ON Result.raceID = Race.raceID
-                    GROUP BY Race.raceID, Race.name
+                    GROUP BY Race.raceID, CAST(Race.name AS NVARCHAR(255))
                     ORDER BY avg_speed DESC;
                 """;
 
@@ -870,7 +870,7 @@ public class Database {
              ResultSet resultSet = statement.executeQuery(sql)) {
 
             System.out.println("Total Pit Stops Per Driver:");
-            System.out.printf("%-20s %-20s %-20s%n", "Driver", "Total Pit Stops");
+            System.out.printf("%-30s %-20s%n", "Driver", "Total Pit Stops");
             System.out.println("---------------------------------------------");
 
             boolean hasResults = false;
@@ -1194,20 +1194,20 @@ public class Database {
     //32. Find races with below-average participation
     public void findRacesWithBelowAverageParticipation() {
         String sql = """
-                SELECT Race.raceID, CAST(Race.name AS NVARCHAR(MAX)) AS name, Race.date, COUNT(Result.driverID) AS participant_count
-                FROM Race
-                JOIN Result ON Race.raceID = Result.raceID
-                GROUP BY Race.raceID, CAST(Race.name AS NVARCHAR(MAX)), Race.date
-                HAVING COUNT(Result.driverID) < (
-                    SELECT AVG(total_participants)
-                    FROM (
-                        SELECT COUNT(driverID) AS total_participants
-                        FROM Result
-                        GROUP BY raceID
-                    ) AS race_participation
-                )
-                ORDER BY participant_count ASC;
-            """;
+                    SELECT Race.raceID, CAST(Race.name AS NVARCHAR(MAX)) AS name, Race.date, COUNT(Result.driverID) AS participant_count
+                    FROM Race
+                    JOIN Result ON Race.raceID = Result.raceID
+                    GROUP BY Race.raceID, CAST(Race.name AS NVARCHAR(MAX)), Race.date
+                    HAVING COUNT(Result.driverID) < (
+                        SELECT AVG(total_participants)
+                        FROM (
+                            SELECT COUNT(driverID) AS total_participants
+                            FROM Result
+                            GROUP BY raceID
+                        ) AS race_participation
+                    )
+                    ORDER BY participant_count ASC;
+                """;
 
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
