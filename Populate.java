@@ -96,7 +96,7 @@ public class Populate {
 
                 preparedStatement.executeUpdate();
             }
-
+            System.out.println("City table populated successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -137,7 +137,7 @@ public class Populate {
 
                 preparedStatement.executeUpdate();
             }
-
+            System.out.println("Circuit table populated successfully.");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -175,7 +175,6 @@ public class Populate {
                 preparedStatement.setInt(4, circuitID);
                 preparedStatement.setString(5, name);
 
-                // Use helper methods for date and time parsing
                 java.sql.Date sqlDate = parseDate(date);
                 java.sql.Time sqlTime = parseTime(time);
 
@@ -193,7 +192,7 @@ public class Populate {
 
                 preparedStatement.executeUpdate();
             }
-
+            System.out.println("Race table populated successfully.");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -230,6 +229,7 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
+            System.out.println("Constructor table populated successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -269,6 +269,7 @@ public class Populate {
                 stmt.close();
             }
             reader.close();
+            System.out.println("Driver table populated successfully.");
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
@@ -375,7 +376,7 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-
+            System.out.println("Result table populated successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -400,6 +401,7 @@ public class Populate {
                 stmt.close();
             }
             reader.close();
+            System.out.println("Status table populated successfully.");
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
@@ -479,7 +481,7 @@ public class Populate {
 
                 preparedStatement.executeUpdate();
             }
-
+            System.out.println("SprintResult table populated successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -524,7 +526,7 @@ public class Populate {
                 }
             }
 
-
+            System.out.println("DriverStanding table populated successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -568,7 +570,7 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-
+            System.out.println("ConstructorResults table populated successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -607,7 +609,7 @@ public class Populate {
 
                 preparedStatement.executeUpdate();
             }
-
+            System.out.println("ConstructorStanding table populated successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -641,6 +643,7 @@ public class Populate {
                 stmt.close();
             }
             reader.close();
+            System.out.println("Pitstop table populated successfully.");
         } catch (IOException | SQLException | ParseException e) {
             e.printStackTrace();
         }
@@ -698,7 +701,7 @@ public class Populate {
 
                 preparedStatement.executeUpdate();
             }
-
+            System.out.println("QualifyingRecord table populated successfully.");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -735,6 +738,7 @@ public class Populate {
                 stmt.close();
             }
             reader.close();
+            System.out.println("Laptime table populated successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -767,7 +771,7 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-
+            System.out.println("DrivesFor table populated successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -799,7 +803,7 @@ public class Populate {
 
                 preparedStatement.executeUpdate();
             }
-
+            System.out.println("Compete table populated successfully.");
 
         } catch (SQLException e) {
             e.printStackTrace();
