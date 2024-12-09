@@ -35,14 +35,22 @@ public class Interface {
             } else if (input.matches("\\d+")) { // Handles query selection like '13'
                 handleQuery(Integer.parseInt(input));
             } else if (input.equalsIgnoreCase("d")) {
-                //po.deleteDatabaseData();
+                try {
+                    //po.deleteDatabaseData();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             } else if (input.equalsIgnoreCase("r")) {
-                //po.loadConfigAndPopulate();
+                try {
+                    //po.loadConfigAndPopulate();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             } else {
                 System.out.println("Invalid input.");
+                System.out.println("-------------------------------------------------------------------------");
             }
         }
-
         scanner.close();
     }
 
