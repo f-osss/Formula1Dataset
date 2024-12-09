@@ -1,22 +1,22 @@
 use
 cs3380;
 
-drop table if exists circuit;
-drop table if exists city;
-drop table if exists constructor;
-drop table if exists drivesFor;
-drop table if exists driver;
-drop table if exists race;
-drop table if exists compete;
-drop table if exists result;
-drop table if exists sprintResult;
-drop table if exists driverStanding;
-drop table if exists constructorResults;
-drop table if exists constructorStanding;
-drop table if exists pitstop;
-drop table if exists status;
-drop table if exists qualifyingRecord;
-drop table if exists laptime;
+DROP TABLE IF EXISTS laptime;
+DROP TABLE IF EXISTS pitstop;
+DROP TABLE IF EXISTS result;
+DROP TABLE IF EXISTS driverStanding;
+DROP TABLE IF EXISTS sprintResult;
+DROP TABLE IF EXISTS qualifyingRecord;
+DROP TABLE IF EXISTS constructorStanding;
+DROP TABLE IF EXISTS constructorResults;
+DROP TABLE IF EXISTS compete;
+DROP TABLE IF EXISTS drivesFor;
+DROP TABLE IF EXISTS race;
+DROP TABLE IF EXISTS circuit;
+DROP TABLE IF EXISTS status;
+DROP TABLE IF EXISTS driver;
+DROP TABLE IF EXISTS constructor;
+DROP TABLE IF EXISTS city;
 
 CREATE TABLE city
 (
