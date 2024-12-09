@@ -38,7 +38,7 @@ public class Interface {
                 try {
                     db.executeSqlFile("formula1_cpg12.sql");
 
-                    System.out.println("Tables deleted and created again successfully");
+                    System.out.println("Tables deleted and created again successfully\n");
                 } catch(Exception e){
                     e.printStackTrace();
                 }
