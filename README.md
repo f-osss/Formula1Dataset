@@ -8,7 +8,11 @@ To run the program, the user needs to run the make file. To run it, type the fol
 make
 make run
 ```
-Note: the tables on Uranium are currently populated.
+Uranium Authentication:
+Username: salamif
+Password: 7941056
+
+Note: the tables on Uranium are currently populated. 
 You can however;
 
 ##Recreate the tables
