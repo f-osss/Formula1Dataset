@@ -130,7 +130,7 @@ public class Interface {
         try {
             handleQuery(Integer.parseInt(scanner.nextLine().trim()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+            System.out.println("Invalid input! Please enter a valid integer for the query number.\n");
         }
 
     }
@@ -146,7 +146,7 @@ public class Interface {
         try {
             handleQuery(Integer.parseInt(scanner.nextLine().trim()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+            System.out.println("Invalid input! Please enter a valid integer for the query number.\n");
         }
 
     }
@@ -161,7 +161,7 @@ public class Interface {
         try {
             handleQuery(Integer.parseInt(scanner.nextLine().trim()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+            System.out.println("Invalid input! Please enter a valid integer for the query number.\n");
         }
 
     }
@@ -178,7 +178,7 @@ public class Interface {
         try {
             handleQuery(Integer.parseInt(scanner.nextLine().trim()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+            System.out.println("Invalid input! Please enter a valid integer for the query number.\n");
         }
 
     }
@@ -193,7 +193,7 @@ public class Interface {
         try {
             handleQuery(Integer.parseInt(scanner.nextLine().trim()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+            System.out.println("Invalid input! Please enter a valid integer for the query number.\n");
         }
 
     }
@@ -205,7 +205,7 @@ public class Interface {
         try {
             handleQuery(Integer.parseInt(scanner.nextLine().trim()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+            System.out.println("Invalid input! Please enter a valid integer for the query number.\n");
         }
 
     }
@@ -219,7 +219,7 @@ public class Interface {
         try {
             handleQuery(Integer.parseInt(scanner.nextLine().trim()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+            System.out.println("Invalid input! Please enter a valid integer for the query number.\n");
         }
 
     }
@@ -232,7 +232,7 @@ public class Interface {
         try {
             handleQuery(Integer.parseInt(scanner.nextLine().trim()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+            System.out.println("Invalid input! Please enter a valid integer for the query number.\n");
         }
 
     }
@@ -246,7 +246,7 @@ public class Interface {
         try {
             handleQuery(Integer.parseInt(scanner.nextLine().trim()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+            System.out.println("Invalid input! Please enter a valid integer for the query number.\n");
         }
 
     }
@@ -259,7 +259,7 @@ public class Interface {
         try {
             handleQuery(Integer.parseInt(scanner.nextLine().trim()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+            System.out.println("Invalid input! Please enter a valid integer for the query number.\n");
         }
 
     }
