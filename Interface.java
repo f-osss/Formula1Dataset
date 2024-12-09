@@ -18,7 +18,7 @@ public class Interface {
         while (true) {
             System.out.println("Enter `h` or 'help' to get the main menu");
             System.out.println("Enter 'q' to close the program");
-            System.out.println("Enter `d` to delete database data");
+            System.out.println("Enter `d` to delete database data and create tables");
             System.out.println("Enter `r` to repopulate database data");
             System.out.print(">>> User input: ");
 
@@ -37,12 +37,16 @@ public class Interface {
             } else if (input.equalsIgnoreCase("d")) {
                 try {
                     db.executeSqlFile("formula1_cpg12.sql");
+
+                    System.out.println("Tables deleted and created again successfully")
                 } catch(Exception e){
                     e.printStackTrace();
                 }
             } else if (input.equalsIgnoreCase("r")) {
                 try {
                     po.loadConfigAndPopulate();
+
+                    System.out.println("Tables populated successfully")
                 } catch(Exception e){
                     e.printStackTrace();
                 }
