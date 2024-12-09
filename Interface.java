@@ -39,14 +39,14 @@ public class Interface {
                     db.executeSqlFile("formula1_cpg12.sql");
 
                     System.out.println("Tables deleted and created again successfully\n");
-                } catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (input.equalsIgnoreCase("r")) {
                 try {
                     po.loadConfigAndPopulate();
                     System.out.println("Tables populated successfully");
-                } catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
@@ -221,14 +221,22 @@ public class Interface {
         switch (queryNumber) {
             case 1:
                 System.out.print("Enter limit: ");
-                db.findRaceWithHighestAvgSpeed(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.findRaceWithHighestAvgSpeed(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 2:
                 db.findFastestLapTimesForDriver();
                 break;
             case 3:
                 System.out.print("Enter limit: ");
-                db.fastestLapTimes(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.fastestLapTimes(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 4:
                 db.countRacesPerYear();
@@ -238,11 +246,19 @@ public class Interface {
                 break;
             case 6:
                 System.out.print("Enter limit: ");
-                db.racesWithHighAccidents(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.racesWithHighAccidents(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 7:
                 System.out.print("Enter limit: ");
-                db.findClosestFinish(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.findClosestFinish(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 8:
                 db.findRacesWithBelowAverageParticipation();
@@ -252,18 +268,30 @@ public class Interface {
                 break;
             case 10:
                 System.out.print("Enter number of wins: ");
-                db.findDriversWithSpecificWins(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.findDriversWithSpecificWins(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 11:
                 System.out.print("Enter limit: ");
-                db.driverWithMostWins(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.driverWithMostWins(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 12:
                 System.out.print("Enter raceID: ");
-                int input6 = Integer.parseInt(scanner.nextLine().trim());
-                System.out.print("Enter limit: ");
-                int input7 = Integer.parseInt(scanner.nextLine().trim());
-                db.findTopDriversInRace(input6,input7);
+                try {
+                    int input6 = Integer.parseInt(scanner.nextLine().trim());
+                    System.out.print("Enter limit: ");
+                    int input7 = Integer.parseInt(scanner.nextLine().trim());
+                    db.findTopDriversInRace(input6, input7);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter valid integers for raceID and limit.");
+                }
                 break;
             case 13:
                 db.improvedDriver();
@@ -279,31 +307,51 @@ public class Interface {
                 break;
             case 17:
                 System.out.print("Enter raceID: ");
-                int input1 = Integer.parseInt(scanner.nextLine().trim());
-                System.out.print("Enter limit: ");
-                int input2 = Integer.parseInt(scanner.nextLine().trim());
-                db.findDriverLedMostLaps(input1,input2);
+                try {
+                    int input1 = Integer.parseInt(scanner.nextLine().trim());
+                    System.out.print("Enter limit: ");
+                    int input2 = Integer.parseInt(scanner.nextLine().trim());
+                    db.findDriverLedMostLaps(input1, input2);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter valid integers for raceID and limit.");
+                }
                 break;
             case 18:
                 System.out.print("Enter year: ");
-                db.driversDisqualified(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.driversDisqualified(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid year.");
+                }
                 break;
             case 19:
                 System.out.print("Enter driverID: ");
-                db.findRaceResultsByDriver(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.findRaceResultsByDriver(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid driverID.");
+                }
                 break;
             case 20:
                 System.out.print("Enter raceID: ");
-                int input3 = Integer.parseInt(scanner.nextLine().trim());
-                System.out.print("Enter driverID1: ");
-                int input4 = Integer.parseInt(scanner.nextLine().trim());
-                System.out.print("Enter driverID2: ");
-                int input5 = Integer.parseInt(scanner.nextLine().trim());
-                db.compareLapTimes(input3,input4,input5);
+                try {
+                    int input3 = Integer.parseInt(scanner.nextLine().trim());
+                    System.out.print("Enter driverID1: ");
+                    int input4 = Integer.parseInt(scanner.nextLine().trim());
+                    System.out.print("Enter driverID2: ");
+                    int input5 = Integer.parseInt(scanner.nextLine().trim());
+                    db.compareLapTimes(input3, input4, input5);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter valid integers for raceID and driverIDs.");
+                }
                 break;
             case 21:
                 System.out.print("Enter driverID: ");
-                db.racesForDriver(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.racesForDriver(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid driverID.");
+                }
                 break;
             case 22:
                 db.totalPitStopsPerDriver();
@@ -313,23 +361,43 @@ public class Interface {
                 break;
             case 24:
                 System.out.print("Enter limit: ");
-                db.findConstructorHighestPoints(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.findConstructorHighestPoints(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 25:
                 System.out.print("Enter limit: ");
-                db.constructorsByWins();
+                try {
+                    db.constructorsByWins();
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 26:
                 System.out.print("Enter limit: ");
-                db.topConstructors(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.topConstructors(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 27:
                 System.out.print("Enter limit: ");
-                db.constructorMostMechanicalFailures(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.constructorMostMechanicalFailures(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 28:
                 System.out.print("Enter limit: ");
-                db.fastestAveragePitStop(Integer.parseInt(scanner.nextLine().trim()));
+                try {
+                    db.fastestAveragePitStop(Integer.parseInt(scanner.nextLine().trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                }
                 break;
             case 29:
                 db.listConstructorsAndNationalities();
