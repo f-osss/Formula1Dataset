@@ -30,8 +30,8 @@ public class Interface {
                 break;
             } else if (input.equalsIgnoreCase("h") | input.equalsIgnoreCase("help")) {
                 displayMainMenu();
-            } else if (input.matches("\\d+\\s?[a-zA-Z]")) {
-                handleSubcategory(input.toLowerCase(), scanner);
+            } else if (input.matches("\\d+\\s*[a-zA-Z]")) {
+                    handleSubcategory(input.replaceAll("\\s", "").toLowerCase(), scanner);
             } else if (input.matches("\\d+")) {
                 handleQuery(Integer.parseInt(input));
             } else if (input.equalsIgnoreCase("d")) {
