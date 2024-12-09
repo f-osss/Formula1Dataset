@@ -127,7 +127,12 @@ public class Interface {
         System.out.println("2. Find the fastest lap times for each driver across all races");
         System.out.println("3. Fastest lap times in all races");
         System.out.print("Select a query (e.g., '1' or '2'): ");
-        handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        try {
+            handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+        }
+
     }
 
     private static void display1b(Scanner scanner) {
@@ -138,7 +143,12 @@ public class Interface {
         System.out.println("7. Find races with the closest finish");
         System.out.println("8. Find races with below-average participation");
         System.out.print("Select a query (e.g., '4' or '5'): ");
-        handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        try {
+            handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+        }
+
     }
 
     private static void display2a(Scanner scanner) {
@@ -148,7 +158,12 @@ public class Interface {
         System.out.println("11. Identify the driver with the most race wins.");
         System.out.println("12. Top drivers in a specific race");
         System.out.print("Select a query (e.g., '9' or '11'): ");
-        handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        try {
+            handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+        }
+
     }
 
     private static void display2b(Scanner scanner) {
@@ -160,7 +175,12 @@ public class Interface {
         System.out.println("17. Driver who led the most laps in a race.");
         System.out.println("18. How many drivers were disqualified in the season?");
         System.out.print("Select a query (e.g., '12' or '15'): ");
-        handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        try {
+            handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+        }
+
     }
 
     private static void display2c(Scanner scanner) {
@@ -170,14 +190,24 @@ public class Interface {
         System.out.println("21. Find races in which a specific driver competed.");
         System.out.println("22. Find the total number of pit stops per driver in all races.");
         System.out.print("Select a query (e.g., '18' or '21'): ");
-        handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        try {
+            handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+        }
+
     }
 
     private static void display2d(Scanner scanner) {
         System.out.println("2d. Miscellaneous Driver Queries:");
         System.out.println("23. Identify drivers who have driven for multiple constructors.");
         System.out.print("Select a query (e.g., '22'): ");
-        handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        try {
+            handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+        }
+
     }
 
     private static void display3a(Scanner scanner) {
@@ -186,7 +216,12 @@ public class Interface {
         System.out.println("25. Sort constructors by the number of wins.");
         System.out.println("26. Top constructors across all races.");
         System.out.print("Select a query (e.g., '23' or '24'): ");
-        handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        try {
+            handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+        }
+
     }
 
     private static void display3b(Scanner scanner) {
@@ -194,7 +229,12 @@ public class Interface {
         System.out.println("27. Constructors with the most mechanical failures.");
         System.out.println("28. Which constructor performed the fastest average pit stop?");
         System.out.print("Select a query (e.g., '26' or '27'): ");
-        handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        try {
+            handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+        }
+
     }
 
     private static void display3c(Scanner scanner) {
@@ -203,7 +243,12 @@ public class Interface {
         System.out.println("30. Get details of drivers from a specific constructor.");
         System.out.println("31. Find the number of drivers per constructor.");
         System.out.print("Select a query (e.g., '28' or '30'): ");
-        handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        try {
+            handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+        }
+
     }
 
     private static void display4a(Scanner scanner) {
@@ -211,7 +256,12 @@ public class Interface {
         System.out.println("32. List all countries where races were held.");
         System.out.println("33. List all circuits in a specific country.");
         System.out.print("Select a query (e.g., '31' or '32'): ");
-        handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        try {
+            handleQuery(Integer.parseInt(scanner.nextLine().trim()));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid integer for the query number.");
+        }
+
     }
 
 
