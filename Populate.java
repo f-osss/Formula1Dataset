@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Properties;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -75,6 +74,7 @@ public class Populate {
     }
 
     public void city() {
+        System.out.println("Populating city table...");
         String sql = "INSERT INTO city (name, country) VALUES (?, ?)";
         file = "csv_files/city.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -107,6 +107,7 @@ public class Populate {
     }
 
     public void circuit() {
+        System.out.println("Populating circuit table...");
         String sql = "INSERT INTO circuit (circuitID, cityID, circuitRef, name, long, lat, altitude) VALUES (?,?, ?, ?, ?, ?, ?)";
         file = "csv_files/circuits.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -149,6 +150,7 @@ public class Populate {
     }
 
     public void race() {
+        System.out.println("Populating race table...");
         String sql = "INSERT INTO race (raceID, year, round, circuitID, name, date, time) VALUES (?,?, ?, ?, ?, ?, ?)";
         file = "csv_files/races.csv";
 
@@ -204,6 +206,7 @@ public class Populate {
     }
 
     public void constructor() {
+        System.out.println("Populating constructor table...");
         String sql = "INSERT INTO constructor (constructorID, constructorRef, name, nationality) VALUES (?,?, ?, ?)";
         file = "csv_files/constructors.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -240,6 +243,7 @@ public class Populate {
     }
 
     private void driver() {
+        System.out.println("Populating driver table...");
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/drivers.csv"));
             reader.readLine(); // Skip header
@@ -276,6 +280,7 @@ public class Populate {
     }
 
     public void result() {
+        System.out.println("Populating result table...");
         String sql = "INSERT INTO result (resultID, raceID, driverID, constructorID, number, grid, positionOrder, points, laps, time, milliseconds, fastestLap, rank, fastestLapTime, fastestLapSpeed, statusID) VALUES (?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String file = "csv_files/results.csv";
 
@@ -387,6 +392,7 @@ public class Populate {
     }
 
     private void status() {
+        System.out.println("Populating status table...");
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/status.csv"));
             reader.readLine(); // Skip header
@@ -408,6 +414,7 @@ public class Populate {
     }
 
     public void sprintResult() {
+        System.out.println("Populating sprintResult table...");
         String sql = "INSERT INTO sprintResult (resultID, raceID, driverID, constructorID, number, grid, position, positionOrder, points, laps, time, milliseconds, fastestLap, fastestLapTime, statusID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         file = "csv_files/sprint_results.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -492,6 +499,7 @@ public class Populate {
     }
 
     public void driverStanding() {
+        System.out.println("Populating driverStanding table...");
         String sql = "INSERT INTO driverStanding (driverStandingID, raceID, driverID, points, position, wins) VALUES (?, ?, ?, ?, ?, ?)";
         String file = "csv_files/driver_standings.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -537,6 +545,7 @@ public class Populate {
     }
 
     public void constructorResult() {
+        System.out.println("Populating constructorResults table...");
         String sql = "INSERT INTO constructorResults (constructorResultsID, raceID,constructorID,points,status) VALUES (?, ?,?,?,?)";
         file = "csv_files/constructor_results.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -581,6 +590,7 @@ public class Populate {
     }
 
     public void constructorStanding() {
+        System.out.println("Populating constructorStanding table...");
         String sql = "INSERT INTO constructorStanding (constructorStandingID, raceID,wins,points,position,constructorID) VALUES (?, ?,?,?,?,?)";
         file = "csv_files/constructor_standings.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -620,6 +630,7 @@ public class Populate {
     }
 
     private void Pitstop() {
+        System.out.println("Populating pitstop table...");
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/pit_stops.csv"));
             reader.readLine(); // Skip header
@@ -650,6 +661,7 @@ public class Populate {
     }
 
     public void qualifyingRecord() {
+        System.out.println("Populating qualifyingRecord table...");
         String sql = "INSERT INTO qualifyingRecord (qualifyID, raceID, driverID, constructorID, number, position, q1, q2, q3) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
         file = "csv_files/qualifying.csv";
 
@@ -713,6 +725,7 @@ public class Populate {
     }
 
     private void LapTime() {
+        System.out.println("Populating laptime table...");
         try (Connection connection = DriverManager.getConnection(connectionUrl)) {
             BufferedReader reader = new BufferedReader(new FileReader("csv_files/lap_times.csv"));
             reader.readLine(); // Skip header
@@ -749,6 +762,7 @@ public class Populate {
     }
 
     public void drivesFor() {
+        System.out.println("Populating drivesFor table...");
         String sql = "INSERT INTO drivesFor (constructorID, driverID) VALUES (?, ?)";
         file = "csv_files/drivesFor.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
@@ -782,6 +796,7 @@ public class Populate {
     }
 
     public void compete() {
+        System.out.println("Populating compete table...");
         String sql = "INSERT INTO compete (raceID, driverID) VALUES (?, ?)";
         file = "csv_files/compete.csv";
         try (Connection connection = DriverManager.getConnection(connectionUrl);
