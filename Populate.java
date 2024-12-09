@@ -53,6 +53,7 @@ public class Populate {
                 + "trustServerCertificate=false;"
                 + "loginTimeout=30;";
 
+        System.out.println("Tables are being populated...");
         city();
         circuit();
         race();
@@ -96,8 +97,6 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-            System.out.println("city table successfully populated");
-
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -139,7 +138,6 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-            System.out.println("Circuit table successfully populated!");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -196,7 +194,6 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-            System.out.println("races table successfully populated");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -232,8 +229,6 @@ public class Populate {
 
                 preparedStatement.executeUpdate();
             }
-
-            System.out.println("constructor table successfully populated");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -274,7 +269,6 @@ public class Populate {
                 stmt.close();
             }
             reader.close();
-            System.out.println("driver table successfully populated");
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
@@ -381,7 +375,6 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-            System.out.println("Result table successfully populated");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -406,7 +399,6 @@ public class Populate {
                 stmt.executeUpdate();
                 stmt.close();
             }
-            System.out.println("status table successfully populated");
             reader.close();
         } catch (IOException | SQLException e) {
             e.printStackTrace();
@@ -488,8 +480,6 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-            System.out.println("sprintResult table successfully populated");
-
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -520,9 +510,6 @@ public class Populate {
                     int position = Integer.parseInt(fields[4].trim());
                     int wins = Integer.parseInt(fields[6].trim());
 
-                    // Debug: Print the values before executing the query
-                    System.out.println("Inserting: " + driverStandingID + ", " + raceID + ", " + driverID + ", " + points + ", " + position + ", " + wins);
-
                     preparedStatement.setInt(1, driverStandingID);
                     preparedStatement.setInt(2, raceID);
                     preparedStatement.setInt(3, driverID);
@@ -537,7 +524,6 @@ public class Populate {
                 }
             }
 
-            System.out.println("Driver standing table successfully populated");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -583,8 +569,6 @@ public class Populate {
             }
 
 
-            System.out.println("constructor_Results table successfully populated");
-
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -624,9 +608,6 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-
-            System.out.println("constructor standing table successfully populated");
-
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -660,7 +641,6 @@ public class Populate {
                 stmt.close();
             }
             reader.close();
-            System.out.println("pitstop table successfully populated");
         } catch (IOException | SQLException | ParseException e) {
             e.printStackTrace();
         }
@@ -719,7 +699,6 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-            System.out.println("qualifyingRecord table successfully populated");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -755,7 +734,6 @@ public class Populate {
                 stmt.executeUpdate();
                 stmt.close();
             }
-            System.out.println("lap time table successfully populated");
             reader.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -789,7 +767,6 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-            System.out.println("drivesFor table successfully populated");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -823,7 +800,6 @@ public class Populate {
                 preparedStatement.executeUpdate();
             }
 
-            System.out.println("compete table successfully populated");
 
         } catch (SQLException e) {
             e.printStackTrace();
