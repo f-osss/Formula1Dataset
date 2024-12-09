@@ -895,7 +895,7 @@ public class Database {
     //21. Find races in which a specific driver competed
     public void racesForDriver(int driverID) {
         String sql = """
-                    DECLARE @driverID INT = ?; -- (user inputs this)
+                    DECLARE @driverID INT = ?; 
                     SELECT Race.name, Race.date
                     FROM Result
                     JOIN Race ON Result.raceID = Race.raceID
@@ -944,7 +944,7 @@ public class Database {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 System.out.println("Top Drivers with Most Wins:");
-                System.out.printf("%-20s %-20s %-20s%n", "Driver", "Total Wins");
+                System.out.printf("%-30s %-20s%n", "Driver", "Total Wins");
                 System.out.println("---------------------------------------------");
 
                 boolean hasResults = false;
