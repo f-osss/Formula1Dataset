@@ -81,6 +81,7 @@ public class Interface {
     }
 
     private static void handleSubcategory(String subcategory, Scanner scanner) {
+        System.out.println("-------------------------------------------------------------------------");
         switch (subcategory) {
             case "1a":
                 display1a(scanner);
