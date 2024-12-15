@@ -15,9 +15,9 @@ Password: 7941056
 Note: the tables on Uranium are currently populated. 
 You can however;
 
-##Recreate the tables
+## Recreate the tables
 Once the program is running, the user can type `d` to delete all existing tables and recreate them
 then,
-##Populate the dataset
+## Populate the dataset
 To populate the dataset, the user can type `p` to populate the tables with the data from the csv files. 
 This would take about 10 minutes.
